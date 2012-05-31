@@ -28,9 +28,9 @@ cond_num = 1;
 total_ol_dur = 0;
 frequency = 400;
 
-for pat = [2]; % 8 Wide, full field, 8 Wide front field (front 120 degres)
+for pat = 2; % 8 Wide, full field, 8 Wide front field (front 120 degres)
     % the different temporal frequency position functions
-    for pos_funcX = [1 2 20 21 39 40 44 45]; % [.5 hz CW .5 hz CCW 1 hz cw 1 hz ccw 2 hz cw 2 hz ccw 3 hz cw 3 hz ccw]
+    for pos_funcX = [1 2 20 21 39 40 54 55]; % [.5 hz CW .5 hz CCW 1 hz cw 1 hz ccw 2 hz cw 2 hz ccw 3 hz cw 3 hz ccw]
     % Sym conds will be sequential except for the last, which is the closed
     % loop condition       
     
@@ -122,6 +122,7 @@ end
 % Even though it is set in the experiment, be explicit about the voltage
 % value of the closed loop portion!
 Conditions(numel(Conditions)).Voltage   =  0;
-total_dur = total_ol_dur + numel(Conditions)*Conditions(numel(Conditions)).Duration;
-disp(total_dur/60);
+
+% total_dur = total_ol_dur + numel(Conditions)*Conditions(numel(Conditions)).Duration;
+% disp(total_dur/60);
 

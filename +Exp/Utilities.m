@@ -110,25 +110,24 @@ classdef Utilities
 		% function [result condition_func meta_file funcs_on_SD pats_on_SD cfgs_on_SD] = get_check_protocol_input(protocol)
 		% Checks to see if the protocol folder exists, and that it has the required elements
         % Returns a struct of logicals, if all are 1, good to go
-            varargout{1} = 'empty'; varargout{2} = varargout{1}; varargout{3} = varargout{1}; varargout{4} = varargout{1};
+            varargout{1} = 'empty'; varargout{2} = varargout{1}; varargout{3} = varargout{1}; varargout{4} = varargout{1}; varargout{5} = varargout{1};
 			% this function working correctly depends on the +Exp package being on the same level as the protocol folder... probably a safe bet
 			exp_loc = what('+Exp');
             [~, base_dir] = fileattrib(fullfile(exp_loc.path,'..'));
 			protocol_loc = fullfile(base_dir.Name,'protocols',protocol);
-			if ~isdir(protocol_loc)
-				result = 'no_folder';
-				return
-			end
-			
-			protocol_file_info = dir(protocol_loc);
-			
+			% This error should probably go somewhere else...
+            if ~isdir(protocol_loc)
+				disp('No folder for protocol!')
+            end			
 			% Check for the SD card files
 			result.has_funcs 	= 0;
 			result.has_pats 	= 0;
-            result.has_cfgs    = 0;
+            result.has_cfgs     = 0;
 			result.has_conds 	= 0;
 			result.has_meta 	= 0;
-			
+            
+            protocol_file_info = dir(protocol_loc);
+            
 			% use 3:end because the first 'files' are . and .. 
 			for i = 3:numel(protocol_file_info)
 				name = protocol_file_info(i).name;
@@ -150,7 +149,7 @@ classdef Utilities
 						varargout{1} = (protocol_file_info(i).name);
 					elseif ~isempty(strfind(name,'meta'))
 						result.has_meta = 1;
-						varargout{2} = (protocol_file_info(i).name);
+						varargout{2} = fullfile(protocol_loc,(protocol_file_info(i).name));
 					end
 				end
             end
@@ -181,9 +180,11 @@ classdef Utilities
         function [result metadata] = get_check_meta_file(meta_file)
             try 
                 % Will it load - does it have fields, something should probably make more sense here...
-				[~, meta, ~] = fileparts(meta_file);
+				[folder, meta, ~] = fileparts(meta_file);
+                cf = cd;
+                cd(folder)
                 eval(meta);
-                metadata = metadata;
+                cd(cf);
                 getfield(metadata,'DoB');
                 eval_result = 1;
             catch ME

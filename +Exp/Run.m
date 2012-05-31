@@ -227,7 +227,7 @@ end
 
 % Set the configuration for the experiment, right now only using one for
 % the whole experiment
-string = ('Panels off, setting experiment panel config.Expect Box/Errors');
+string = ('Panels off, setting experiment panel config. Expect Box/Errors');
 unixy_output_pt1(string)
 Panel_com('all_off'); pause(.05)
 Panel_com('set_config_id',cond_struct(1).PanelCfgNum); pause(4.5);
@@ -263,7 +263,7 @@ for rep = 1:reps
         rep_progress = [ '[' repmat(' ',1,4-numel(num2str(rep))) num2str(rep) '/' repmat(' ',1,4-numel(num2str(reps))) num2str(reps) ']' ];
         trial_progress = [ '[' repmat(' ',1,4-numel(num2str(curr_cond_index))) num2str(curr_cond_index) '/' repmat(' ',1,4-numel(num2str(total_conds))) num2str(total_conds) ']' ];
         condition_progress = [ '[' repmat(' ',1,4-numel(num2str(cond))) num2str(cond) '/' repmat(' ',1,4-numel(num2str(Nconds-1))) num2str(Nconds-1) ']'];
-        fprintf('Repetition %s -- Trial %s -- Condition %s ', rep_progress, trial_progress, condition_progress);    
+        fprintf('Repetition %s -- Trial %s -- Condition %s  ', rep_progress, trial_progress, condition_progress);    
         
         [time voltage] = Exp.Utilities.set_Panel_com(cond_struct(cond));
         % need to convert the voltage to 16 bit (2^15)-1

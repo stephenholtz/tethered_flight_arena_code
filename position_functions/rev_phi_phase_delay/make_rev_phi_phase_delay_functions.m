@@ -23,7 +23,7 @@ function make_rev_phi_phase_delay_functions
 
 project = 'rev_phi_phase_delay';
 temporal_freqs = [.5 1 2 3];    % the .5 is hard coded below to show up as 0pt5
-sampling_rate = 200;            % 200 hz allows for 5ms precision in offsets
+sampling_rate = 400;            % 200 hz allows for 5ms precision in offsets
 pattern_y_length = 2;           % on and off flicker for the rev phi
 max_num_delays = 8;             % many more than this will break the way this works...
 counter = 0;
@@ -115,9 +115,17 @@ for temp_freq = temporal_freqs
                 funct = repmat(funct, 1, ceil((sampling_rate*function_total_length)/numel(funct)));
                 
                 for delay_type = [1 -1]
+                    delay_val = 1000*delay/sampling_rate;
+                    if mod(abs(delay_val),1) ~= 0
+                        delay_val = regexp(num2str(delay_val),'\.','split');
+                        delay_val = [delay_val{1} 'pt' delay_val{2}];
+                    else
+                        delay_val = num2str(delay_val);
+                    end              
+                    
                     switch delay_type
                         case 1
-                            function_name = [chan_name, '_', num2str(1000*delay/sampling_rate), 'ms_after_' num2str(sampling_rate) 'Hz'];
+                            function_name = [chan_name, '_', delay_val, 'ms_after_' num2str(sampling_rate) 'Hz'];
                             % SHIFT IT TO HAPPEN LATER
                             func = [repmat(funct(1),1,(delay)) funct]; % I will never know why repmat fails here...
                             
@@ -126,7 +134,7 @@ for temp_freq = temporal_freqs
                             func = [];
 
                         case -1
-                            function_name = [chan_name, '_', num2str(1000*delay/sampling_rate), 'ms_before_' num2str(sampling_rate) 'Hz'];
+                            function_name = [chan_name, '_', delay_val, 'ms_before_' num2str(sampling_rate) 'Hz'];
                             % SHIFT IT TO HAPPEN EARLIER
                             func = funct((delay):end);
                             

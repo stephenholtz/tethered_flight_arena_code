@@ -34,7 +34,6 @@ classdef Utilities
                                 'HeadGlued',...         % 1 = glued, 0 = not glued
                                 'Experimenter',...      % keep track of who ran the experiment
                                 'AssayType',...         % (tf = tethered flight)
-                                'Protocol',...          % (condition_function name)
                                 'DateTime',...          % the time the experiment started
                                 'ExperimentName',...    % generated in the meta file, something unique to help debugging
                                 'Effector',...          % this will be used in database for searching 
@@ -177,7 +176,8 @@ classdef Utilities
             end
         end
         
-        function [result metadata] = get_check_meta_file(meta_file)
+        function [result metadata] = get_check_meta_file(meta_file,metadata)
+            failed = 0;
             try 
                 % Will it load - does it have fields, something should probably make more sense here...
 				[folder, meta, ~] = fileparts(meta_file);
@@ -195,18 +195,20 @@ classdef Utilities
             end
             
             if eval_result && isstruct(metadata)
-                while true
-                    for name = fieldnames(metadata)
-                        if sum(cell2mat(strfind(Exp.Utilities.metadataFieldList, [name{:}]))) == 0
-                            result = false;
-                            break
-                        end
+                for g = Exp.Utilities.metadataFieldList
+                       
+                    if ~isfield(metadata,g)
+                        failed = 1;
                     end
-                    result = true;
-                    break
                 end
             else
+                failed = 1;
+            end
+            
+            if failed
                 result = false;
+            else
+                result = true;
             end
         end
         

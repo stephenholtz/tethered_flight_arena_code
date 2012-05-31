@@ -75,31 +75,18 @@ result = Exp.Utilities.check_cond_file(cond_struct);
     else
         unixy_output_pt2(1)        
     end
-
-[result metadata] = Exp.Utilities.get_check_meta_file(meta_file);
+    
+metadata.Protocol = protocol;
+[result metadata] = Exp.Utilities.get_check_meta_file(meta_file,metadata);
     string = ('Checking metadata file and contents');
     unixy_output_pt1(string)
     if ~result; 
-        unixy_output_pt2(0)        
+        unixy_output_pt2(0)
+        disp(Exp.Utilities.metadataFieldList);
         error('Metadata failed to load/missing fields from meta file.'); 
     else
         unixy_output_pt2(1)        
     end
-
-% recover genotype for storing the file (as geno_full + datestr)
-% this should eventually check against a database/text file -- so I separated it out as its own check
-geno = strcat(metadata.Chromo2,'_',metadata.Chromo3);
-result = Exp.Utilities.check_geno_input(geno);
-result = 1;
-    string = ('Checking genotype format ');
-    unixy_output_pt1(string)
-    if ~result; 
-        unixy_output_pt2(0)        
-        error('Genotype specified in metadata invalid'); 
-    else
-        unixy_output_pt2(1)        
-    end
-    geno_full = strcat(geno,'_',metadata.Effector);
 
 %% Double check the metadata is correct with a(n overly complex) gui. 
 % Additional option to save a temporary experiment with all fields 
@@ -317,7 +304,7 @@ end
 %% Determine the file save location from metadata, make that directory, copy the patterns and functions to it, and save the metadata/conditions to that location.
 % Establish the new file system storage location
 root_data_loc = 'C:\tf_tmpfs';
-data_location = fullfile(root_data_loc,metadata.Protocol,[metadata.Chromo2 '_' metadata.Chromo3 '__' metadata.Effector],metadata.ExperimentName);
+data_location = fullfile(root_data_loc,metadata.Protocol,[metadata.Line '_' metadata.Effector],metadata.DateTime);
 % Move the temporary daq file to the new location
 temp_daq_name = daq_file;
 daq_location = fullfile(temp_daq_name);

@@ -1,14 +1,12 @@
 classdef Data
     %DATA contains raw data for individual trials (in other assays more)
-    %   Higher levels may or may not use the output of these functions, the
-    %   properties are all stored in a database.
-    % Note:
-    %   Any time there is only one object returned, it is propagated as a
-    %   single object in a cell array. 
+    %   For tethered flight, this is simply the DAQ Channels and a logical
+    %   indicating if the trial was successful or not.
+    %   Because memory is a problem, this level has minimal computation.
+    %
+    %   This class is populated by tfAnalysis.import automatically.
     
     properties
-        % Include id for uploading back to the db with tfAnalysis.Update
-        id
         % Was the trial successful? This is the only 'computation' that is
         % done (thresholds on the wbf, left_amp and right_amp).
         successful 
@@ -21,7 +19,6 @@ classdef Data
         wbf
         voltage_signal                                     
         lmr
-        
     end
     
     properties (Constant = true, Access = private)
@@ -33,7 +30,6 @@ classdef Data
         % Values are private and can be returned, but are not saved in the
         % objects fields. So long as they are not populated, or cleared
         % before saving, VERY little size increase occurs.
-        
         
         mean_left_amp
         mean_x_pos
@@ -85,7 +81,7 @@ classdef Data
         
         function self = main(self)
             % Run only the neccessary computations on the data on this
-            % level.
+            % level, dog.
             self = determine_success(self);
         end
         
@@ -96,7 +92,7 @@ classdef Data
             
             % To save space, store these thresholds as private properties
             
-            % > 10% shouldn't be below the threshold
+            % > 10% shouldn't be below either threshold
             if sum(self.wbf < self.wbf_threshold) > numel(self.wbf)*.1
                 self.successful = 0;
             elseif sum(self.right_amp+self.left_amp < self.rpl_threshold) > numel(self.wbf)*.3
@@ -104,7 +100,6 @@ classdef Data
             else
                 self.successful = 1;
             end
-            
         end
         
         function self = clear_private_properties(self)
@@ -146,99 +141,6 @@ classdef Data
             
             self.data_duration              = [];
             self.data_duration_time_series  = [];
-
         end
-        
-        function self = perform_computations(self)
-            % routine to compute all values with one method call, very
-            % procedural, but whatever it works.
-            self = cpt_duration(self);
-            self = cpt_channel_means(self);
-            self = cpt_channel_sems(self);
-            self = cpt_hists(self);
-            self = cpt_corr_vals(self);
-            self = cpt_integrated_vals(self);            
-            self = cpt_time_to_half_max(self);
-        end
-        
-        function self = cpt_duration(self)
-           self.data_duration               = numel(self.wbf);
-           self.data_duration_time_series   = 1:self.data_duration;
-        end
-        
-        function self = cpt_channel_means(self)
-            self.mean_left_amp          = mean(self.left_amp);
-            self.mean_x_pos             = mean(self.x_pos);
-            self.mean_right_amp         = mean(self.right_amp);
-            self.mean_y_pos             = mean(self.y_pos);
-            self.mean_wbf               = mean(self.wbf );
-            self.mean_voltage_signal    = mean(self.voltage_signal);
-            self.mean_lmr               = mean(self.lmr);
-        end
-        
-        function self = cpt_channel_sems(self)
-            self.sem_left_amp       = std(self.left_amp)/(length(self.left_amp))^(1/2);
-            self.sem_x_pos          = std(self.x_pos)/(length(self.x_pos))^(1/2);
-            self.sem_right_amp      = std(self.right_amp)/(length(self.right_amp))^(1/2);
-            self.sem_y_pos          = std(self.y_pos)/(length(self.y_pos))^(1/2);
-            self.sem_wbf            = std(self.wbf )/(length(self.wbf))^(1/2);
-            self.sem_voltage_signal = std(self.voltage_signal)/(length(self.voltage_signal))^(1/2);
-            self.sem_lmr            = std(self.lmr)/(length(self.lmr))^(1/2);
-        end
-        
-        function self = cpt_hists(self)
-            % This is a simplified histogram for x position, in the
-            % tethered flight case, 96 positions is really all that will
-            % usually be needed.
-            self.hist_96_x_pos = hist(self.x_pos,96);
-            self.hist_96_y_pos = hist(self.x_pos,96);
-        end
-        
-        function self = cpt_corr_vals(self)
-            % Taken straight from John's telethon figure scripts
-            % X/Y pos normalized to use with each cross correlation            
-            dem.x = self.x_pos - self.mean_x_pos;
-            norm.x = dem.x/max(abs(dem.x));
-            dem.y = self.y_pos - self.mean_y_pos;
-            norm.y = dem.y/max(abs(dem.y));
-            % LmR and WBF normalized for the cross correlation
-            dem.lmr = self.lmr - self.mean_lmr;
-            norm.lmr = dem.lmr/max(abs(dem.lmr));                        
-            dem.wbf = self.wbf - self.mean_wbf;
-            norm.wbf = dem.wbf/max(abs(dem.wbf));
-            
-            % cross correlation and lag value assignment for:
-            % x and lmr
-            [cc, lags] = xcorr(norm.x,norm.lmr,75,'coeff');
-            [self.corr_x_lmr,  max_index]    = max(cc);
-            self.lag_corr_x_lmr              = lags(max_index);            
-            % y and lmr
-            [cc, lags] = xcorr(norm.y,dem.lmr,75,'coeff');
-            [self.corr_y_lmr,  max_index]    = max(cc);
-            self.lag_corr_y_lmr              = lags(max_index);  
-            % x and wbf
-            [cc, lags] = xcorr(norm.x,dem.wbf,75,'coeff');
-            [self.corr_x_wbf,  max_index] = max(cc);
-            self.lag_corr_x_wbf              = lags(max_index);  
-            % y and wbf
-            [cc, lags] = xcorr(norm.y,dem.wbf,75,'coeff');
-            [self.corr_y_wbf,  max_index] = max(cc);
-            self.lag_corr_y_wbf              = lags(max_index); 
-        end
-        
-        function self = cpt_integrated_vals(self)
-            % Straight from john's telethon analysis, a trapezoidal
-            % integration of the response.
-            self.integrated_lmr_response = trapz(self.data_duration_time_series,abs(self.lmr));            
-            self.integrated_wbf_response = trapz(self.data_duration_time_series,abs(self.wbf));
-        end
-        
-        function self = cpt_time_to_half_max(self)
-            % Straight from john's telethon analysis, the lmr voltage and
-            % wbf voltage value at the half maximum
-            self.time_to_half_max_lmr = find(abs(self.lmr) == max(abs(self.lmr)));
-            self.time_to_half_max_wbf = find(abs(self.wbf) == max(abs(self.wbf)));
-        end
-        
     end
 end

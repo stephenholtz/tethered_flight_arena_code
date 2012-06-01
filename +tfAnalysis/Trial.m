@@ -1,26 +1,19 @@
 classdef Trial
-    % Trial class holds a set of equal data instances and meta properties.
-    % In the tethered flight case, there will only be one data instance, so
-    % there is no computation needed, and a reference can pass down to data
-    % for later computation.
-    % 
-    % Note:
-    %   Any time there is only one 'data' object returned, it is propagated
-    %   as a single object in a cell array.
+    %TRIAL contains the metadata for each individual trial of a given
+    %   stimulus type (an indivudual instance of a condition, i.e.). There
+    %   are no computations needed on this level for tethered flight, it is
+    %   just a property holder. It will have one data object which will
+    %   have DAQ properties.
+    %
+    %   TRIAL and the data object it contains are automatically populated 
+    %   by tfAnalysis.import
     
     properties
-        % All of these properties are used as containers in our class
-        % structure. Their values may or may not need to be computed with
-        % class methods, most of which should be called by the main
-        % function. See methods for more information.        
-        
-        % Include id for uploading back to the db        
-        id
         trial_name
         
         % Conditions of the trial
         cond_num
-        rep_num         %%%% NEEDS TO BE ADDED HERE
+        rep_num
         pat_id
         gains
         mode
@@ -35,6 +28,8 @@ classdef Trial
         pos_func_name_x
         pos_func_name_y
         pattern_name
+        panel_cfg_num
+        panel_cfg_name
         
         % Cell array of data objects
         data
@@ -44,15 +39,5 @@ classdef Trial
     methods
         function self = Trial()
         end
-        
-        function self = main(self)
-            % routine to compute needed values. In this case all that would
-            % be required is to copy up to trial because there is a 1:1
-            % mapping, so rather than clog the database, they are just
-            % directly referenced from the Experiment class. 
-            % i.e. obj.experiment{num}.trial{num}.data{1}.property is
-            % needed to get to trial specific data.
-        end
     end
-    
 end

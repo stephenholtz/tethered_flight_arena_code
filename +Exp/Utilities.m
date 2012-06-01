@@ -228,10 +228,33 @@ classdef Utilities
                 result = false;
             end            
         end
-        
-        function result = check_geno_input(geno)
-        % For now just return 1, need to find a better method for this
-        result = 1;
+
+        function [result varargout] = get_check_grouped_conds_file(protocol)
+            % Checks for a file called grouped_conds.m that has a 
+            % variable called grouped_conditions containing information on
+            % how to appropriately add symmetric conditions together for
+            % the protocol selected. 
+            % This is not something appropriate for all protocols so it is
+            % not included in the metadata file or condition file etc.,
+            result = 0;
+            varargout{1} = 'null';
+			% this function working correctly depends on the +Exp package being on the same level as the protocol folder... probably a safe bet
+			exp_loc = what('+Exp');
+            
+            [~, base_dir] = fileattrib(fullfile(exp_loc.path,'..'));
+			protocol_loc = fullfile(base_dir.Name,'protocols',protocol);            
+            protocol_file_info = dir(protocol_loc);
+            grouped_file_ind=find(strcmp({protocol_file_info.name},'grouped_conds.m')==1);
+            
+            if grouped_file_ind
+                cf = pwd;
+                cd(protocol_loc);
+                eval('grouped_conds');
+                varargout{1} = grouped_conditions;
+                cd(cf)
+                result = 1;
+            end
+            
         end
         
         function metadata = testing_metadata
@@ -243,7 +266,7 @@ classdef Utilities
         	end
         	% Some should be over written with 'real' values though...
         	metadata.DateTime       = datestr(now,30);
-			metadata.ExperimentName = [metadata.AssayType '-' metadata.Protocol '-' metadata.DateTime '-' metadata.Chromo2 '_' metadata.Chromo3 '__' metadata.Effector];
+			metadata.ExperimentName = ['test_experiment_', metadata.DateTime];
             metadata.daqFile        = 'raw_data.daq';
         end
         

@@ -34,7 +34,7 @@ classdef import < handle
                 % a single file name
                 elseif ischar(varargin{1})
                     exps{1} = varargin{1};
-                end                
+                end
             else
                 % top level folder as first arg, 'all' as second
                 if nargin == 2 && ischar(varargin{nargin}) && strcmpi(varargin{nargin},'all')
@@ -132,7 +132,7 @@ classdef import < handle
                     [parsed_data, ~, ~] = tfAnalysis.parse_tf_data(raw_data_file,condition_lengths);
                 catch err
                     disp(err.message)
-                    warning('Parse_tf_data failed with given condition lengths, using 90% of given lengths.')
+                    warning('Parse_tf_data failed with given condition lengths, using 90% of given lengths.') %#ok<WNTAG>
                     [parsed_data, ~, ~] = tfAnalysis.parse_tf_data(raw_data_file,condition_lengths*.9);                    
                 end
             catch parseErr
@@ -148,34 +148,39 @@ classdef import < handle
             experiment = tfAnalysis.Experiment;
             % add all of the fields that can be simply loaded from
             % temp_info to the experiment class
-            experiment.line_name        = self.temp_info.meta.Line;            
-            experiment.experiment_name  = self.temp_info.meta.ExperimentName;
-            experiment.assay_type       = self.temp_info.meta.AssayType;
-            experiment.protocol         = self.temp_info.meta.Protocol;
-            experiment.date_time        = self.temp_info.meta.DateTime;
-            experiment.effector         = self.temp_info.meta.Effector;
-            %
-            experiment.sex              = self.temp_info.meta.Sex;
-            experiment.dob              = self.temp_info.meta.DoB;
-            experiment.light_cycle      = self.temp_info.meta.LightCycle;
-            experiment.arena            = self.temp_info.meta.Arena;
-            experiment.head_glued       = self.temp_info.meta.HeadGlued;
-            % experiment.room_temp        = self.temp_info.meta.RoomTemp;
-            experiment.daq_file         = self.temp_info.meta.daqFile;
-            experiment.chr2             = self.temp_info.meta.Chromo2;
-            experiment.chr3             = self.temp_info.meta.Chromo3;
-            experiment.temp_unshift_time           = self.temp_info.meta.temp_unshift_time;
-            experiment.temp_shift_time             = self.temp_info.meta.temp_shift_time;
-            experiment.temp_unshifted              = self.temp_info.meta.temp_unshifted;
-            experiment.temp_shifted                = self.temp_info.meta.temp_shifted;
-            experiment.temp_experiment             = self.temp_info.meta.temp_experiment;
-            experiment.temp_ambient                = self.temp_info.meta.temp_ambient;
-            experiment.humidity_ambient            = self.temp_info.meta.humidity_ambient;
-            % may need to recusively add these in!
-            experiment.note                        = self.temp_info.meta.note;
-            experiment.fly_tag                     = self.temp_info.meta.fly_tag;
+            experiment.line_name            = self.temp_info.meta.Line;            
+            experiment.experiment_name      = self.temp_info.meta.ExperimentName;
+            experiment.assay_type           = self.temp_info.meta.AssayType;
+            experiment.protocol             = self.temp_info.meta.Protocol;
+            experiment.date_time            = self.temp_info.meta.DateTime;
+            experiment.effector             = self.temp_info.meta.Effector;
+            experiment.sex                  = self.temp_info.meta.Sex;
+            experiment.dob                  = self.temp_info.meta.DoB;
+            experiment.light_cycle          = self.temp_info.meta.LightCycle;
+            experiment.arena                = self.temp_info.meta.Arena;
+            experiment.head_glued           = self.temp_info.meta.HeadGlued;
+            experiment.daq_file             = self.temp_info.meta.daqFile;
+            experiment.chr2                 = self.temp_info.meta.Chromo2;
+            experiment.chr3                 = self.temp_info.meta.Chromo3;
+            experiment.temp_unshift_time    = self.temp_info.meta.temp_unshift_time;
+            experiment.temp_shift_time      = self.temp_info.meta.temp_shift_time;
+            experiment.temp_unshifted       = self.temp_info.meta.temp_unshifted;
+            experiment.temp_shifted         = self.temp_info.meta.temp_shifted;
+            experiment.temp_experiment      = self.temp_info.meta.temp_experiment;
+            experiment.temp_ambient         = self.temp_info.meta.temp_ambient;
+            experiment.humidity_ambient     = self.temp_info.meta.humidity_ambient;
+            experiment.note                 = self.temp_info.meta.note;
+            experiment.fly_tag              = self.temp_info.meta.fly_tag;
+            
+            % Grouped conditions, cond2/4 = transformed to cond1/3, form below
+            % {[cond1_rep1... cond1_repN], [cond2_rep1... cond2_repN]; 
+            % [cond3_rep1... cond3_repN], [cond4_rep1... cond4_repN]}
+            try experiment.grouped_conditions = self.temp_info.meta.grouped_conditions;
+            catch
+                experiment.grouped_conditions = 'null';
+            end
         end
-
+        
         function trial = populate_trial_data_obj(self, parsed_data)
             i = 0;
             for index = 1:numel(parsed_data{1})
@@ -208,8 +213,11 @@ classdef import < handle
                     % might want/need to add these in for old experiments
                     % -- for now, check if they are there and then use
                     try
-                    trial{i}.panel_cfg_num      = self.temp_info.cond(cond_num).PanelCfgName;
-                    trial{i}.panel_cfg_name     = self.temp_info.cond(cond_num).PanelCfgNum;
+                        trial{i}.panel_cfg_num      = self.temp_info.cond(cond_num).PanelCfgName;
+                        trial{i}.panel_cfg_name     = self.temp_info.cond(cond_num).PanelCfgNum;
+                    catch
+                        trial{i}.panel_cfg_num      = 'null';
+                        trial{i}.panel_cfg_name     = 'null';
                     end
                     
                     % Add data fields
@@ -224,15 +232,10 @@ classdef import < handle
                     data.voltage_signal = parsed_data{1}{index}.voltage;
                     data.lmr            = parsed_data{1}{index}.lmr;
                     
-                    % Do all of the main functions on the object, before populating dog.                    
+                    % Do all of the main functions on the object
                     trial{i}.data{1} = data.main;      
                 end
-            end            
-            % Do all of the main functions on the object
-            for i = 1:numel(trial)
-               trial{i} = trial{i}.main; 
             end
-            
         end
     end
 end

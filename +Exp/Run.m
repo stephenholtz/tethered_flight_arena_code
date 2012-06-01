@@ -324,6 +324,7 @@ end
 %% Determine the file save location from metadata, make that directory, copy the patterns and functions to it, and save the metadata/conditions to that location.
 % Establish the new file system storage location
 root_data_loc = 'C:\tf_tmpfs';
+metadata.Protocol = protocol;
 data_location = fullfile(root_data_loc,metadata.Protocol,[metadata.Line '_' metadata.Effector],metadata.DateTime);
 % Move the temporary daq file to the new location
 temp_daq_name = daq_file;

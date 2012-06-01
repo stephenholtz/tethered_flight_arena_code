@@ -241,7 +241,7 @@ classdef Genotype < handle
             self.mean_y_pos     = [];
             self.mean_wbf       = [];
             self.mean_lmr       = [];
-
+            
             self.sem_left_amp   = [];
             self.sem_x_pos      = [];
             self.sem_right_amp  = [];

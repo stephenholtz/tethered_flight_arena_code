@@ -24,16 +24,23 @@
 % genotype{9} = '42f06-42f06_tubp_gal80ts-uas_kir_2.1__gal80ts_kir21';
 % genotype{10} = '11c07-11c07_tubp_gal80ts-uas_kir_2.1__gal80ts_kir21';
 
-root_dir = '/Users/holtzs/Desktop/new_temp/summary_files/';
-% save_dir = '/Users/holtzs/Dropbox/new_temp/summary_pdfs/';
-save_dir = '/Users/holtzs/Dropbox/holtz_data_dump/telethon_white/';
+genotypes{1} = 'gmr_14f09_gal4; tubp_gal80ts_gmr_14f09_gal4; uas_kir_2.1__gal80ts_kir21';
+genotypes{2} = 'gmr_26f03_gal4; tubp_gal80ts_gmr_26f03_gal4; uas_kir_2.1__gal80ts_kir21';
+genotypes{3} = 'gmr_53g12_gal4; tubp_gal80ts_gmr_53g12_gal4; uas_kir_2.1__gal80ts_kir21';
+genotypes{4} = 'gmr_58e02_gal4; tubp_gal80ts_gmr_58e02_gal4; uas_kir_2.1__gal80ts_kir21';
+genotypes{5} = 'gmr_76f03_gal4; tubp_gal80ts_gmr_76f03_gal4; uas_kir_2.1__gal80ts_kir21';
+genotypes{6} = 'gmr_95f09_gal4; tubp_gal80ts_gmr_95f09_gal4; uas_kir_2.1__gal80ts_kir21';
 
-genotypes = dir(root_dir);
-genotypes = genotypes(4:end);
+root_dir = '/Users/holtzs/Desktop/new_temp/summary_files/';
+save_dir = '/Users/holtzs/Dropbox/new_temp/summary_pdfs/';
+% save_dir = '/Users/holtzs/Dropbox/holtz_data_dump/telethon_white/';
+
+%genotypes = dir(root_dir);
+%genotypes = genotypes(4:end);
 
 for g = 1:numel(genotypes)
-%     cd(fullfile(root_dir,genotype{g}));
-    cd(fullfile(root_dir,genotypes(g).name));
+     cd(fullfile(root_dir,genotypes{g}));
+%    cd(fullfile(root_dir,genotypes(g).name));
 
     files = dir(cd);
     files = {files(3:end).name};
@@ -52,15 +59,15 @@ for g = 1:numel(genotypes)
     [P1, P2, P3] = tfPlot.plot_telethon_comparison_figure(str{1},str{2});
     end
 %     geno_name = fullfile(save_dir,[genotype{g}(1:5) '_Summary_P1']);
-    tmp_name = genotypes(g).name;
-    geno_name = fullfile(save_dir,[tmp_name(1:5) '_Summary_P1']);
+    tmp_name = genotypes{g}(1:14);
+    geno_name = fullfile(save_dir,[tmp_name '_Summary_P1']);
 
     % saveas(P1,geno_name,'fig') 
-    export_fig(P1,geno_name,'-pdf')
+    export_fig(P1,[tmp_name '_Summary_P1'],'-pdf')
     pause(.5)
     % geno_name = fullfile(save_dir,[genotype{g}(1:5) '_Summary_P2']);
     % saveas(P2,geno_name,'fig')
-    export_fig(P2,geno_name,'-pdf','-append')
+    export_fig(P2,[tmp_name '_Summary_P1'],'-pdf','-append')
     pause(.5)
-    export_fig(P3,geno_name,'-pdf','-append')
+    export_fig(P3,[tmp_name '_Summary_P1'],'-pdf','-append')
 end

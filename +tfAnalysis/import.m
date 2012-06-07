@@ -213,8 +213,8 @@ classdef import < handle
                     % might want/need to add these in for old experiments
                     % -- for now, check if they are there and then use
                     try
-                        trial{i}.panel_cfg_num      = self.temp_info.cond(cond_num).PanelCfgName;
-                        trial{i}.panel_cfg_name     = self.temp_info.cond(cond_num).PanelCfgNum;
+                        trial{i}.panel_cfg_num      = self.temp_info.cond(cond_num).PanelCfgNum;
+                        trial{i}.panel_cfg_name     = self.temp_info.cond(cond_num).PanelCfgName;
                     catch
                         trial{i}.panel_cfg_num      = 'null';
                         trial{i}.panel_cfg_name     = 'null';

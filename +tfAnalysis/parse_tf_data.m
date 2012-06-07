@@ -151,14 +151,13 @@ for flyNum = 1:numel(data_files)
             end
             
         else
-        
-        ExpData{successful_rep_num, condition_number}.left_amp         = RawData(current_block,1)';
-        ExpData{successful_rep_num, condition_number}.x_pos            = RawData(current_block,4)';
-        ExpData{successful_rep_num, condition_number}.right_amp        = RawData(current_block,2)';
-        ExpData{successful_rep_num, condition_number}.y_pos            = RawData(current_block,5)';
-        ExpData{successful_rep_num, condition_number}.wbf              = RawData(current_block,3)';
-        ExpData{successful_rep_num, condition_number}.voltage          = encoded_signal(current_block)';
-        ExpData{successful_rep_num, condition_number}.lmr              = RawData(current_block,6)';
+        ExpData{rep, condition_number}.left_amp         = RawData(current_block,1)';
+        ExpData{rep, condition_number}.x_pos            = RawData(current_block,4)';
+        ExpData{rep, condition_number}.right_amp        = RawData(current_block,2)';
+        ExpData{rep, condition_number}.y_pos            = RawData(current_block,5)';
+        ExpData{rep, condition_number}.wbf              = RawData(current_block,3)';
+        ExpData{rep, condition_number}.voltage          = encoded_signal(current_block)';
+        ExpData{rep, condition_number}.lmr              = RawData(current_block,6)';
         end       
     end
     

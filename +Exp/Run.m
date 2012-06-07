@@ -245,7 +245,7 @@ unixy_output_pt2(1)
 Nconds = numel(cond_struct); num_trials_missed = 0; already_emailed = 0;
 Exp.Utilities.set_Panel_com(cond_struct(Nconds));
 Panel_com('set_ao',[3,0]); % interspersed conditions are of voltage zero (easy decoding!)
-% Panel_com('set_ao',[4,0]); % trigger for precise timing of stim onset
+Panel_com('set_ao',[4,0]); % trigger for precise timing of stim onset
 Panel_com('start');
 string = ('Initial alignment phase. Press any key to continue.');
 unixy_output_pt1(string)
@@ -280,13 +280,14 @@ for rep = 1:reps
         % Set the voltage encoding
         Panel_com('set_ao',[3,voltage_16bit]);
         % Set the trigger value
-        % Panel_com('set_ao',[4,5*(32767/10)]);
+        Panel_com('set_ao',[4,5*(32767/10)]);
         Panel_com('start');
         
         % Trigger the analog input to take its sample
         start(AI_wbf)
         % Get the sample (removes it from SamplesAvailable)
         stim_start_trigger = getdata(AI_wbf);
+        % This depends on the analog output values
         while stim_start_trigger < 0.085
             start(AI_wbf)
             stim_start_trigger = getdata(AI_wbf);
@@ -302,8 +303,8 @@ for rep = 1:reps
         % Set the voltage to zero as soon as possible
         % Check that the fly was flying at the end of the condition,
         % then move on to next or add the trial back in.
-        flying = Exp.Utilities.simple_end_wbf_check(AI_wbf,DIO_trig);
-        % flying = 1;
+        % flying = Exp.Utilities.simple_end_wbf_check(AI_wbf,DIO_trig);
+        flying = 1;
         
         if flying
             cond_nums = cond_nums(2:end);
@@ -335,9 +336,11 @@ for rep = 1:reps
         
         % Interspersed condition (voltage already set to zero above)
         [time ~] = Exp.Utilities.set_Panel_com(cond_struct(Nconds));
+        Panel_com('set_ao',[4,5*(32767/10)]);        
         Panel_com('start');
         pause(time);
         Panel_com('stop');
+        Panel_com('set_ao',[4,0]);        
     end
 end
 

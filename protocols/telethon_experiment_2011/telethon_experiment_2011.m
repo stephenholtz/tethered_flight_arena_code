@@ -2,10 +2,13 @@ function Conditions = telethon_experiment_2011
 %TELETHON_EXPERIMENT_2011 johns full telethon protocol all in one function.
 % It uses the same patterns and functions as
 % short_telethon_experiment_2011. All closed loop interval trial times are
-% 3.5 seconds. (This also accounts for the extra conditions in the google
-% doc not 'listed' here).
+% 3.5 seconds.
+%
 % All 130 experimental conditions are linearly spaced from .1 to 9.9 volts.
 % closed loop portion is set to zero. 
+%
+% Values less than .1 are used to detect the stimulus timing, the linspace
+% CANNOT be anything except .1-X or the detection is unreliable
 
 %% from telethon_vel_nulling_conditions_9_14 
 Conditions(1).PatternID = 6;
@@ -1462,7 +1465,7 @@ encoded_vals = linspace(.1,9.9,numel(Conditions));
 
 for cond_num = 1:numel(Conditions)
     Conditions(cond_num).PanelCfgNum    = 1;
-    Conditions(cond_num).PanelCfgName   = 'cfg_01_48Panel_4Bus';
+    Conditions(cond_num).PanelCfgName   = 'default_4bus_48panel';
 	Conditions(cond_num).PosFuncNameY 	= 'null';
 	Conditions(cond_num).FuncFreqY 		= 50;
 	Conditions(cond_num).FuncFreqX 		= 50;

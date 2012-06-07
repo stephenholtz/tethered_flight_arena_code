@@ -1,7 +1,9 @@
 function Conditions = rev_phi_phase_delay
-% Right now this is full + front field reverse phi phase delay 
+% Right now this is full field reverse phi phase delay 
 % All experimental conditions are linearly spaced from .1 to 9.9 volts.
 % closed loop portion is set to zero, and is the last condition.
+% Values less than .1 are used to detect the stimulus timing, the linspace
+% CANNOT be anything except .1-X or the detection is unreliable
 
 % get to the correct directory
 switch computer
@@ -61,7 +63,6 @@ for pat = 2; % 8 Wide, full field
                 end
             end
         
-        
         for pos_funcY = delay_funcs_y; % temporal freq sepecific delays pos function numbers
             Conditions(cond_num).PatternID = pat; %#ok<*AGROW>
             Conditions(cond_num).PatternName = patterns{pat};
@@ -111,12 +112,11 @@ Conditions(cond_num).Voltage        = 0;
 encoded_vals = linspace(.1,9.9,numel(Conditions));
 for cond_num = 1:numel(Conditions)
     Conditions(cond_num).PanelCfgNum    = 2; % should be only the two center panels!
-    Conditions(cond_num).PanelCfgName   = panel_cfgs(1);
+    Conditions(cond_num).PanelCfgName   = panel_cfgs(2);
     Conditions(cond_num).VelFunction 	= [1 0];
 	Conditions(cond_num).VelFuncName 	= 'none';
     Conditions(cond_num).SpatialFreq    = 'none';    
     Conditions(cond_num).Voltage        =  encoded_vals(cond_num);
-    
 end
 
 % Even though it is set in the experiment, be explicit about the voltage

@@ -1462,7 +1462,7 @@ encoded_vals = linspace(.1,9.9,numel(Conditions));
 
 for cond_num = 1:numel(Conditions)
     Conditions(cond_num).PanelCfgNum    = 1;
-    Conditions(cond_num).PanelCfgName   = 'default_48_4_bus';
+    Conditions(cond_num).PanelCfgName   = 'cfg_01_48Panel_4Bus';
 	Conditions(cond_num).PosFuncNameY 	= 'null';
 	Conditions(cond_num).FuncFreqY 		= 50;
 	Conditions(cond_num).FuncFreqX 		= 50;

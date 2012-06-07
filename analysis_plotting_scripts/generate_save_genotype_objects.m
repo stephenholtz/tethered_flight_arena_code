@@ -4,25 +4,8 @@ tic
 % gmr_11c07_ae_01 = tfAnalysis.import('/Users/holtzs/Desktop/telethon_experiment_2011/11c07-11c07_tubp_gal80ts-uas_kir_2.1__gal80ts_kir21/','all');
 
 % root_location = '/Users/holtzs/Desktop/new_temp/telethon_experiment_2011/';
-root_location = '/Volumes/reiserlab/slh_fs/TEMP_telethon_2011/telethon_experiment_2011/';
+root_location = '/Volumes/reiserlab/slh_fs/telethon_experiment_2011/';
 save_root = '/Users/holtzs/Desktop/new_temp/summary_files/';
-
-% genotype{1} = '55d05-55d05_tubp_gal80ts-uas_kir_2.1__gal80ts_kir21';
-% genotype{2} = '22b02-22b02_tubp_gal80ts-uas_kir_2.1__gal80ts_kir21';
-% genotype{3} = '76e09-76e09_tubp_gal80ts-uas_kir_2.1__gal80ts_kir21';
-% genotype{4} = '24g09-24g09_tubp_gal80ts-uas_kir_2.1__gal80ts_kir21';
-% genotype{5} = '67a04-67a04_tubp_gal80ts-uas_kir_2.1__gal80ts_kir21';
-% genotype{6} = '19c07-19c07_tubp_gal80ts-uas_kir_2.1__gal80ts_kir21';
-% genotype{7} = '89c04-89c04_tubp_gal80ts-uas_kir_2.1__gal80ts_kir21';
-% genotype{8} = '13g04-13g04_tubp_gal80ts-uas_kir_2.1__gal80ts_kir21';
-% genotype{9} = '42f06-42f06_tubp_gal80ts-uas_kir_2.1__gal80ts_kir21';
-% genotype{10} = '11c07-11c07_tubp_gal80ts-uas_kir_2.1__gal80ts_kir21';
-% genotype{1} = 'gmr_14f09_gal4; tubp_gal80ts_gmr_14f09_gal4; uas_kir_2.1__gal80ts_kir21';
-% genotype{2} = 'gmr_26f03_gal4; tubp_gal80ts_gmr_26f03_gal4; uas_kir_2.1__gal80ts_kir21';
-% genotype{3} = 'gmr_53g12_gal4; tubp_gal80ts_gmr_53g12_gal4; uas_kir_2.1__gal80ts_kir21';
-% genotype{4} = 'gmr_58e02_gal4; tubp_gal80ts_gmr_58e02_gal4; uas_kir_2.1__gal80ts_kir21';
-% genotype{5} = 'gmr_76f03_gal4; tubp_gal80ts_gmr_76f03_gal4; uas_kir_2.1__gal80ts_kir21';
-% genotype{6} = 'gmr_95f09_gal4; tubp_gal80ts_gmr_95f09_gal4; uas_kir_2.1__gal80ts_kir21';
 
 genotypes = dir(root_location);
 genotypes = genotypes(3:end);
@@ -41,13 +24,13 @@ for i = 1:numel(genotypes);
     geno = geno.calculate_channel_means_sems;
     shifted = tfPlot.generate_mat_file_for_telethon_genotype(geno);
     
-    try
+%     try
     geno.select('unshifted');
     geno = geno.calculate_channel_means_sems;    
     unshifted = tfPlot.generate_mat_file_for_telethon_genotype(geno);
-    catch mERR
-        disp('Cannot make unshifted...')
-    end
+%     catch mERR
+%         disp('Cannot make unshifted...')
+%     end
     
     % AND SAVE MATS + GENO
 %     filepath = fullfile(save_root,genotype{i});
@@ -55,12 +38,12 @@ for i = 1:numel(genotypes);
     mkdir(filepath)    
     filename = fullfile(filepath,'shifted');
     save(filename,'shifted')
-    try
+%     try
     filename = fullfile(filepath,'unshifted');
     save(filename,'unshifted')
-    catch sERR
-        disp('Cannot save unshifted...')
-    end
+%     catch sERR
+%         disp('Cannot save unshifted...')
+%     end
     
 %     geno_name = ['geno_gmr_' genotype{i}(1:5)];
 %     

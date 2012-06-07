@@ -22,6 +22,7 @@ function [Page1 Page2 Page3] = plot_telethon_comparison_figure(varargin)
         data{g} = getfield(temp,contents{1});
         clear temp
     end
+    data{2}.metadata
     a = 1;
     if a
 %% Page 1    

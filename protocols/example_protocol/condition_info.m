@@ -1,6 +1,0 @@
-% Symmetry information/condition information for the telethon_experiment_2011 protocol
-
-sym_pairs = ...
-        {   2 , 4   ; ... % clockwise; counterclockwise ...
-            6 , 8   };
-  

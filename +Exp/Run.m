@@ -181,39 +181,50 @@ if ~decision
     return
 end
 
-%% Initialize the hardware and neccessary channels. Hard coded.
+%% Initialize the hardware and neccessary channels. Hard coded for sanity.
 string = ('Initializing hardware');
-unixy_output_pt1(string)
-daqreset; % useful!
-pause(.2);
-AI_wbf = analoginput('mcc',0);
-addchannel(AI_wbf, 0);
-set(AI_wbf,'TriggerType','Immediate','SamplesPerTrigger',1,'ManualTriggerHwOn','Start')
 
-pause(.2);
-DIO_trig = digitalio('mcc',0);
-pause(.2);
-addline(DIO_trig,0,'Out');
-pause(.2);
+    % Reset the daq
+    unixy_output_pt1(string)
+    daqreset; % useful!
+    pause(.2);
+    
+    % Setup the wbf monitor for checking if the fly is flying
+    AI_wbf = analoginput('mcc',0);
+    addchannel(AI_wbf, 0);
+    set(AI_wbf,'TriggerType','Immediate','SamplesPerTrigger',1,'ManualTriggerHwOn','Start')
+    pause(.2);
 
-% For acquiring the actual data, if wanted
-if nargin > 2 ;
-    if isnumeric(varargin{2});
-        record = varargin{2};
+    % Setup the digital trigger for the buzzer/fan
+    DIO_trig = digitalio('mcc',0);
+    addline(DIO_trig,0,'Out');
+    pause(.2);
+    
+    % Setup the stimulus sync-er for ensuring full stim presentation
+    AI_stim_sync = analoginput('mcc',0);
+    addchannel(AI_stim_sync, 1);
+    set(AI_stim_sync,'TriggerType','Immediate','SamplesPerTrigger',10,'ManualTriggerHwOn','Start')
+    pause(.2);
+
+    % For acquiring the actual data, if wanted
+    if nargin > 2 ;
+        if isnumeric(varargin{2});
+            record = varargin{2};
+        else
+            error('record (varargin) incorrectly specified, supply binary')
+        end
     else
-        error('record (varargin) incorrectly specified, supply binary')
+        record = true;
     end
-else
-    record = true;
-end
 
-if record
-    DAQ_dev = analoginput('nidaq','Dev1');
-    addchannel(DAQ_dev,0:6);
-    daq_file = fullfile('C:\tf_tmpfs\',metadata.daqFile);
-    set(DAQ_dev,'LoggingMode','Disk','LogFileName',daq_file,'SampleRate',1000);
-    set(DAQ_dev,'SamplesPerTrigger',Inf); %,'TimerFcn',@AcquireData
-end
+    if record
+        DAQ_dev = analoginput('nidaq','Dev1');
+        addchannel(DAQ_dev,0:6);
+        daq_file = fullfile('C:\tf_tmpfs\',metadata.daqFile);
+        set(DAQ_dev,'LoggingMode','Disk','LogFileName',daq_file,'SampleRate',1000);
+        set(DAQ_dev,'SamplesPerTrigger',Inf); %,'TimerFcn',@AcquireData
+    end
+    
 unixy_output_pt2(1)
 
 %% Start the experiment, initial alignment (with last condition, the default
@@ -284,22 +295,28 @@ for rep = 1:reps
         Panel_com('start');
         
         % Trigger the analog input to take its sample
-        start(AI_wbf)
+        start(AI_stim_sync)
         % Get the sample (removes it from SamplesAvailable)
-        stim_start_trigger = getdata(AI_wbf);
+        stim_start_trigger = getdata(AI_stim_sync);
         % This depends on the analog output values
-        while stim_start_trigger < 0.085
-            start(AI_wbf)
-            stim_start_trigger = getdata(AI_wbf);
+        while stim_start_trigger < 2.5
+            start(AI_stim_sync)
+            stim_start_trigger = getdata(AI_stim_sync);
         end
-        pause(time);
+        
+        ticHandle = tic;
+        time_elapsed = toc(ticHandle);
+        while time_elapsed < time
+            time_elapsed = toc(ticHandle);            
+        end
+        time_elapsed
         
         Panel_com('stop');
         % Reset the voltage encoding
         Panel_com('set_ao',[3,0]);
         % Reset the trigger value
         Panel_com('set_ao',[4,0]);
-
+        
         % Set the voltage to zero as soon as possible
         % Check that the fly was flying at the end of the condition,
         % then move on to next or add the trial back in.
@@ -336,9 +353,26 @@ for rep = 1:reps
         
         % Interspersed condition (voltage already set to zero above)
         [time ~] = Exp.Utilities.set_Panel_com(cond_struct(Nconds));
+        % Turn the trigger back on
         Panel_com('set_ao',[4,5*(32767/10)]);        
         Panel_com('start');
-        pause(time);
+        start(AI_stim_sync)
+        % Get the sample (removes it from SamplesAvailable)
+        stim_start_trigger = getdata(AI_stim_sync);
+        
+        % This depends on the analog output values
+        while stim_start_trigger < 2.5
+            start(AI_stim_sync)
+            stim_start_trigger = getdata(AI_stim_sync);
+        end
+        
+        ticHandle = tic;
+        time_elapsed = toc(ticHandle);
+        while time_elapsed < time
+            time_elapsed = toc(ticHandle);            
+        end
+        time_elapsed
+        
         Panel_com('stop');
         Panel_com('set_ao',[4,0]);        
     end

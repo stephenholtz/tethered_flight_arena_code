@@ -16,6 +16,11 @@ function [parsed_exp_data voltage_encoding_values data_segments] = parse_tf_data
 % Leave all the fancy analysis for after the raw data is placed in the
 % parsed_exp_data struct, unless conditions are passed, that is. places in
 % db friendly field names. Get function input into common form
+%   
+% If the lengths are given, then segments which are too short (i.e. failed)
+% are not included. Error checking is still needed after this to select for
+% good conditions.
+
 if nargin == 2
     data_files = varargin(1);
     condition_lengths = varargin{2};
@@ -78,6 +83,7 @@ for flyNum = 1:numel(data_files)
         % Check to see what the rep is. More robust than a counter, and now
         % don't need to finish all of one trial before second conds start!
         rep = 1;
+        
         while ~isempty(ExpData{rep,condition_number})
             rep = rep + 1;
             % If matlab can't index into the current row, add another.
@@ -88,20 +94,26 @@ for flyNum = 1:numel(data_files)
                 segment_voltages{rep,condition_number} = [];                
             end                
         end
+        
         segment_voltages{rep, condition_number} = [current_block(1) current_block(end)];
         ordered_segment_voltages{value_index} = [current_block(1) current_block(end)];
         
+        successful_rep_num = 0;
         if ~isempty(condition_lengths)
         condition_length = condition_lengths(condition_number)*SAMPLERATE;
             
-        ExpData{rep, condition_number}.left_amp         = RawData(current_block(1:condition_length),1)';
-        ExpData{rep, condition_number}.x_pos            = RawData(current_block(1:condition_length),4)';
-        ExpData{rep, condition_number}.right_amp        = RawData(current_block(1:condition_length),2)';
-        ExpData{rep, condition_number}.y_pos            = RawData(current_block(1:condition_length),5)';
-        ExpData{rep, condition_number}.wbf              = RawData(current_block(1:condition_length),3)';
-        ExpData{rep, condition_number}.voltage          = encoded_signal(current_block(1:condition_length))';
-        ExpData{rep, condition_number}.lmr              = RawData(current_block(1:condition_length),6)';
-        
+            if numel(current_block) >= condition_length;
+            successful_rep_num = successful_rep_num +1;
+
+            ExpData{successful_rep_num, condition_number}.left_amp         = RawData(current_block(1:condition_length),1)';
+            ExpData{successful_rep_num, condition_number}.x_pos            = RawData(current_block(1:condition_length),4)';
+            ExpData{successful_rep_num, condition_number}.right_amp        = RawData(current_block(1:condition_length),2)';
+            ExpData{successful_rep_num, condition_number}.y_pos            = RawData(current_block(1:condition_length),5)';
+            ExpData{successful_rep_num, condition_number}.wbf              = RawData(current_block(1:condition_length),3)';
+            ExpData{successful_rep_num, condition_number}.voltage          = encoded_signal(current_block(1:condition_length))';
+            ExpData{successful_rep_num, condition_number}.lmr              = RawData(current_block(1:condition_length),6)';
+            end
+
         else
         ExpData{rep, condition_number}.left_amp         = RawData(current_block,1)';
         ExpData{rep, condition_number}.x_pos            = RawData(current_block,4)';
@@ -118,29 +130,35 @@ for flyNum = 1:numel(data_files)
     % And append this onto the ExpData cell array at the end.
     condition_number = size(ExpData,2) + 1;
     
+    successful_rep_num = 0;
     for rep = 1:numel(ordered_segment_voltages)-1
-       
+        
         current_block = ordered_segment_voltages{rep}(2):ordered_segment_voltages{rep+1}(1);
 
         if ~isempty(condition_lengths)
         condition_length = condition_lengths(numel(condition_lengths))*SAMPLERATE;
+            
+            if numel(current_block) >= condition_length;
+            successful_rep_num = successful_rep_num +1;
 
-        ExpData{rep, condition_number}.left_amp         = RawData(current_block(1:condition_length),1)';
-        ExpData{rep, condition_number}.x_pos            = RawData(current_block(1:condition_length),4)';
-        ExpData{rep, condition_number}.right_amp        = RawData(current_block(1:condition_length),2)';
-        ExpData{rep, condition_number}.y_pos            = RawData(current_block(1:condition_length),5)';
-        ExpData{rep, condition_number}.wbf              = RawData(current_block(1:condition_length),3)';
-        ExpData{rep, condition_number}.voltage          = encoded_signal(current_block(1:condition_length))';
-        ExpData{rep, condition_number}.lmr              = RawData(current_block(1:condition_length),6)';
+            ExpData{successful_rep_num, condition_number}.left_amp         = RawData(current_block(1:condition_length),1)';
+            ExpData{successful_rep_num, condition_number}.x_pos            = RawData(current_block(1:condition_length),4)';
+            ExpData{successful_rep_num, condition_number}.right_amp        = RawData(current_block(1:condition_length),2)';
+            ExpData{successful_rep_num, condition_number}.y_pos            = RawData(current_block(1:condition_length),5)';
+            ExpData{successful_rep_num, condition_number}.wbf              = RawData(current_block(1:condition_length),3)';
+            ExpData{successful_rep_num, condition_number}.voltage          = encoded_signal(current_block(1:condition_length))';
+            ExpData{successful_rep_num, condition_number}.lmr              = RawData(current_block(1:condition_length),6)';
+            end
+            
         else
         
-        ExpData{rep, condition_number}.left_amp         = RawData(current_block,1)';
-        ExpData{rep, condition_number}.x_pos            = RawData(current_block,4)';
-        ExpData{rep, condition_number}.right_amp        = RawData(current_block,2)';
-        ExpData{rep, condition_number}.y_pos            = RawData(current_block,5)';
-        ExpData{rep, condition_number}.wbf              = RawData(current_block,3)';
-        ExpData{rep, condition_number}.voltage          = encoded_signal(current_block)';
-        ExpData{rep, condition_number}.lmr              = RawData(current_block,6)';
+        ExpData{successful_rep_num, condition_number}.left_amp         = RawData(current_block,1)';
+        ExpData{successful_rep_num, condition_number}.x_pos            = RawData(current_block,4)';
+        ExpData{successful_rep_num, condition_number}.right_amp        = RawData(current_block,2)';
+        ExpData{successful_rep_num, condition_number}.y_pos            = RawData(current_block,5)';
+        ExpData{successful_rep_num, condition_number}.wbf              = RawData(current_block,3)';
+        ExpData{successful_rep_num, condition_number}.voltage          = encoded_signal(current_block)';
+        ExpData{successful_rep_num, condition_number}.lmr              = RawData(current_block,6)';
         end       
     end
     

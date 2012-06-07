@@ -77,12 +77,9 @@ classdef Utilities
             time = cond_struct.Duration;
             voltage = cond_struct.Voltage;
         end
-    
-		function result = simple_end_wbf_check(monitor_channel, startle_channel)
-		% return 1 if the fly was flying
-            start(monitor_channel);
-            WBF = getdata(monitor_channel, 5); freq = mean(WBF);
-            if freq < 1.0;        % A wing beat frequency of below 120 => buzz buzz; if we want that
+        
+        function startle_animal(startle_channel)
+            % Buzz the fly
                 start(startle_channel)
                 putvalue(startle_channel,1)
                 pause(.012)
@@ -92,12 +89,18 @@ classdef Utilities
                 pause(.004)
                 putvalue(startle_channel,0)
                 stop(startle_channel)
+        end
+        
+		function result = simple_end_wbf_check(monitor_channel)
+		% return 1 if the fly was flying
+            start(monitor_channel);
+            freq = getdata(monitor_channel); %freq = mean(WBF);
+            if freq < 1.0;        % A wing beat frequency of below 120 => buzz buzz; if we want that
                 result = 0;   
             else
                 result = 1;
             end
-
-            stop(monitor_channel);
+                stop(monitor_channel);
             end
 	end
     
@@ -332,4 +335,3 @@ classdef Utilities
 		end
     end
 end
-

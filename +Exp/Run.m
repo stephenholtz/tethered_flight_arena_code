@@ -1,5 +1,5 @@
 function Run(protocol,varargin)
-%function Run(protocol[string] ,reps[numeric], record [binary])
+%function Run(protocol[string] ,reps[numeric], record[binary])
 % Run will run an experiment of the protocol specified, for the number of
 % reps specified (3 default), and record (by default) or not.
 %
@@ -203,7 +203,7 @@ string = ('Initializing hardware');
     % Setup the stimulus sync-er for ensuring full stim presentation
     AI_stim_sync = analoginput('mcc',0);
     addchannel(AI_stim_sync, 1);
-    set(AI_stim_sync,'TriggerType','Immediate','SamplesPerTrigger',10,'ManualTriggerHwOn','Start')
+    set(AI_stim_sync,'TriggerType','Immediate','SamplesPerTrigger',1,'ManualTriggerHwOn','Start')
     pause(.2);
 
     % For acquiring the actual data, if wanted
@@ -253,7 +253,7 @@ unixy_output_pt2(1)
 
 
 % Initial alignment portion, use the last condition as the interspersal condition.
-Nconds = numel(cond_struct); num_trials_missed = 0; already_emailed = 0;
+Nconds = numel(cond_struct); num_trials_missed = 0; emailed_conds_missed = 0; reluctant_email_sent = 0;
 Exp.Utilities.set_Panel_com(cond_struct(Nconds));
 Panel_com('set_ao',[3,0]); % interspersed conditions are of voltage zero (easy decoding!)
 Panel_com('set_ao',[4,0]); % trigger for precise timing of stim onset
@@ -298,18 +298,27 @@ for rep = 1:reps
         start(AI_stim_sync)
         % Get the sample (removes it from SamplesAvailable)
         stim_start_trigger = getdata(AI_stim_sync);
+        
         % This depends on the analog output values
+        ticHandle = tic;
         while stim_start_trigger < 2.5
             start(AI_stim_sync)
             stim_start_trigger = getdata(AI_stim_sync);
+            if toc(ticHandle) > 10
+                error('Stimulus failed to display for 10 seconds')
+            end
         end
         
         ticHandle = tic;
         time_elapsed = toc(ticHandle);
         while time_elapsed < time
-            time_elapsed = toc(ticHandle);            
+            time_elapsed = toc(ticHandle);
+            if ~Exp.Utilities.simple_end_wbf_check(AI_wbf)
+                flying = 0;
+                pause(.2) % This is important for later decoding the stimuli.. with the AO's if it is too short it might show up as a noise spike!
+                break
+            end
         end
-        time_elapsed
         
         Panel_com('stop');
         % Reset the voltage encoding
@@ -318,10 +327,8 @@ for rep = 1:reps
         Panel_com('set_ao',[4,0]);
         
         % Set the voltage to zero as soon as possible
-        % Check that the fly was flying at the end of the condition,
+        % Check that the fly was flying up until the end of the condition
         % then move on to next or add the trial back in.
-        % flying = Exp.Utilities.simple_end_wbf_check(AI_wbf,DIO_trig);
-        flying = 1;
         
         if flying
             cond_nums = cond_nums(2:end);
@@ -332,20 +339,22 @@ for rep = 1:reps
             total_conds = total_conds+1;
             num_trials_missed = num_trials_missed +1;
             
-            if num_trials_missed > 40 && already_emailed == 0;
+            if num_trials_missed > 40 && emailed_conds_missed == 0;
                 email_subject = ['WARNING: tfExperiment ' metadata.ExperimentName ' Requires Attention.'];
                 email_message = ['Fly has not completed trials ' num2str(num_trials_missed) ' times.'];
+                disp(email_message);                
                 result = Exp.Utilities.send_email(email_subject,email_message);
                 if ~result; disp('Error sending too many trials missed email');
                 end
-                already_emailed = 1;
-            elseif num_trials_missed > 100 && already_emailed == 1;
+                emailed_conds_missed = 1;
+            elseif num_trials_missed > 100 && emailed_conds_missed == 1;
                 email_subject = ['WARNING: tfExperiment ' metadata.ExperimentName ' Requires Attention.'];
                 email_message = ['Fly has not completed trials ' num2str(num_trials_missed) ' times.'];
+                disp(email_message);                
                 result = Exp.Utilities.send_email(email_subject,email_message);
                 if ~result; disp('Error sending too many trials missed email');
                 end
-                already_emailed = 2;
+                emailed_conds_missed = 2;
             end
             
         end
@@ -354,7 +363,7 @@ for rep = 1:reps
         % Interspersed condition (voltage already set to zero above)
         [time ~] = Exp.Utilities.set_Panel_com(cond_struct(Nconds));
         % Turn the trigger back on
-        Panel_com('set_ao',[4,5*(32767/10)]);        
+        Panel_com('set_ao',[4,5*(32767/10)]);
         Panel_com('start');
         start(AI_stim_sync)
         % Get the sample (removes it from SamplesAvailable)
@@ -368,11 +377,27 @@ for rep = 1:reps
         
         ticHandle = tic;
         time_elapsed = toc(ticHandle);
+        base_time = time;
         while time_elapsed < time
-            time_elapsed = toc(ticHandle);            
+            time_elapsed = toc(ticHandle);
+            if ~Exp.Utilities.simple_end_wbf_check(AI_wbf)
+                flying = 0;
+                Exp.Utilities.startle_animal(DIO_trig)
+                time = time + 1.3;
+                pause(1.25)
+            end
+            
+            if time_elapsed > base_time*10 && reluctant_email_sent == 0;
+                email_subject = ['WARNING: tfExperiment ' metadata.ExperimentName ' Requires Attention.'];
+                email_message = ['Fly failed to start flight after ' num2str(time_elapsed) ' seconds.'];
+                disp(email_message);
+                result = Exp.Utilities.send_email(email_subject,email_message);
+                if ~result; disp('Error sending too many trials missed email');
+                end
+                reluctant_email_sent = 1;
+            end
         end
-        time_elapsed
-        
+                
         Panel_com('stop');
         Panel_com('set_ao',[4,0]);        
     end
@@ -475,12 +500,12 @@ fprintf('Finished in %d\n',timer);
     end
 
     function unixy_output_pt2(worked)
-        if worked
+        if worked == 1 
             fprintf('[Done]\n')
         elseif worked == 0
             fprintf('[Failed]\n')
         elseif worked == -1
-            fprintf(' [Failed: Added back to queue.]\n')
+            fprintf('[Failed: No Flight. Added back to queue.]\n')
         end
     end
 end

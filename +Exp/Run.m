@@ -20,9 +20,24 @@ function Run(protocol,varargin)
 %
 % If the functions or patterns are not specified, a warning will appear and
 % an empty mat file will be stored in the final data destination
+% The protocol folder specified must also have folders:
+% functions_on_SD_card, cfgs_on_SD_card and patterns_on_SD_card, which have
+% the functions, configuration files, and patterns used in the experiment
+% If the folders are empty, an empty folder will be copied to the
+% experiment's folder at the end.
 %
 % The conditions and metadata must be specified and in the correct format -
 % error checking is all handled by the Exp.Utilities class
+%
+% Experiment runs through randomized conditions, if the fly stops flying
+% during the condition it will end, and go to closed loop, which will
+% continue to startle the fly until it begins flying. 
+%
+% If the fly doesn't start flying for a while of startling, or a certain
+% number of conditions are missed, or the experiment finishes. Emails are 
+% sent as notifications.
+% 
+% Exp.Utilities has some of the common functions for cleanliness 
 %
 % SLH - 2012
 
@@ -309,6 +324,7 @@ for rep = 1:reps
             end
         end
         
+        flying = 1;
         ticHandle = tic;
         time_elapsed = toc(ticHandle);
         while time_elapsed < time

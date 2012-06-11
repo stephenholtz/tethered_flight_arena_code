@@ -95,8 +95,8 @@ end
 Conditions(cond_num).PatternID      = numel(patterns); % single stripe 8 wide, same contrast as rev phi stims
 Conditions(cond_num).PatternName    = patterns(numel(patterns));
 Conditions(cond_num).Mode           = [1 0];
-Conditions(cond_num).InitialPosition= [49 2];   % this is expansion avoidance
-Conditions(cond_num).Gains          = [-21 0 0 0]; % seems to work pretty well, 42-48 is another regime that looks nice
+Conditions(cond_num).InitialPosition= [49 1];
+Conditions(cond_num).Gains          = [-12 0 0 0]; % seems to work pretty well, 42-48 is another regime that looks nice
 Conditions(cond_num).PosFunctionX   = [1 0];
 Conditions(cond_num).PosFunctionY 	= [2 0];
 Conditions(cond_num).FuncFreqY 		= frequency; % all the pos funcs need to be made to work with this

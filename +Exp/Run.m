@@ -309,7 +309,6 @@ for rep = 1:reps
             end
         end
         
-        flying = 1;
         ticHandle = tic;
         time_elapsed = toc(ticHandle);
         while time_elapsed < time
@@ -501,7 +500,7 @@ fprintf('Finished in %d\n',timer);
     end
 
     function unixy_output_pt2(worked)
-        if worked == 1
+        if worked == 1 
             fprintf('[Done]\n')
         elseif worked == 0
             fprintf('[Failed]\n')

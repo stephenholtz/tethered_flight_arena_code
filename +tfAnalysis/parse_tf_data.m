@@ -60,6 +60,7 @@ for flyNum = 1:numel(data_files)
         curr_voltages = mean(curr_voltage_values);
         voltage_values = [voltage_values curr_voltages];
     end
+    
     % Sort and determine unique values. Assume each is a condition where
     % its index == its condition number in the experiment. Much cleaner to
     % break it into two for loops.
@@ -74,16 +75,17 @@ for flyNum = 1:numel(data_files)
     % Does not determine the duration values, and the correct padding --
     % ensures no knowledge of the conditions is needed at this stage in
     % processing -- will just store all and require later slicing/striding.
-   for cn = 1:numel(voltage_values); segment_voltages{cn} = []; ExpData{cn} = []; end %#ok<*AGROW>
-
+    for cn = 1:numel(voltage_values); segment_voltages{cn} = []; ExpData{cn} = []; end %#ok<*AGROW>
+        successful_rep_num = 0;
+    
     for value_index = 1:numel(end_value)
         current_block = start_value(value_index):end_value(value_index);
         curr_voltage_values = encoded_signal(current_block);
         [~, condition_number] = min(abs(mean(curr_voltage_values) - voltage_values));
+        
         % Check to see what the rep is. More robust than a counter, and now
         % don't need to finish all of one trial before second conds start!
         rep = 1;
-        
         while ~isempty(ExpData{rep,condition_number})
             rep = rep + 1;
             % If matlab can't index into the current row, add another.
@@ -98,20 +100,17 @@ for flyNum = 1:numel(data_files)
         segment_voltages{rep, condition_number} = [current_block(1) current_block(end)];
         ordered_segment_voltages{value_index} = [current_block(1) current_block(end)];
         
-        successful_rep_num = 0;
         if ~isempty(condition_lengths)
         condition_length = condition_lengths(condition_number)*SAMPLERATE;
             
             if numel(current_block) >= condition_length;
-            successful_rep_num = successful_rep_num +1;
-
-            ExpData{successful_rep_num, condition_number}.left_amp         = RawData(current_block(1:condition_length),1)';
-            ExpData{successful_rep_num, condition_number}.x_pos            = RawData(current_block(1:condition_length),4)';
-            ExpData{successful_rep_num, condition_number}.right_amp        = RawData(current_block(1:condition_length),2)';
-            ExpData{successful_rep_num, condition_number}.y_pos            = RawData(current_block(1:condition_length),5)';
-            ExpData{successful_rep_num, condition_number}.wbf              = RawData(current_block(1:condition_length),3)';
-            ExpData{successful_rep_num, condition_number}.voltage          = encoded_signal(current_block(1:condition_length))';
-            ExpData{successful_rep_num, condition_number}.lmr              = RawData(current_block(1:condition_length),6)';
+            ExpData{rep, condition_number}.left_amp         = RawData(current_block(1:condition_length),1)';
+            ExpData{rep, condition_number}.x_pos            = RawData(current_block(1:condition_length),4)';
+            ExpData{rep, condition_number}.right_amp        = RawData(current_block(1:condition_length),2)';
+            ExpData{rep, condition_number}.y_pos            = RawData(current_block(1:condition_length),5)';
+            ExpData{rep, condition_number}.wbf              = RawData(current_block(1:condition_length),3)';
+            ExpData{rep, condition_number}.voltage          = encoded_signal(current_block(1:condition_length))';
+            ExpData{rep, condition_number}.lmr              = RawData(current_block(1:condition_length),6)';
             end
 
         else
@@ -151,6 +150,7 @@ for flyNum = 1:numel(data_files)
             end
             
         else
+        
         ExpData{rep, condition_number}.left_amp         = RawData(current_block,1)';
         ExpData{rep, condition_number}.x_pos            = RawData(current_block,4)';
         ExpData{rep, condition_number}.right_amp        = RawData(current_block,2)';

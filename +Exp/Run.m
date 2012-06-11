@@ -13,6 +13,13 @@ function Run(protocol,varargin)
 % The protocol folder specified must have a metadata file which returns all
 % the necessary data as specified in the Exp.Utilities properties
 %
+% The protocol folder specified must also have a folder
+% functions_on_SD_card and patterns_on_SD_card which has at least the
+% Pattern_xxx.mat files and the Function_xxx.mat files that are loaded onto
+% the SD card from PControl
+%
+% If the functions or patterns are not specified, a warning will appear and
+% an empty mat file will be stored in the final data destination
 % The protocol folder specified must also have folders:
 % functions_on_SD_card, cfgs_on_SD_card and patterns_on_SD_card, which have
 % the functions, configuration files, and patterns used in the experiment
@@ -71,6 +78,7 @@ if ~result;
     error('Conditions failed to load');
 else
     unixy_output_pt2(1)
+    
 end
 
 result = Exp.Utilities.check_cond_file(cond_struct);
@@ -106,6 +114,7 @@ else
     metadata.grouped_conditions = 'null';    
 end
 
+
 %% Double check the metadata is correct with a(n overly complex) gui.
 % Additional option to save a temporary experiment with all fields
 % changed to testing, when saved.
@@ -128,7 +137,9 @@ make_popup_metadata_ui(main_fh,type,value);
         else
             value_cell{ind} = 'values exist';
         end            
-            type_cell{ind} = fields(ind);            
+            type_cell{ind} = fields(ind);
+            
+            
         end
     end
 
@@ -188,9 +199,9 @@ end
 %% Initialize the hardware and neccessary channels. Hard coded for sanity.
 string = ('Initializing hardware');
 
-    % Reset the daq, this frees up the file it was recording
+    % Reset the daq
     unixy_output_pt1(string)
-    daqreset; 
+    daqreset; % useful!
     pause(.2);
     
     % Setup the wbf monitor for checking if the fly is flying
@@ -254,6 +265,7 @@ unixy_output_pt1(string)
 Panel_com('all_off'); pause(.05)
 Panel_com('set_config_id',cond_struct(1).PanelCfgNum); pause(4.5);
 unixy_output_pt2(1)
+
 
 % Initial alignment portion, use the last condition as the interspersal condition.
 Nconds = numel(cond_struct); num_trials_missed = 0; emailed_conds_missed = 0; reluctant_email_sent = 0;
@@ -504,7 +516,7 @@ fprintf('Finished in %d\n',timer);
     end
 
     function unixy_output_pt2(worked)
-        if worked == 1
+        if worked == 1 
             fprintf('[Done]\n')
         elseif worked == 0
             fprintf('[Failed]\n')

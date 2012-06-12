@@ -4,11 +4,15 @@ classdef Data
     %   indicating if the trial was successful or not.
     %   Because memory is a problem, this level has minimal computation.
     %
+    %   The lmr from the wing beat analyser is slightly messy. Opted to
+    %   replace it with the cleaner left_amp - right_amp
+    %
     %   This class is populated by tfAnalysis.import automatically.
     
     properties
-        % Was the trial successful? This is the only 'computation' that is
-        % done (thresholds on the wbf, left_amp and right_amp).
+        % Was the trial successful? This  and lmr recalculation are the 
+        % only computations done (thresholds on the wbf, left_amp and 
+        % right_amp).
         successful 
         
         % DAQ Channels
@@ -17,13 +21,13 @@ classdef Data
         right_amp
         y_pos
         wbf
-        voltage_signal                                     
+        voltage_signal
         lmr
     end
     
     properties (Constant = true, Access = private)
-        wbf_threshold = 1.35;
-        rpl_threshold = 1.50;
+        WBF_THRESHOLD = 1.35;
+        RPL_THRESHOLD = 1.50;
     end
     
     properties (Access = private)
@@ -77,12 +81,26 @@ classdef Data
     methods
         
         function self = Data()
+            % Only a container in my composition based analysis
         end      
         
         function self = main(self)
             % Run only the neccessary computations on the data on this
             % level, dog.
             self = determine_success(self);
+            self = replace_wba_lmr_with_calcd_lmr(self);
+        end
+        
+        function self = replace_wba_lmr_with_calcd_lmr(self)
+            self.lmr = self.left_amp - self.right_amp;
+        end
+        
+        function self = filter_wing_beat_channels(self)
+%             % Butterworth...
+%             self.lmr = [];
+%             self.left_amp = [];
+%             self.right_amp = [];
+            
         end
         
         function self = determine_success(self)
@@ -93,9 +111,9 @@ classdef Data
             % To save space, store these thresholds as private properties
             
             % > 10% shouldn't be below either threshold
-            if sum(self.wbf < self.wbf_threshold) > numel(self.wbf)*.1
+            if sum(self.wbf < self.WBF_THRESHOLD) > numel(self.wbf)*.1
                 self.successful = 0;
-            elseif sum(self.right_amp+self.left_amp < self.rpl_threshold) > numel(self.wbf)*.3
+            elseif sum(self.right_amp+self.left_amp < self.RPL_THRESHOLD) > numel(self.wbf)*.3
                 self.successful = 0;
             else
                 self.successful = 1;

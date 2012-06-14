@@ -1,0 +1,159 @@
+server: clustrix
+db: tethered_flight
+Admin user: tethered_flightAdmin / tfl1ghtA
+App user: tethered_flightApp / tfl1ghtW
+Read user: tethered_flightRead / tethered_flightRead
+
+Admin user has schema privs (Create/Drop/Insert/Update/Delete/Select)
+App user has write privs (Insert/Update/Delete/Select)
+Read user can only select.
+
+daily backups at midnight
+
+Email Tom Dolafi for modifications
+
+% Using MySQL Workbench
+
+1. in cmd window ping the server to get its ip address
+2. in the mysql workbench add a new connection under 'open connection to start querying'
+3. use the Standard connection method and add a connection name, 
+4. replace the hostname with the ip address of the server and the port with 3306 if needed
+5. username and password are above, enter them and test connection
+
+% Using the database toolbox. Arguments for the database function 
+
+        dbUser = '';        %'tethered_flightApp';
+        dbPass  = '';       %'tfl1ghtW';
+        dbDriver = '';      %'com.mysql.jdbc.Driver';
+        dataBase = '';      % 'jdbc:mysql://10.40.4.71:3306/tethered_flight' 'jdbc:mysql://localhost:3306/slh'; 
+
+ 	ADD THE MYSQL JAVA CONNECTOR TO THE MATLAB PATH
+
+
+% Create script
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+
+CREATE SCHEMA IF NOT EXISTS `tethered_flight` DEFAULT CHARACTER SET utf8 ;
+USE `tethered_flight` ;
+
+-- -----------------------------------------------------
+-- Table `tethered_flight`.`experiment`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `tethered_flight`.`experiment` (
+  `experiment_pk_id` INT UNSIGNED NOT NULL ,
+  `conditions_file` VARCHAR(255) NULL DEFAULT 'none' COMMENT 'Name of the condition function that was run in the experiment. ' ,
+  `date` VARCHAR(15) NULL COMMENT 'Date the experiment was conducted.' ,
+  `comments` TEXT NULL ,
+  PRIMARY KEY (`experiment_pk_id`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `tethered_flight`.`metadata`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `tethered_flight`.`metadata` (
+  `metadata_pk_id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `experiment_id` INT UNSIGNED NOT NULL ,
+  `chromo2` VARCHAR(255) NULL DEFAULT 'wt-wt' ,
+  `chromo3` VARCHAR(255) NULL DEFAULT 'wt-wt' ,
+  `chromo4` VARCHAR(255) NULL DEFAULT 'wt-wt' ,
+  `sex` VARCHAR(45) NULL DEFAULT 'male' ,
+  `dob` VARCHAR(255) NULL DEFAULT 'none' COMMENT 'date the fly was born in the form DD_MM_YYYY.' ,
+  `light_cycle` VARCHAR(255) NULL DEFAULT 'none' COMMENT 'Incubator light cycle on_off in the form HH_HH, military time.' ,
+  `arena` INT UNSIGNED NULL DEFAULT 1 COMMENT 'Number of the arena the fly was run in.' ,
+  `head_glued` INT UNSIGNED NULL DEFAULT 0 ,
+  `room_temp` INT UNSIGNED NULL DEFAULT 21 COMMENT 'Set temperature of the room.' ,
+  `daq_file` VARCHAR(255) NULL DEFAULT '*.daq' COMMENT 'The name/location of the daq file all the data was parsed from.' ,
+  `time` VARCHAR(45) NULL DEFAULT 'none' ,
+  `presorted` INT NULL DEFAULT 1 COMMENT 'If the flies to be run were presorted into a vial before running.' ,
+  `comments` TEXT NULL ,
+  PRIMARY KEY (`metadata_pk_id`) ,
+  INDEX `fk_metadata_experiment` (`experiment_id` ASC) ,
+  CONSTRAINT `fk_metadata_experiment`
+    FOREIGN KEY (`experiment_id` )
+    REFERENCES `tethered_flight`.`experiment` (`experiment_pk_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'metadata collected that is relevant to the entire experiment' /* comment truncated */ ;
+
+
+-- -----------------------------------------------------
+-- Table `tethered_flight`.`condition`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `tethered_flight`.`condition` (
+  `condition_pk_id` INT UNSIGNED NOT NULL DEFAULT 1 ,
+  `experiment_id` INT UNSIGNED NOT NULL ,
+  `condition_number` INT NULL ,
+  `pattern_id` VARCHAR(255) NULL DEFAULT 'none' ,
+  `gains` VARCHAR(255) NULL DEFAULT 'none' ,
+  `mode` VARCHAR(255) NULL DEFAULT '[0 0 0 0]' ,
+  `duration` DECIMAL(5) NULL DEFAULT 3.000 ,
+  `initial_position` VARCHAR(255) NULL DEFAULT '[1 1]' ,
+  `func_freq_x` INT NULL DEFAULT 50 ,
+  `pos_function_x` VARCHAR(255) NULL DEFAULT '[1 0]' ,
+  `func_freq_y` INT NULL DEFAULT 50 ,
+  `pos_function_y` VARCHAR(255) NULL DEFAULT '[2 0]' ,
+  `vel_function` VARCHAR(255) NULL DEFAULT 1 ,
+  `voltage` DECIMAL(3) NULL DEFAULT 0.00 ,
+  `pos_func_name_x` VARCHAR(255) NULL ,
+  `pos_func_name_y` VARCHAR(255) NULL ,
+  `pattern_name` VARCHAR(255) NULL ,
+  `comments` TEXT NULL ,
+  PRIMARY KEY (`condition_pk_id`) ,
+  INDEX `fk_condition_experiment1` (`experiment_id` ASC) ,
+  CONSTRAINT `fk_condition_experiment1`
+    FOREIGN KEY (`experiment_id` )
+    REFERENCES `tethered_flight`.`experiment` (`experiment_pk_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `tethered_flight`.`trial_data`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `tethered_flight`.`trial_data` (
+  `trial_data_pk_id` INT UNSIGNED NOT NULL ,
+  `metadata_id` INT UNSIGNED NOT NULL ,
+  `experiment_id` INT UNSIGNED NOT NULL ,
+  `condition_id` INT UNSIGNED NOT NULL ,
+  `left_wba` MEDIUMTEXT NULL ,
+  `right_wba` MEDIUMTEXT NULL ,
+  `wbf` MEDIUMTEXT NULL ,
+  `x_pos` MEDIUMTEXT NULL ,
+  `y_pos` MEDIUMTEXT NULL ,
+  `voltage` MEDIUMTEXT NULL ,
+  `landing` MEDIUMTEXT NULL ,
+  `temperature` MEDIUMTEXT NULL ,
+  INDEX `fk_trial_data_experiment` (`experiment_id` ASC) ,
+  INDEX `fk_trial_data_conditions` (`condition_id` ASC) ,
+  INDEX `fk_trial_data_metadata` (`metadata_id` ASC) ,
+  PRIMARY KEY (`trial_data_pk_id`) ,
+  CONSTRAINT `fk_trial_data_experiment`
+    FOREIGN KEY (`experiment_id` )
+    REFERENCES `tethered_flight`.`experiment` (`experiment_pk_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_trial_data_conditions`
+    FOREIGN KEY (`condition_id` )
+    REFERENCES `tethered_flight`.`condition` (`condition_pk_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_trial_data_metadata`
+    FOREIGN KEY (`metadata_id` )
+    REFERENCES `tethered_flight`.`metadata` (`metadata_pk_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'contains the full data string for an experiment' ;
+
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+

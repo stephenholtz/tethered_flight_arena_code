@@ -1,0 +1,470 @@
+classdef Experiment 
+    %EXPERIMENT Class holds all the trial classes and their associated data
+    %   Experiment class is really only useful for fly by fly quality
+    %   checking. Comparison across multiple experiment condition occurs (as
+    %   it should) on a higher classdef such as genotype. There is also a
+    %   container here for aggregated data for conditions of the same name,
+    %   i.e. all properties of of condition 1, 2 are here in the condition
+    %   specific properties.
+    %
+    % Note:
+    %   Some of the methods here are just for error checking/quality
+    %   checking.
+    % 
+    %   TODO
+    %   - fly quality assessment figure on this level
+    %   - closed loop assessment on this level
+    %   - fly metadata figure on this level
+    
+    %--------------NON CONDITION SPECIFIC PROPERTIES-----------------------
+    properties
+        % All of these properties are used as containers in our class
+        % structure. Their values may or may not need to be computed with
+        % class methods, most of which should be called by the main
+        % function. See methods for more information.        
+        
+        % For later updating the database with tfAnalysis.Update
+        id
+        
+        % A cell array of trials
+        trial
+        
+        % Non condition specific properties
+        
+        % Values from the experiment_properties table in the database
+        sex
+        dob
+        light_cycle
+        arena
+        head_glued
+        room_temp
+        % Values from the experiment table in the database
+        experiment_name
+        assay_type
+        protocol
+        date_time
+        chr2
+        chr3
+        effector
+        
+        % Overall exp statistics -- for error checking on one exp
+        mean_left_amp
+        mean_x_pos
+        mean_right_amp
+        mean_y_pos
+        mean_wbf
+        mean_voltage_signal
+        mean_lmr
+        
+        sem_left_amp
+        sem_x_pos
+        sem_right_amp
+        sem_y_pos
+        sem_wbf
+        sem_voltage_signal                                     
+        sem_lmr
+    end
+    %--------------CONDITION SPECIFIC PROPERTIES---------------------------
+    properties
+        % Combined values for each condition type across all repetitions.
+        % Contains each of the values from the trial cell array, averaged,
+        % and with an sem calculation (within one experiment). Referenced
+        % like: cond_property{cond_num} i.e. cond_lmr{4} will return the
+        % average lmr time series for condition number 4.
+        
+            % Conditions of the trial
+            cond_num
+            cond_pat_id
+            cond_gains
+            cond_mode
+            cond_duration
+            cond_init_pos
+            cond_func_freq_x
+            cond_pos_func_x
+            cond_func_freq_y
+            cond_pos_func_y
+            cond_vel_func
+            cond_voltage
+            cond_pos_func_name_x
+            cond_pos_func_name_y
+            cond_pattern_name
+
+            % Computed values from the array of data objects
+            cond_mean_left_amp
+            cond_mean_x_pos
+            cond_mean_right_amp
+            cond_mean_y_pos
+            cond_mean_wbf
+            cond_mean_voltage_signal
+            cond_mean_lmr
+
+            cond_sem_left_amp
+            cond_sem_x_pos
+            cond_sem_right_amp
+            cond_sem_y_pos
+            cond_sem_wbf
+            cond_sem_voltage_signal                                     
+            cond_sem_lmr
+
+            cond_hist_96_x_pos
+            cond_hist_96_y_pos     
+            cond_hist_96_x_pos_sem
+            cond_hist_96_y_pos_sem
+
+            % Correlation values from the array of data objects
+            cond_corr_x_lmr
+            cond_corr_y_lmr
+            cond_corr_x_wbf
+            cond_corr_y_wbf        
+            cond_lag_corr_x_lmr
+            cond_lag_corr_y_lmr
+            cond_lag_corr_x_wbf
+            cond_lag_corr_y_wbf  
+
+            cond_corr_x_lmr_sem
+            cond_corr_y_lmr_sem
+            cond_corr_x_wbf_sem
+            cond_corr_y_wbf_sem
+            cond_lag_corr_x_lmr_sem
+            cond_lag_corr_y_lmr_sem
+            cond_lag_corr_x_wbf_sem
+            cond_lag_corr_y_wbf_sem
+
+            % Integrated Responses from the array of data objects
+            cond_integrated_lmr_response
+            cond_integrated_wbf_response
+            cond_integrated_lmr_response_sem
+            cond_integrated_wbf_response_sem
+
+            % Time to half max from the array of data objects
+            cond_time_to_half_max_lmr
+            cond_time_to_half_max_wbf
+            cond_time_to_half_max_lmr_sem
+            cond_time_to_half_max_wbf_sem
+
+            % Duration
+            cond_data_duration
+            cond_data_duration_time_series          
+        
+    end
+    
+    %--------------NON CONDITION SPECIFIC METHODS--------------------------
+    methods
+        function self = Experiment()
+        end
+        
+        function self = main(self)
+            self = cpt_channel_means_sems(self);  
+        end
+        
+        function self = cpt_channel_means_sems(self)
+            % Since conditions are of multiple lengths sometimes, these
+            % need to unpack each trial and append for each trial, rather
+            % than the tidy cell2mat approach.
+                    left_amp         = [];                                  %#ok<*AGROW>
+                    x_pos            = [];
+                    right_amp        = [];
+                    y_pos            = [];
+                    wbf              = [];
+                    voltage_signal   = [];
+                    lmr              = [];            
+            for i = 1:numel(self.trial)
+                    left_amp         = [left_amp; (self.trial{i}.data{1}.left_amp)];            %#ok<*AGROW>
+                    x_pos            = [x_pos; (self.trial{i}.data{1}.x_pos)];
+                    right_amp        = [right_amp; (self.trial{i}.data{1}.right_amp)];
+                    y_pos            = [y_pos; (self.trial{i}.data{1}.y_pos)];
+                    wbf              = [wbf; (self.trial{i}.data{1}.wbf)];
+                    voltage_signal   = [voltage_signal; (self.trial{i}.data{1}.voltage_signal)];
+                    lmr              = [lmr; (self.trial{i}.data{1}.lmr)];                
+            end
+                self.mean_left_amp      = mean(left_amp);
+                self.mean_x_pos         = mean(x_pos);
+                self.mean_right_amp 	= mean(right_amp);
+                self.mean_y_pos         = mean(y_pos);
+                self.mean_wbf           = mean(wbf);
+                self.mean_voltage_signal= mean(voltage_signal);
+                self.mean_lmr           = mean(lmr);
+                % SEMs
+                self.sem_left_amp       = mean(std(left_amp))/((numel(self.trial))^(1/2));
+                self.sem_x_pos          = mean(std(x_pos))/((numel(self.trial))^(1/2));
+                self.sem_right_amp      = mean(std(right_amp))/((numel(self.trial))^(1/2));
+                self.sem_y_pos          = mean(std(y_pos))/((numel(self.trial))^(1/2));
+                self.sem_wbf            = mean(std(wbf))/((numel(self.trial))^(1/2));
+                self.sem_voltage_signal = mean(std(voltage_signal))/((numel(self.trial))^(1/2));
+                self.sem_lmr            = mean(std(lmr))/((numel(self.trial))^(1/2));
+        end
+        
+        function [exp_stats_struct, exp_stats_figure] = get_exp_stats(self)
+            % Include a few sections in a small struct and/or figure.
+            % Fly Metadata:
+            %       Genotype - Effector - Protocol - Sex - DoB( + age)
+            %       Date,Time Run - Arena - Light Cycle etc.,
+            % Some Stats:
+            %       Average WBF - Average LmR - (todo) Average Closed Loop
+            % m for meta
+            % ADD PLOTS: HIST LmR + Hist L Hist R + WBF avg over trials.
+            
+            exp_stats_struct.m.genotype      = [self.chr2, '-', self.chr3];
+            exp_stats_struct.m.effector      = self.effector;
+            exp_stats_struct.m.protocol      = self.protocol;
+            exp_stats_struct.m.sex           = self.sex;
+            exp_stats_struct.m.date_time     = self.date_time;
+            exp_stats_struct.m.dob           = self.dob;
+            exp_stats_struct.m.light_cycle   = self.light_cycle;
+            % mean_sem
+            exp_stats_struct.stats.left_amp          = self.mean_left_amp;
+            exp_stats_struct.stats.left_amp_sem      = self.sem_left_amp;
+            exp_stats_struct.stats.x_pos             = self.mean_x_pos;
+            exp_stats_struct.stats.x_pos_sem         = self.sem_x_pos;
+            exp_stats_struct.stats.right_amp         = self.mean_right_amp;
+            exp_stats_struct.stats.right_amp_sem     = self.sem_right_amp;
+            exp_stats_struct.stats.y_pos             = self.mean_y_pos;
+            exp_stats_struct.stats.y_pos_sem         = self.sem_y_pos;
+            exp_stats_struct.stats.wbf               = self.mean_wbf;
+            exp_stats_struct.stats.wbf_sem           = self.sem_wbf;
+            exp_stats_struct.stats.voltage_signal    = self.mean_voltage_signal;
+            exp_stats_struct.stats.voltage_signal_sem= self.sem_voltage_signal;                                
+            exp_stats_struct.stats.lmr               = self.mean_lmr;
+            exp_stats_struct.stats.lmr_sem           = self.sem_lmr;
+            
+            % Data for the plots
+            for i = 1:numel(self.trial)
+                    lmr{i}              = cell2mat(self.trial{i}.mean_lmr);                
+                    wbf{i}              = cell2mat(self.trial{i}.mean_wbf);                    
+            end
+            lmr_for_plot      = mean(cell2mat(lmr),2);            
+            wbf_for_plot      = mean(cell2mat(wbf),2);            
+            
+            % Make the figure with the struct as a table, and properties
+            % displayed
+            figure_name = [[self.chr2, '\_', self.chr3], ' Effector: ' ,self.effector, ' D/T: ', self.date_time];
+            exp_stats_figure = figure('Color',[1 1 1],'PaperOrientation','landscape','Name',figure_name,'NumberTitle','off');
+            % Iterate through each substruct and construct the table.
+            axis off
+            title({'Summary Statistics for Experiment: ',figure_name});
+            uitable('Parent',exp_stats_figure, 'Units','normalized','Position',[.05 .05 .45 .85],'ColumnWidth',{100},...
+                    'ColumnName',{'Type','Value'},...
+                                'Data',[[fieldnames(exp_stats_struct.m); fieldnames(exp_stats_struct.stats)],...
+                                        [struct2cell(exp_stats_struct.m); struct2cell(exp_stats_struct.stats)]]);
+            uip1 = uipanel('Parent',exp_stats_figure','Position',[.55 .5 .40 .40],'BackgroundColor',[1 1 1], 'Title','LmR Hist');   
+            subplot(1,1,1,'Parent',uip1)            
+                hist(lmr_for_plot)
+            uip2 = uipanel('Parent',exp_stats_figure','Position',[.55 .0525 .40 .40],'BackgroundColor',[1 1 1], 'Title','WBF Over Trial');   
+            subplot(1,1,1,'Parent',uip2)
+                plot(wbf_for_plot)
+        end
+        
+    end
+    %--------------CONDITION SPECIFIC METHODS------------------------------
+    methods
+        % These methods need to loop through all of the trials and use the
+        % trial property 'cond_num' to average/sem across repetitions.
+        % cond_cpt_channel_means_sems is a good example of how it works.
+        
+        function self = cpt_cond_data(self)
+            
+            % populate the condition specific properties they
+            % are computed from the genotype level -- for now offline
+            % access to them is probably the best way to go.
+            
+            self = cond_cpt_duration(self);
+            self = cond_cpt_channel_means_sems(self);
+            self = cond_cpt_hists(self);
+            self = cond_cpt_corr_vals(self);
+            self = cond_cpt_integrated_vals(self);
+            self = cond_cpt_time_to_half_max(self);  
+        end
+        
+        function self = cond_cpt_duration(self)
+            % All of the durations should be the same within a given
+            % condition, so one will do for now.
+            for i = 1:numel(self.trial)
+                
+                condition = self.trial{i}.data{1}.cond_num;
+                if ischar(condition); condition = str2double(condition);
+                end
+                
+                self.cond_data_duration{condition} = self.trial{i}.data{1}.data_duration;
+                self.cond_data_duration_time_series{condition} = self.trial{i}.data{1}.data_duration_time_series;
+                
+            end
+        end
+        
+        function self = cond_cpt_channel_means_sems(self)
+            for i = 1:numel(self.trial)
+                
+                % determine the condition number, and the rep for averaging
+                condition = self.trial{i}.data{1}.cond_num;
+                if ischar(condition); condition = str2double(condition);
+                end
+                condition_set{i} = condition;
+                r = sum(condition == [condition_set{:}]);
+                
+                left_amp{condition,r}        = self.trial{i}.data{1}.left_amp;                       %#ok<*AGROW>
+                x_pos{condition,r}           = self.trial{i}.data{1}.x_pos;
+                right_amp{condition,r}       = self.trial{i}.data{1}.right_amp;
+                y_pos{condition,r}           = self.trial{i}.data{1}.y_pos;
+                wbf{condition,r}             = self.trial{i}.data{1}.wbf;
+                voltage_signal{condition,r}  = self.trial{i}.data{1}.voltage_signal;
+                lmr{condition,r}             = self.trial{i}.data{1}.lmr;                
+            end
+            
+            for condition = unique([condition_set{:}])     % Same as cell2mat, but looks prettier       
+                self.cond_mean_left_amp{condition}         = mean(([left_amp{condition,:}]),2);
+                self.cond_mean_x_pos{condition}            = mean(([x_pos{condition,:}]),2);
+                self.cond_mean_right_amp{condition}        = mean(([right_amp{condition}]),2);
+                self.cond_mean_y_pos{condition}            = mean(([y_pos{condition}]),2);
+                self.cond_mean_wbf{condition}              = mean(([wbf{condition}]),2);
+                self.cond_mean_voltage_signal{condition}   = mean(([voltage_signal{condition}]),2);
+                self.cond_mean_lmr{condition}              = mean(([lmr{condition}]),2);             
+
+                self.cond_sem_left_amp{condition}          = std(([left_amp{condition}]),1,2)/(numel(left_amp{condition}))^(1/2);
+                self.cond_sem_x_pos{condition}             = std(([x_pos{condition}]),1,2)/(numel(x_pos{condition}))^(1/2);
+                self.cond_sem_right_amp{condition}         = std(([right_amp{condition}]),1,2)/(numel(right_amp{condition}))^(1/2);
+                self.cond_sem_y_pos{condition}             = std(([y_pos{condition}]),1,2)/(numel(y_pos{condition}))^(1/2);
+                self.cond_sem_wbf{condition}               = std(([wbf{condition}]),1,2)/(numel(wbf{condition}))^(1/2);
+                self.cond_sem_voltage_signal{condition}    = std(([voltage_signal{condition}]),1,2)/(numel(voltage_signal{condition}))^(1/2);
+                self.cond_sem_lmr{condition}               = std(([lmr{condition}]),1,2)/(numel(lmr{condition}))^(1/2);           
+            end
+        end
+
+        function self = cond_cpt_hists(self)
+            for i = 1:numel(self.trial)
+                
+                condition = self.trial{i}.data{1}.cond_num;
+                if ischar(condition); condition = str2double(condition);
+                end
+                condition_set{i} = condition;
+                r = sum(condition == [condition_set{:}]);
+                
+                hist_96.x{condition,r} = hist(self.trial{i}.data{1}.x_pos,96)';
+                hist_96.y{condition,r} = hist(self.trial{i}.data{1}.y_pos,96)';
+            end
+            
+            for condition = unique([condition_set{:}])            
+            
+                self.cond_hist_96_x_pos{condition}= mean(([hist_96.x{condition}]),2);
+                self.cond_hist_96_y_pos{condition}= mean(([hist_96.y{condition}]),2);
+                self.cond_hist_96_x_pos_sem{condition}= std(([hist_96.x{condition}]),1,2)/(numel(hist_96.y{condition})^(1/2));
+                self.cond_hist_96_y_pos_sem{condition}= std(([hist_96.y{condition}]),1,2)/(numel(hist_96.y{condition})^(1/2));            
+            end            
+        end
+        
+        function self = cond_cpt_corr_vals(self)
+            % Taken straight from John's telethon figure scripts
+            for i = 1:numel(self.trial)
+                
+                condition = self.trial{i}.data{1}.cond_num;
+                if ischar(condition); condition = str2double(condition);
+                end
+                condition_set{i} = condition;
+                r = sum(condition == [condition_set{:}]);
+                
+                % X/Y pos normalized to use with each cross correlation            
+                dem.x{condition,r} = self.trial{i}.data{1}.x_pos - mean(self.trial{i}.data{1}.x_pos);
+                norm.x{condition,r} = dem.x{condition,r}/max(abs(dem.x{condition,r}));
+                dem.y{condition,r} = self.trial{i}.data{1}.y_pos - mean(self.trial{i}.data{1}.y_pos);
+                norm.y{condition,r} = dem.y{condition,r}/max(abs(dem.y{condition,r}));
+                % LmR and WBF normalized for the cross correlation
+                dem.lmr{condition,r} = self.trial{i}.data{1}.lmr - mean(self.trial{i}.data{1}.lmr);
+                norm.lmr{condition,r} = dem.lmr{condition,r}/max(abs(dem.lmr{condition,r}));                        
+                dem.wbf{condition,r} = self.trial{i}.data{1}.wbf - mean(self.trial{i}.data{1}.wbf);
+                norm.wbf{condition,r} = dem.wbf{condition,r}/max(abs(dem.wbf{condition,r}));
+                
+                % cross correlation and lag value assignment for:
+                % x and lmr
+                [cc, lags] = xcorr(norm.x{condition,r},dem.lmr{condition,r},75,'coeff');
+                [corr.x_lmr{condition,r},  max_index]   = max(cc);
+                peak_corr.x_lmr{condition,r}    = lags(max_index);
+                % y and lmr
+                [cc, lags] = xcorr(norm.y{condition,r},dem.lmr{condition,r},75,'coeff');
+                [corr.y_lmr{condition,r},  max_index]   = max(cc);
+                peak_corr.y_lmr{condition,r}    = lags(max_index);
+                % x and wbf
+                [cc, lags] = xcorr(norm.x{condition,r},dem.wbf{condition,r},75,'coeff');
+                [corr.x_wbf{condition,r},  max_index]   = max(cc);
+                peak_corr.x_wbf{condition,r}    = lags(max_index);
+                % y and wbf
+                [cc, lags] = xcorr(norm.y{condition,r},dem.wbf{condition,r},75,'coeff');
+                [corr.y_wbf{condition,r},  max_index]   = max(cc);
+                peak_corr.y_wbf{condition,r}    = lags(max_index);
+            end
+            
+            for condition = unique([condition_set{:}])            
+                
+                self.cond_corr_x_lmr{condition}                 = mean(([corr.x_lmr{condition,:}]));
+                self.cond_corr_x_lmr_sem{condition}             = std(([corr.x_lmr{condition,:}]))/(numel(corr.x_lmr{condition,:})^(1/2));
+                self.cond_lag_corr_x_lmr{condition}             = mean(([peak_corr.x_lmr{condition,:}]));
+                self.cond_lag_corr_x_lmr_sem{condition}         = std(([peak_corr.x_lmr{condition,:}]))/(numel(peak_corr.x_lmr{condition,:})^(1/2));
+                self.cond_corr_y_lmr{condition}                 = mean(([corr.y_lmr{condition,:}]));
+                self.cond_corr_y_lmr_sem{condition}             = std(([corr.y_lmr{condition,:}]))/(numel(corr.y_lmr{condition,:})^(1/2));
+                self.cond_lag_corr_y_lmr{condition}             = mean(([peak_corr.y_lmr{condition,:}]));
+                self.cond_lag_corr_y_lmr_sem{condition}         = std(([peak_corr.y_lmr{condition,:}]))/(numel(peak_corr.y_lmr{condition,:})^(1/2));
+                self.cond_corr_x_wbf{condition}                 = mean(([corr.x_wbf{condition,:}]));
+                self.cond_corr_x_wbf_sem{condition}             = std(([corr.x_wbf{condition,:}]))/(numel(corr.x_wbf{condition,:})^(1/2));
+                self.cond_lag_corr_x_wbf{condition}             = mean(([peak_corr.x_wbf{condition,:}]));
+                self.cond_lag_corr_x_wbf_sem{condition}         = std(([peak_corr.x_wbf{condition,:}]))/(numel(peak_corr.x_wbf{condition,:})^(1/2));
+                self.cond_corr_y_wbf{condition}                 = mean(([corr.y_wbf{condition,:}]));
+                self.cond_corr_y_wbf_sem{condition}             = std(([corr.y_wbf{condition,:}]))/(numel(corr.y_wbf{condition,:})^(1/2));
+                self.cond_lag_corr_y_wbf{condition}             = mean(([peak_corr.y_wbf{condition,:}]));
+                self.cond_lag_corr_y_wbf_sem{condition}         = std(([peak_corr.y_wbf{condition,:}]))/(numel(peak_corr.y_wbf{condition,:})^(1/2));
+            end
+        end
+
+        function self = cond_cpt_integrated_vals(self)
+            % Straight from john's telethon analysis
+            for i = 1:numel(self.trial)
+                
+                condition = self.trial{i}.data{1}.cond_num;
+                if ischar(condition); condition = str2double(condition);
+                end
+                condition_set{i} = condition;
+                r = sum(condition == [condition_set{:}]);
+                
+                integrated.lmr_response{condition,r}     = trapz(self.cond_data_duration_time_series{condition}{1},abs(self.trial{i}.data{1}.lmr));
+                integrated.wbf_response{condition,r}     = trapz(self.cond_data_duration_time_series{condition}{1},abs(self.trial{i}.data{1}.wbf));
+                
+            end
+            for condition = unique([condition_set{:}])            
+
+                self.cond_integrated_lmr_response{condition}       = mean(([integrated.lmr_response{condition,:}]));
+                self.cond_integrated_lmr_response_sem{condition}   = std(([integrated.lmr_response{condition,:}]))/(numel(integrated.lmr_response{condition}))^(1/2);
+                self.cond_integrated_wbf_response{condition}       = mean(([integrated.wbf_response{condition,:}]));              
+                self.cond_integrated_wbf_response_sem{condition}   = std(([integrated.wbf_response{condition,:}]))/(numel(integrated.wbf_response{condition}))^(1/2);
+            end
+        end
+
+        function self = cond_cpt_time_to_half_max(self)
+            % Straight from john's telethon analysis
+            for i = 1:numel(self.trial)
+                
+                condition = self.trial{i}.data{1}.cond_num;
+                if ischar(condition); condition = str2double(condition);
+                end
+                condition_set{i} = condition;
+                r = sum(condition == [condition_set{:}]);
+                
+                time_to_half_max.lmr{condition,r}= find(abs(self.trial{i}.data{1}.lmr) == max(abs(self.trial{i}.data{1}.lmr)),1);
+                time_to_half_max.wbf{condition,r}= find(abs(self.trial{i}.data{1}.wbf) == max(abs(self.trial{i}.data{1}.wbf)),1);
+            end
+            for condition = unique([condition_set{:}])            
+                
+                self.cond_time_to_half_max_lmr{condition}= mean(([time_to_half_max.lmr{condition,:}]));
+                self.cond_time_to_half_max_wbf{condition}= mean(([time_to_half_max.wbf{condition,:}]));
+                self.cond_time_to_half_max_lmr_sem{condition}= std(([time_to_half_max.lmr{condition,:}]))/(numel(time_to_half_max.lmr{condition}))^(1/2);
+                self.cond_time_to_half_max_wbf_sem{condition}= std(([time_to_half_max.wbf{condition,:}]))/(numel(time_to_half_max.wbf{condition}))^(1/2);
+            end
+        end
+        
+        function self = clear_nulls(self)
+            fields = properties(self);
+            for i = 1:numel(fields)
+               if ischar(getfield(self,fields{i})) && sum(strcmpi(getfield(self,fields{i}),'Null'))
+                    self = setfield(self,fields{i},[]);
+               end
+            end
+        end
+        
+    end
+    
+end

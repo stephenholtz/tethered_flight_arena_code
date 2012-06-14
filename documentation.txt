@@ -1,0 +1,75 @@
+tethered_flight_arena_code
+
+
+
+This package contains the matlab code to run experiments, collect data,  analyze data and upload that data to a MySQL database. 
+
+
+
++Exp package - Run
+	
+- Exp.Run(protocol, repetitions)
+	
+- The protocol is a folder name within the tethered_flight_arena_code/protocols/ it needs to contain a few things for the experiment to run
+	
+- The protocol folder idea was created so that *all* parts of an experiment could be encapsulated and stored every time an experiment was run
+		
+* It contains a folder for all the SD card patterns and one for all the SD card functions
+	- Within the protocol folder there must be a condition_function with the SAME NAME AS THE PROTOCOL
+
+- condition_function must be a matlab function that returns a structure of all the conditions in a given experiment.
+		
+* These fields are defined in the Exp.Utilities class in the properties section
+	
+- metadata_file is a script that returns information about the fly in the experiment, it is also contained within the protocol folder and currently needs to be changed every time a new genotype/environmental condition changes -- this will be fixed soon
+		
+* For the function to recognize it, there needs to be 'meta' somewhere in the file name
+		* The fields required are also defined in the Exp.Utilities class
+	
+- The number of repetitions defaults to three, it is a varargin
+- By default Exp.Run will record a daq file to C:\tf_tmpfs\9001.daq. If told not to, it will
+still expect a file to be saved to C:\tf_tmpfs\9001.daq 
+* Regardless it will then move this to a folder that also has the patterns, functions etc from the SD card, and the metadata, conditions from the protocol folder.
+
+
++Exp package - RunGUI
+	
+- This wasn't really followed up on, but it is a GUI that displays what the fly is seeing and allows for remote running a lot easier i.e. remote desktop with a trace and a pretty picture of what is going on
+	
+- Really just left over from when I was trying to understand the GUI making process, might be useful
+	
+- Has same functionality as Run
+
+
+
++tfAnalysis package
+	
+- This package contains some methods to parse, and organize experimental data into a class structure using composition
+		
+* i.e. a higher class is composed of aggregated lower classes (like experiment versus trial, where many trials exist in one experiment)
+	
+- Levels that exist that also exist in database: Experiment, Trial, Data
+		* these three levels can be pushed to the database using the FlyNet packages Add or Push (for multiple) 
+	
+- Right now a Genotype and a Project class structure also exist, but not in the database
+
+
+
++FlyNet package
+	
+- This package contains the code for a matlab to mysql (and mysql to matlab) 
+	
+- It also includes a previously written Janleia database connector and the JDBC connector that matlab uses
+
+- There should be no setup required other than having the Database toolbox and possibly the statistics toolbox installed
+	
+- The Push and Pull functions work with Experiment level objects, which can be then manipulated and reaggregated in the matlab workspace 
+
+
+Misc, etc
+	
+- The useful_matlab_functions in misc contain some scripts to test the wing beat analyzer, etc
+	
+- The Misc also just contains some workspace setups etc., 
+	
+- This should probably be removed, a lot of it is also on the Reiserlab Share

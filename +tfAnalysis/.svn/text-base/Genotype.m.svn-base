@@ -1,0 +1,321 @@
+classdef Genotype
+    %GENOTYPE Contains all the experiment objects for flies of a genotype
+    %   All of the properties and methods for comparing trials of a given
+    %   experimental type are in this class. Methods to make simple figures
+    %   are also on this level As are some general fly health assessment
+    %   figures. 
+    %   Because at this level data can be aggregated many
+    %   different ways, properties may be cell arrays, cell arrays of
+    %   objects, or values. So, COMMENT ALL PROPERTIES AND METHODS! 
+    %   Note: The data from this class is meant to be used for final figure
+    %   production, not the figures from it.
+    %
+    %   TODO
+    %   - General genotype quality assessment
+    %   - Reps/fly, etc.,
+    
+    % Note:
+    % To preserve the readability of the code, if only one data element
+    % (array, value etc.,) exists, it is stored in a cell array. Indexing
+    % into any data element requires at least self.property{num}. This gets
+    % rid of a lot of logic for checking for number of elements.
+
+    %--------------META PROPERTIES-----------------------------------------
+    properties
+        % Cell array of experiment objects
+        experiment
+        
+        % properties common to all experiments of the genotype
+        assay_type
+        protocol
+        chr2
+        chr3
+        effector
+        
+        % properties that are determined by experiment metadata (props)
+        dates_times         % Dates and times the experiments were run
+        dobs                % Dates of birth of the flies
+        light_cycles        % Light cycles of all the flies run
+        arenas              % Arenas the flies were run in
+        
+
+    end
+    %--------------AVERAGED EXPERIMENT PROPERTIES--------------------------
+    properties
+        % Some arrays of time series/values that come from each experiment,
+        % basically regrouped trials across experiments. Accessed like:
+        % mean_left_amp{cond_num}
+        
+        % Computed values from the array of data objects
+        mean_left_amp
+        mean_x_pos
+        mean_right_amp
+        mean_y_pos
+        mean_wbf
+        mean_voltage_signal
+        mean_lmr
+        
+        sem_left_amp
+        sem_x_pos
+        sem_right_amp
+        sem_y_pos
+        sem_wbf
+        sem_voltage_signal                                     
+        sem_lmr
+        
+        hist_96_x_pos
+        hist_96_y_pos     
+        hist_96_x_pos_sem
+        hist_96_y_pos_sem
+        
+        % Correlation values from the array of data objects
+        corr_x_lmr
+        corr_y_lmr
+        corr_x_wbf
+        corr_y_wbf        
+        lag_corr_x_lmr
+        lag_corr_y_lmr
+        lag_corr_x_wbf
+        lag_corr_y_wbf  
+        
+        corr_x_lmr_sem
+        corr_y_lmr_sem
+        corr_x_wbf_sem
+        corr_y_wbf_sem
+        lag_corr_x_lmr_sem
+        lag_corr_y_lmr_sem
+        lag_corr_x_wbf_sem
+        lag_corr_y_wbf_sem
+        
+        % Integrated Responses from the array of data objects
+        integrated_lmr_response
+        integrated_wbf_response
+        integrated_lmr_response_sem
+        integrated_wbf_response_sem
+
+        % Time to half max from the array of data objects
+        time_to_half_max_lmr
+        time_to_half_max_wbf
+        time_to_half_max_lmr_sem
+        time_to_half_max_wbf_sem
+        
+        % Duration
+        data_duration
+        data_duration_time_series        
+        
+    end
+    %--------------METHODS FOR POPULATING PROPERTIES-----------------------    
+    methods
+        function self = Genotype(varargin)
+            if nargin == 1 && ~iscell(varargin{1})
+                self.experiment = varargin{1}.experiment;
+                self.experiment = self.experiment{1}.clear_nulls;
+                self.experiment = self.experiment{1}.cpt_cond_data;
+                
+                self = populate_meta_props(self);
+                self = cpt_duration(self);
+                self = cpt_channel_means_sems(self);
+                self = cpt_hists(self);
+                self = cpt_corr_vals(self);
+                self = cpt_integrated_vals(self);   
+                self = cpt_time_to_half_max(self);
+            elseif iscell(varargin{1})
+                self.experiment = varargin{1};
+                for i = 1:numel(self.experiment)
+                    self.experiment{i} = self.experiment{i}.clear_nulls;
+                    self.experiment{i} = self.experiment{i}.cpt_cond_data;
+                end
+                self = populate_meta_props(self);
+                self = cpt_duration(self);
+                self = cpt_channel_means_sems(self);
+                self = cpt_hists(self);
+                self = cpt_corr_vals(self);
+                self = cpt_integrated_vals(self);   
+                self = cpt_time_to_half_max(self);                
+            else
+                error('Only one argument to Genotype constructor please.')
+            end
+            
+            % free up space
+            self.experiment = [];            
+        end
+        
+        function self = main(self)
+            % If the constructor gets complicated, and it might, use the
+            % main function.
+        end
+        
+        function self = populate_meta_props(self)
+            self.assay_type     = self.experiment{1}.assay_type;
+            self.protocol       = self.experiment{1}.protocol;
+            self.chr2           = self.experiment{1}.chr2;
+            self.chr3           = self.experiment{1}.chr3;
+            self.effector       = self.experiment{1}.effector;
+            
+            for i = 1:numel(self.experiment);
+                    self.dates_times{i} = self.experiment{i}.date_time;
+                    self.dobs{i}        = self.experiment{i}.dob;
+                    self.light_cycles{i}= self.experiment{i}.light_cycle;
+                    self.arenas{i}      = self.experiment{i}.arena;
+            end
+
+        end
+        
+        function self = cpt_duration(self)
+            % All of the durations should be the same per condition of one
+            % protocol. So one will do.
+            for i = 1:numel(self.experiment{1}.cond_data_duration)
+                self.data_duration{i} = self.experiment{1}.cond_data_duration{i};
+                self.data_duration_time_series{i} = self.experiment{1}.cond_data_duration_time_series{i};
+            end
+        end
+        
+        function self = cpt_channel_means_sems(self)
+            % remap and average/sem across trials
+            % since all experiments should have the same numbers of
+            % trials, we can flip the for loops to remap/avg
+            for i = 1:numel(self.experiment{1}.cond_data_duration)
+                % For each condition...
+                for g = 1:numel(self.experiment)
+                    % For each experiment with that trial...
+                    left_amp{g}         = (self.experiment{g}.cond_mean_left_amp{i});            %#ok<*AGROW>
+                    x_pos{g}            = (self.experiment{g}.cond_mean_x_pos{i});
+                    right_amp{g}        = (self.experiment{g}.cond_mean_right_amp{i});
+                    y_pos{g}            = (self.experiment{g}.cond_mean_y_pos{i});
+                    wbf{g}              = (self.experiment{g}.cond_mean_wbf{i});
+                    voltage_signal{g}   = (self.experiment{g}.cond_mean_voltage_signal{i});
+                    lmr{g}              = (self.experiment{g}.cond_mean_lmr{i});
+                end
+                self.mean_left_amp{i}          = mean(cell2mat(left_amp),2);
+                self.mean_x_pos{i}             = mean(cell2mat(x_pos),2);
+                self.mean_right_amp{i}         = mean(cell2mat(right_amp),2);
+                self.mean_y_pos{i}             = mean(cell2mat(y_pos),2);
+                self.mean_wbf{i}               = mean(cell2mat(wbf),2);
+                self.mean_voltage_signal{i}    = mean(cell2mat(voltage_signal),2);
+                self.mean_lmr{i}               = mean(cell2mat(lmr),2);
+                % SEMs
+                self.sem_left_amp{i}           = std(cell2mat(left_amp),1,2)/(numel(self.experiment{g}.trial))^(1/2);
+                self.sem_x_pos{i}              = std(cell2mat(x_pos),1,2)/(numel(self.experiment{g}.trial))^(1/2);
+                self.sem_right_amp{i}          = std(cell2mat(right_amp),1,2)/(numel(self.experiment{g}.trial))^(1/2);
+                self.sem_y_pos{i}              = std(cell2mat(y_pos),1,2)/(numel(self.experiment{g}.trial))^(1/2);
+                self.sem_wbf{i}                = std(cell2mat(wbf),1,2)/(numel(self.experiment{g}.trial))^(1/2);
+                self.sem_voltage_signal{i}     = std(cell2mat(voltage_signal),1,2)/(numel(self.experiment{g}.trial))^(1/2);
+                self.sem_lmr{i}                = std(cell2mat(lmr),1,2)/(numel(self.experiment{g}.trial))^(1/2);
+            end
+        end
+        
+        function self = cpt_hists(self)
+            for i = 1:numel(self.experiment{1}.cond_data_duration)
+                for g = 1:numel(self.experiment)
+                    hist_96.x{g}         = (self.experiment{g}.cond_hist_96_x_pos{i});%#ok<*AGROW>
+                    hist_96.y{g}         = (self.experiment{g}.cond_hist_96_y_pos{i});
+                end
+                self.hist_96_x_pos{i}       = mean(cell2mat(hist_96.x),2);
+                self.hist_96_y_pos{i}       = mean(cell2mat(hist_96.y),2);
+                self.hist_96_x_pos_sem{i}   = std(cell2mat(hist_96.x),1,2)/(numel(hist_96.x)^(1/2));
+                self.hist_96_y_pos_sem{i}   = std(cell2mat(hist_96.y),1,2)/(numel(hist_96.y)^(1/2)); 
+            end
+        end
+        
+        function self = cpt_corr_vals(self)
+            % Taken straight from John's telethon figure scripts
+            % X/Y pos normalized to use with each cross correlation            
+            for i = 1:numel(self.experiment{1}.cond_data_duration)
+                for g = 1:numel(self.experiment)
+                    corr.x_lmr{g}       = self.experiment{g}.cond_corr_x_lmr{i};
+                    peak_corr.x_lmr{g}  = self.experiment{g}.cond_lag_corr_x_lmr{i};
+                    corr.y_lmr{g}       = self.experiment{g}.cond_corr_y_lmr{i};
+                    peak_corr.y_lmr{g}  = self.experiment{g}.cond_lag_corr_y_lmr{i};
+                    corr.x_wbf{g}       = self.experiment{g}.cond_corr_x_wbf{i};
+                    peak_corr.x_wbf{g}  = self.experiment{g}.cond_lag_corr_x_wbf{i};
+                    corr.y_wbf{g}       = self.experiment{g}.cond_corr_y_wbf{i};
+                    peak_corr.y_wbf{g}  = self.experiment{g}.cond_lag_corr_y_wbf{i};
+                end
+                self.corr_x_lmr{i}                 = mean(cell2mat(corr.x_lmr));
+                self.corr_x_lmr_sem{i}             = std(cell2mat(corr.x_lmr),1,2)/(numel(corr.x_lmr)^(1/2));
+                self.lag_corr_x_lmr{i}             = mean(cell2mat(peak_corr.x_lmr));
+                self.lag_corr_x_lmr_sem{i}         = std(cell2mat(peak_corr.x_lmr),1,2)/(numel(peak_corr.x_lmr)^(1/2));
+                self.corr_y_lmr{i}                 = mean(cell2mat(corr.y_lmr));
+                self.corr_y_lmr_sem{i}             = std(cell2mat(corr.y_lmr),1,2)/(numel(corr.y_lmr)^(1/2));
+                self.lag_corr_y_lmr{i}             = mean(cell2mat(peak_corr.y_lmr));
+                self.lag_corr_y_lmr_sem{i}         = std(cell2mat(peak_corr.y_lmr),1,2)/(numel(peak_corr.y_lmr)^(1/2));      
+                self.corr_x_wbf{i}                 = mean(cell2mat(corr.x_wbf));
+                self.corr_x_wbf_sem{i}             = std(cell2mat(corr.x_wbf),1,2)/(numel(corr.x_wbf)^(1/2));              
+                self.lag_corr_x_wbf{i}             = mean(cell2mat(peak_corr.x_wbf));
+                self.lag_corr_x_wbf_sem{i}         = std(cell2mat(peak_corr.x_wbf),1,2)/(numel(peak_corr.x_wbf)^(1/2));              
+                self.corr_y_wbf{i}                 = mean(cell2mat(corr.y_wbf));
+                self.corr_y_wbf_sem{i}             = std(cell2mat(corr.y_wbf),1,2)/(numel(corr.y_wbf)^(1/2));
+                self.lag_corr_y_wbf{i}             = mean(cell2mat(peak_corr.y_wbf));
+                self.lag_corr_y_wbf_sem{i}         = std(cell2mat(peak_corr.y_wbf),1,2)/(numel(peak_corr.y_wbf)^(1/2));
+            end
+        end
+        
+        function self = cpt_integrated_vals(self)
+            % Straight from john's telethon analysis
+            for i = 1:numel(self.experiment{1}.cond_data_duration)
+                for g = 1:numel(self.experiment)
+                    integrated.lmr_response{g}      = self.experiment{g}.cond_integrated_lmr_response{i};
+                    integrated.wbf_response{g}      = self.experiment{g}.cond_integrated_wbf_response{i};
+                end
+            self.integrated_lmr_response{i}        = mean(cell2mat(integrated.lmr_response));
+            self.integrated_lmr_response_sem{i}    = std(cell2mat(integrated.lmr_response),1,2)/(numel(integrated.lmr_response))^(1/2);
+            self.integrated_wbf_response{i}        = mean(cell2mat(integrated.wbf_response));              
+            self.integrated_wbf_response_sem{i}    = std(cell2mat(integrated.wbf_response),1,2)/(numel(integrated.wbf_response))^(1/2);
+            end
+        end
+        
+        function self = cpt_time_to_half_max(self)
+            % Straight from john's telethon analysis
+            for i = 1:numel(self.experiment{1}.cond_data_duration)
+                for g = 1:numel(self.experiment)
+                    time_to_half_max.lmr{g} = self.experiment{g}.cond_time_to_half_max_lmr{i};
+                    time_to_half_max.wbf{g} = self.experiment{g}.cond_time_to_half_max_wbf{i};
+                end
+                self.time_to_half_max_lmr{i} = mean(cell2mat(time_to_half_max.lmr));
+                self.time_to_half_max_wbf{i} = mean(cell2mat(time_to_half_max.wbf));
+                self.time_to_half_max_lmr_sem{i} = std(cell2mat(time_to_half_max.lmr))/(numel(time_to_half_max.lmr))^(1/2);
+                self.time_to_half_max_wbf_sem{i} = std(cell2mat(time_to_half_max.wbf))/(numel(time_to_half_max.wbf))^(1/2);
+            end
+        end
+        
+    end
+    %--------------METHODS FOR HIGHER ANALYSIS/FIGURES---------------------
+    methods    
+        function [geno_stats_struct, geno_stats_figure] = get_genotype_stats(self)
+            
+            
+            
+            geno_stats_struct = 'barfy';
+            geno_stats_figure = figure;
+        end
+        
+        function [tuning_curve_pts, tuning_curve_figure] = get_tuning_curve(self, field, conditions, type)
+            
+            
+        end
+        
+        function [average sem_plus sem_minus] = get_mean_sem_symmetric_conditions(self,field,conditions)
+            % Takes two symmetric conditions and gives the average, plus
+            % and minus the sem for that condition in whatever form it
+            % exists in the field (time series or single point). i.e. field
+            % mean_lmr and conditions 17,18
+            
+            
+        end
+        
+        function [average sem_plus sem_minus] = get_mean_sem(self,field,condition)
+            % Takes a condition and gives the average, plus and minus the
+            % sem for that condition in whatever form it exists in the
+            % field (time series or single point). i.e. field mean_lmr and
+            % condition 17
+            
+            % instead of keeping track of where sem data is located, just
+            % figure it out again from the raw data on the experiment
+            % level.
+            values = getfield(self,'field',{condition});
+            
+            
+            
+        end
+    end
+end

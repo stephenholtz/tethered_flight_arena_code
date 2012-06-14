@@ -33,7 +33,7 @@ classdef Trial < handle
         
         % Cell array of data objects
         data
-        
+
     end
     
     methods

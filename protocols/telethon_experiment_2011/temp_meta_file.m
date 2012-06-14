@@ -8,7 +8,7 @@ metadata.Line               = 'gmr_48a08dbd'; %'gmr_42f06_ae_01';
 metadata.Chromo2            = 'gmr; tubp_gal80ts';
 metadata.Chromo3            = 'gmr_48a08dbd; uas_kir_2.1';
 metadata.Sex                = 'female'; % 'male' 'female'
-metadata.DoB                = '6_6_12';
+metadata.DoB                = '6_8_12';
 metadata.HeadGlued          = '0'; % '1' '0'
 metadata.Effector           = 'gal80ts_kir21'; % 'gal80ts_kir21' 'gal80ts_tnt'
 metadata.daqFile            = 'raw_data.daq';
@@ -22,7 +22,7 @@ metadata.humidity_ambient   = 60;
 metadata.fly_tag            = ''; % ['pal_' datestr(now,30)];
 metadata.note               = ''; % 'ocelli_dark_paint' 'ocelli_clear_paint'
 
-time = 2;
+time = 1;
 switch time % Prevents me from messing up the light cycles, kinda.
     case 1
         metadata.LightCycle = '20_12'; % AM
@@ -39,8 +39,8 @@ switch time % Prevents me from messing up the light cycles, kinda.
 end
 
 % Don't generally change.
-[~,metadata.Arena]          = system('%computername%','-echo'); % REISERLAB-WW11
-[~,metadata.Experimenter]   = system('%username%','-echo');     % HOLTZS
+[~,metadata.Arena]          = system('echo %COMPUTERNAME%'); % REISERLAB-WW11
+[~,metadata.Experimenter]   = system('echo %USERNAME%');     % HOLTZS
 metadata.AssayType          = 'tf';
 metadata.DateTime           = datestr(now,30);
 metadata.ExperimentName     = [metadata.AssayType '-' metadata.Protocol '-' metadata.DateTime '-' metadata.Line];

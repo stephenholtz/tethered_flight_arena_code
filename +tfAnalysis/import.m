@@ -158,6 +158,7 @@ classdef import < handle
             experiment.dob                  = self.temp_info.meta.DoB;
             experiment.light_cycle          = self.temp_info.meta.LightCycle;
             experiment.arena                = self.temp_info.meta.Arena;
+            experiment.experimenter         = self.temp_info.meta.Experimenter;
             experiment.head_glued           = self.temp_info.meta.HeadGlued;
             experiment.daq_file             = self.temp_info.meta.daqFile;
             experiment.chr2                 = self.temp_info.meta.Chromo2;
@@ -172,13 +173,6 @@ classdef import < handle
             experiment.note                 = self.temp_info.meta.note;
             experiment.fly_tag              = self.temp_info.meta.fly_tag;
             
-            % Grouped conditions, cond2/4 = transformed to cond1/3, form below
-            % {[cond1_rep1... cond1_repN], [cond2_rep1... cond2_repN]; 
-            % [cond3_rep1... cond3_repN], [cond4_rep1... cond4_repN]}
-            try experiment.grouped_conditions = self.temp_info.meta.grouped_conditions;
-            catch
-                experiment.grouped_conditions = 'null';
-            end
         end
         
         function trial = populate_trial_data_obj(self, parsed_data)

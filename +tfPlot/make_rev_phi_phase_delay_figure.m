@@ -1,5 +1,5 @@
 function varargout = make_rev_phi_phase_delay_figure
-% make reverse phi phase delay figures
+% make reverse phi phase delay figures, uses ExpAgg
 
 fig_handle(1) = figure;
 

@@ -27,10 +27,13 @@ classdef Data < handle
     
     properties (Constant = true, Access = private)
         WBF_THRESHOLD = 1.35;
-        RPL_THRESHOLD = 1.50;
+        RPL_THRESHOLD = 1.65;
+        ACQUISITION_SAMPLING_RATE = 1000; 
+        DEFAULT_DOWNSAMPLING_VALUE = 500;
     end
     
     properties (Access = private)
+        new_sampling_rate
         % Values are private and can be returned, but are not saved in the
         % objects fields. So long as they are not populated, or cleared
         % before saving, VERY little size increase occurs.
@@ -93,6 +96,17 @@ classdef Data < handle
         
         function self = replace_wba_lmr_with_calcd_lmr(self)
             self.lmr = self.left_amp - self.right_amp;
+        end
+        
+        function self = downsample_data(self,varargin)
+%             if isempty(varargin)
+%                 self.new_sampling_rate = self.DEFAULT_DOWNSAMPLING_VALUE;
+%             else
+%                 self.new_sampling_rate = varargin{1};
+%             end
+%             
+%             
+%             
         end
         
         function self = filter_wing_beat_channels(self)

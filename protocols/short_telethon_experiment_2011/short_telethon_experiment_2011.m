@@ -1,22 +1,4 @@
 function [Conditions] = short_telethon_experiment_2011
-% 16 conditions + a closed loop that is the 17th condition
-% strs = [];
-% for g = 1:numel(Conditions)
-%     for i = 1:numel(fieldnames(Conditions))
-%         a = fieldnames(Conditions);
-%         out = getfield(Conditions(g),a{i});
-%         if ischar (out)
-%             out = [' ''' ,out, ''' ']; 
-%         elseif isnumeric(out)
-%             out = ['[', num2str(out), ']'];
-%         end
-%         str = [ 'Conditions(',num2str(g),').', a{i}, ' = ', out '; wwwww '];
-%         strs = [strs str] ;
-%     end
-% end
-% 
-% (strs)
-
 % Conditions for John's short telethon - updated 2012
 
 %% Bilateral Motion
@@ -37,7 +19,6 @@ Conditions(1).PosFuncLoc =  'R:\Telethon_Database\functions\telethon_pos_funcs_0
 Conditions(1).FuncFreqX = [50];
 Conditions(1).PosFunctionY = [0  0];
 Conditions(1).FuncFreqY = [50];
-Conditions(1).Voltage = [0.05];
 Conditions(1).PosFuncNameY =  'null';
 
 % Back to front 9 Hz RIGHT SIDE
@@ -57,7 +38,6 @@ Conditions(2).PosFuncLoc =  'R:\Telethon_Database\functions\telethon_pos_funcs_0
 Conditions(2).FuncFreqX = [50]; 
 Conditions(2).PosFunctionY = [0  0]; 
 Conditions(2).FuncFreqY = [50]; 
-Conditions(2).Voltage = [0.14063]; 
 Conditions(2).PosFuncNameY =  'null' ; 
 
 % Front to back 9 Hz RIGHT SIDE
@@ -77,7 +57,6 @@ Conditions(3).PosFuncLoc =  'R:\Telethon_Database\functions\telethon_pos_funcs_0
 Conditions(3).FuncFreqX = [50]; 
 Conditions(3).PosFunctionY = [0  0]; 
 Conditions(3).FuncFreqY = [50]; 
-Conditions(3).Voltage = [0.23125]; 
 Conditions(3).PosFuncNameY =  'null' ; 
 
 % Front to back 9 Hz LEFT SIDE
@@ -97,7 +76,6 @@ Conditions(4).PosFuncLoc =  'R:\Telethon_Database\functions\telethon_pos_funcs_0
 Conditions(4).FuncFreqX = [50]; 
 Conditions(4).PosFunctionY = [0  0]; 
 Conditions(4).FuncFreqY = [50]; 
-Conditions(4).Voltage = [0.32187]; 
 Conditions(4).PosFuncNameY =  'null' ; 
 
 %% Low Contrast Rotation
@@ -119,7 +97,6 @@ Conditions(5).PosFuncLoc =  'R:\Telethon_Database\functions\telethon_pos_funcs_0
 Conditions(5).FuncFreqX = [50]; 
 Conditions(5).PosFunctionY = [0  0]; 
 Conditions(5).FuncFreqY = [50]; 
-Conditions(5).Voltage = [0.4125]; 
 Conditions(5).PosFuncNameY =  'null' ; 
 
 %
@@ -139,7 +116,6 @@ Conditions(6).PosFuncLoc =  'R:\Telethon_Database\functions\telethon_pos_funcs_0
 Conditions(6).FuncFreqX = [50]; 
 Conditions(6).PosFunctionY = [0  0]; 
 Conditions(6).FuncFreqY = [50]; 
-Conditions(6).Voltage = [0.50313]; 
 Conditions(6).PosFuncNameY =  'null' ; 
 
 %
@@ -159,7 +135,6 @@ Conditions(7).PosFuncLoc =  'R:\Telethon_Database\functions\telethon_pos_funcs_0
 Conditions(7).FuncFreqX = [50]; 
 Conditions(7).PosFunctionY = [0  0]; 
 Conditions(7).FuncFreqY = [50]; 
-Conditions(7).Voltage = [0.59375]; 
 Conditions(7).PosFuncNameY =  'null' ; 
 
 %
@@ -179,7 +154,6 @@ Conditions(8).PosFuncLoc =  'R:\Telethon_Database\functions\telethon_pos_funcs_0
 Conditions(8).FuncFreqX = [50]; 
 Conditions(8).PosFunctionY = [0  0]; 
 Conditions(8).FuncFreqY = [50]; 
-Conditions(8).Voltage = [0.68438]; 
 Conditions(8).PosFuncNameY =  'null' ; 
 
 %% Reverse Phi stims.
@@ -200,7 +174,6 @@ Conditions(9).PosFuncLoc =  'R:\Telethon_Database\functions\telethon_pos_funcs_0
 Conditions(9).FuncFreqX = [50]; 
 Conditions(9).PosFunctionY = [0  0]; 
 Conditions(9).FuncFreqY = [50]; 
-Conditions(9).Voltage = [0.775]; 
 Conditions(9).PosFuncNameY =  'null' ; 
 
 Conditions(10).PatternID = [5]; 
@@ -219,7 +192,6 @@ Conditions(10).PosFuncLoc =  'R:\Telethon_Database\functions\telethon_pos_funcs_
 Conditions(10).FuncFreqX = [50]; 
 Conditions(10).PosFunctionY = [0  0]; 
 Conditions(10).FuncFreqY = [50]; 
-Conditions(10).Voltage = [0.86562]; 
 Conditions(10).PosFuncNameY =  'null' ; 
 
 %% Stripe tracking
@@ -240,7 +212,6 @@ Conditions(11).PosFuncLoc =  'R:\Telethon_Database\functions\telethon_pos_funcs_
 Conditions(11).FuncFreqX = [50]; 
 Conditions(11).PosFunctionY = [0  0]; 
 Conditions(11).FuncFreqY = [50]; 
-Conditions(11).Voltage = [0.95625]; 
 Conditions(11).PosFuncNameY =  'null' ; 
 
 Conditions(12).PatternID = [10]; 
@@ -259,7 +230,6 @@ Conditions(12).PosFuncLoc =  'R:\Telethon_Database\functions\telethon_pos_funcs_
 Conditions(12).FuncFreqX = [50]; 
 Conditions(12).PosFunctionY = [0  0]; 
 Conditions(12).FuncFreqY = [50]; 
-Conditions(12).Voltage = [1.0469]; 
 Conditions(12).PosFuncNameY =  'null' ; 
 
 Conditions(13).PatternID = [10]; 
@@ -278,7 +248,6 @@ Conditions(13).PosFuncLoc =  'R:\Telethon_Database\functions\telethon_pos_funcs_
 Conditions(13).FuncFreqX = [50]; 
 Conditions(13).PosFunctionY = [0  0]; 
 Conditions(13).FuncFreqY = [50]; 
-Conditions(13).Voltage = [1.1375]; 
 Conditions(13).PosFuncNameY =  'null' ; 
 
 Conditions(14).PatternID = [10]; 
@@ -297,7 +266,6 @@ Conditions(14).PosFuncLoc =  'R:\Telethon_Database\functions\telethon_pos_funcs_
 Conditions(14).FuncFreqX = [50]; 
 Conditions(14).PosFunctionY = [0  0]; 
 Conditions(14).FuncFreqY = [50]; 
-Conditions(14).Voltage = [1.2281]; 
 Conditions(14).PosFuncNameY =  'null' ; 
 
 Conditions(15).PatternID = [10]; 
@@ -316,7 +284,6 @@ Conditions(15).PosFuncLoc =  'R:\Telethon_Database\functions\telethon_pos_funcs_
 Conditions(15).FuncFreqX = [50]; 
 Conditions(15).PosFunctionY = [0  0]; 
 Conditions(15).FuncFreqY = [50]; 
-Conditions(15).Voltage = [1.3188]; 
 Conditions(15).PosFuncNameY =  'null' ; 
 
 Conditions(16).PatternID = [10]; 
@@ -335,7 +302,6 @@ Conditions(16).PosFuncLoc =  'R:\Telethon_Database\functions\telethon_pos_funcs_
 Conditions(16).FuncFreqX = [50]; 
 Conditions(16).PosFunctionY = [0  0]; 
 Conditions(16).FuncFreqY = [50]; 
-Conditions(16).Voltage = [1.4094]; 
 Conditions(16).PosFuncNameY =  'null' ; 
 
 Conditions(17).PatternID = [10];
@@ -354,5 +320,38 @@ Conditions(17).PosFuncLoc =  'R:\Telethon_Database\functions\telethon_pos_funcs_
 Conditions(17).FuncFreqX = [50];
 Conditions(17).PosFunctionY = [0  0];
 Conditions(17).FuncFreqY = [50];
-Conditions(17).Voltage = [1.52];
 Conditions(17).PosFuncNameY =  'null';
+
+
+%% Closed loop condition for interspersing between trials
+%
+Conditions(18).PatternID = 1;
+Conditions(18).Duration = 3.5;
+Conditions(18).InitialPosition = [49 1];
+Conditions(18).Gains = [-15 0 0 0];
+Conditions(18).Mode = [1 0];
+Conditions(18).PosFunctionX = [1 0];
+Conditions(18).PatternName = {'Pattern_11_8wide_bothcontrasts_stripes_c49_telethon.mat'};
+Conditions(18).SpatialFreq = 0;
+Conditions(18).PosFuncNameX = 'none';
+Conditions(18).PosFuncLoc = 'R:\Telethon_Database\functions\telethon_pos_funcs_04_11'; 
+
+%% Set condition parameters that are not specified (or do not change) in the telethon
+% assign voltages to each condition as well.
+encoded_vals = linspace(.1,9.9,numel(Conditions));
+
+for cond_num = 1:numel(Conditions)
+    Conditions(cond_num).PanelCfgNum    = 1;
+    Conditions(cond_num).PanelCfgName   = 'default_4bus_48panel';
+	Conditions(cond_num).PosFuncNameY 	= 'null';
+	Conditions(cond_num).FuncFreqY 		= 50;
+	Conditions(cond_num).FuncFreqX 		= 50;
+	Conditions(cond_num).PosFunctionY 	= [0 0];
+	Conditions(cond_num).VelFunction 	= [1 0];
+	Conditions(cond_num).VelFuncName 	= 'none';
+    Conditions(cond_num).Voltage        =  encoded_vals(cond_num);
+end
+
+% Even though it is set in the experiment, be explicit about the voltage
+% value of the closed loop portion!
+Conditions(numel(Conditions)).Voltage        =  0;

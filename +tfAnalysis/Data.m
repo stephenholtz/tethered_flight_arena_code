@@ -30,10 +30,12 @@ classdef Data < handle
         RPL_THRESHOLD = 1.65;
         ACQUISITION_SAMPLING_RATE = 1000; 
         DEFAULT_DOWNSAMPLING_VALUE = 500;
+        
     end
     
     properties (Access = private)
-        new_sampling_rate
+        current_sampling_rate
+        upsampled_rate
         % Values are private and can be returned, but are not saved in the
         % objects fields. So long as they are not populated, or cleared
         % before saving, VERY little size increase occurs.
@@ -99,14 +101,88 @@ classdef Data < handle
         end
         
         function self = downsample_data(self,varargin)
-%             if isempty(varargin)
-%                 self.new_sampling_rate = self.DEFAULT_DOWNSAMPLING_VALUE;
-%             else
-%                 self.new_sampling_rate = varargin{1};
-%             end
-%             
-%             
-%             
+            % Error check for prior sampling and sane rate...
+            if isempty(self.current_sampling_rate)
+                self.current_sampling_rate = self.ACQUISITION_SAMPLING_RATE;
+            end
+            
+            if isempty(varargin)
+                new_sampling_rate = self.DEFAULT_DOWNSAMPLING_VALUE;
+            else
+                new_sampling_rate = varargin{1};
+            end
+            
+            if mod(self.current_sampling_rate,new_sampling_rate)
+                error('Cannot downsample to %d from %d, nonzero modulus of old/new rates',new_sampling_rate,self.current_sampling_rate)
+            end
+            
+            ds_stride = self.current_sampling_rate/new_sampling_rate;
+            
+            if ds_stride > 1
+                self.left_amp       = median(reshape(self.left_amp,ds_stride,numel(self.left_amp)/ds_stride));
+                self.x_pos          = median(reshape(self.x_pos,ds_stride,numel(self.x_pos)/ds_stride));
+                self.right_amp      = median(reshape(self.right_amp,ds_stride,numel(self.right_amp)/ds_stride));
+                self.y_pos          = median(reshape(self.y_pos,ds_stride,numel(self.y_pos)/ds_stride));
+                self.wbf            = median(reshape(self.wbf,ds_stride,numel(self.wbf)/ds_stride));
+                self.voltage_signal = median(reshape(self.voltage_signal,ds_stride,numel(self.voltage_signal)/ds_stride));
+                self.lmr            = median(reshape(self.lmr,ds_stride,numel(self.lmr)/ds_stride));
+                self.current_sampling_rate = new_sampling_rate;
+            else
+                warning('Current sampling rate is already %d',self.current_sampling_rate)
+            end
+        end
+        
+        function self = upsample_data(self,varargin)
+            % Error check for prior sampling and sane rate...
+            if isempty(self.current_sampling_rate)
+                self.current_sampling_rate = self.ACQUISITION_SAMPLING_RATE;
+            end
+            
+            if isempty(self.upsampled_rate)
+                self.upsampled_rate = self.current_sampling_rate;
+            end
+            
+            if varargin{1}
+                new_sampling_rate = self.ACQUISITION_SAMPLING_RATE;
+            else
+                new_sampling_rate = varargin{1};
+            end
+            
+            if varargin{2}
+                up_samp_type = varargin{2};
+            else
+                up_samp_type = 'median';
+            end
+            
+            switch up_samp_type
+                case 'median'
+                    an_func = @median;
+                case 'mean'
+                    an_func = @mean;
+                otherwise
+                    error('Invalid up_samp_type.')
+            end
+            
+            us_stride = new_sampling_rate/self.upsampled_rate;
+            
+            if us_stride > 1
+                self.left_amp       = an_func(shift_repeats(self.left_amp,us_stride));
+                self.x_pos          = an_func(shift_repeats(self.x_pos,us_stride));
+                self.right_amp      = an_func(shift_repeats(self.right_amp,us_stride));
+                self.y_pos          = an_func(shift_repeats(self.y_pos,us_stride));
+                self.wbf            = an_func(shift_repeats(self.wbf,us_stride));
+                self.voltage_signal = an_func(shift_repeats(self.voltage_signal,us_stride));
+                self.lmr            = an_func(shift_repeats(self.lmr,us_stride));
+                
+                self.upsampled_rate = new_sampling_rate;
+            else
+                warning('Current sampling rate is already %d.',self.upsampled_rate)
+            end
+            
+            function out_mat = shift_repeats(mat,repeats)
+                out_mat(:,2) = circshift(mat(:,2)',repeats)';
+            end
+            
         end
         
         function self = filter_wing_beat_channels(self)

@@ -77,7 +77,9 @@ sym_conditions = ...
                         [110,120]};
 
 grouped_conditions{1}.name = '0.5 Hz';
-grouped_conditions{1}.x_axis = [-62.5 -55 -45 -37.5 -27.5 -20 -10 -2.5 0 0 2.5 20 27.5 37.5 45 55 62.5];
+grouped_conditions{1}.tf = .5;
+grouped_conditions{1}.x_axis = [-62.5 -55 -45 -37.5 -27.5 -20 -10 -2.5 0 0 2.5 10 20 27.5 37.5 45 55 62.5];
+% grouped_conditions{1}.phase_diff = [-62.5 -55 -45 -37.5 -27.5 -20 -10 -2.5 0 0 2.5 10 20 27.5 37.5 45 55 62.5];
 grouped_conditions{1}.list = ...
                        {[18,36];... %
                         [17,35];... % 
@@ -99,7 +101,9 @@ grouped_conditions{1}.list = ...
                         [9,27]};
 
 grouped_conditions{2}.name = '1 Hz';
+grouped_conditions{2}.tf = 1;
 grouped_conditions{2}.x_axis = [-30 -25 -22.5 -17.5 -15 -10 -7.5 -2.5 0 0 2.5 7.5 10 15 17.5 22.5 25 30];
+% grouped_conditions{2}.phase_diff = [-30 -25 -22.5 -17.5 -15 -10 -7.5 -2.5 0 0 2.5 7.5 10 15 17.5 22.5 25 30];
 grouped_conditions{2}.list = ...
                        {[54,72];... %
                         [53,71];... %                        
@@ -121,7 +125,9 @@ grouped_conditions{2}.list = ...
                         [45,63]};
 
 grouped_conditions{3}.name = '2 Hz';
-grouped_conditions{3}.x_axis = [-15 -12 -10 -7.5  -5 -2.5 0 0 2.5 7.5 10 12 15];
+grouped_conditions{3}.tf = 2;
+grouped_conditions{3}.x_axis = [-15 -12 -10 -7.5  -5 -2.5 0 0 2.5 5 7.5 10 12 15];
+% grouped_conditions{3}.phase_diff = [-15 -12 -10 -7.5  -5 -2.5 0 0 2.5 5 7.5 10 12 15];
 grouped_conditions{3}.list = ...
                        {[86,100];...%
                         [85,99];... %
@@ -139,7 +145,9 @@ grouped_conditions{3}.list = ...
                         [79,93]};
 
 grouped_conditions{4}.name = '3 Hz';
+grouped_conditions{4}.tf = 3;
 grouped_conditions{4}.x_axis = [-10 -7.5 -5 -2.5 0 0 2.5 5 7.5 10];
+% grouped_conditions{4}.phase_diff = [-10 -7.5 -5 -2.5 0 0 2.5 5 7.5 10];
 grouped_conditions{4}.list = ...
                        {[110,120];...%  
                         [109,119];... %  

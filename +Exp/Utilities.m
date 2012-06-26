@@ -79,14 +79,14 @@ classdef Utilities
         end
         
         function startle_animal(startle_channel)
-            % Buzz the fly
+            % Puff or Buzz the fly
                 start(startle_channel)
                 putvalue(startle_channel,1)
-                pause(.012)
+                pause(.05)
                 putvalue(startle_channel,0) 
-                pause(.002)
+                pause(.01)
                 putvalue(startle_channel,1)
-                pause(.004)
+                pause(.075)
                 putvalue(startle_channel,0)
                 stop(startle_channel)
         end

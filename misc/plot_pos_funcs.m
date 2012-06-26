@@ -51,12 +51,12 @@ title('position_function_060_lam_12_rev_phi_2Hz_Ychan_0ms_after_400Hz','interpre
 
 %
 subplot(3,1,2)
-load('position_function_058_lam_12_rev_phi_2Hz_CW_Xchan_400Hz')
+load('position_function_058_lam_8_rev_phi_3Hz_CW_Xchan_400Hz')
 plot(func(range),'k'); hold on
 
-load('position_function_061_lam_12_rev_phi_2Hz_Ychan_2pt5ms_after_400Hz')
+load('position_function_070_lam_8_rev_phi_3Hz_Ychan_12pt5ms_before_400Hz')
 plot(func(range),'r')
-title('position_function_061_lam_12_rev_phi_2Hz_Ychan_2pt5ms_after_400Hz','interpreter','none')
+title('position_function_070_lam_8_rev_phi_3Hz_Ychan_12pt5ms_before_400Hz','interpreter','none')
 
 %
 subplot(3,1,3)

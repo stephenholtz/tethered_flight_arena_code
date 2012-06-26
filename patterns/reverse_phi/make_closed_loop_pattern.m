@@ -1,7 +1,7 @@
 %% Make 1 mobile 8px stripe
 
 % Set pattern fields up
-pattern.x_num = 16;             % x is all frames - shouldn't need to be more than 2 x the spatial frequency
+pattern.x_num = 96;             % x is all frames - shouldn't need to be more than 2 x the spatial frequency
 pattern.y_num = 2;              % y is each flicker
 pattern.num_panels = 48;        
 pattern.gs_val = 3;          

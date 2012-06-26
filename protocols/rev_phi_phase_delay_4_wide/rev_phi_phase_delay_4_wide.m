@@ -45,7 +45,7 @@ for pat = 2; % 4 Wide, full field
                     case {20, 21} % tf 1
                         delay_funcs_y = [22 23:2:38]; % []           
                     case {39, 40} % tf 2
-                        delay_funcs_y = [41 42:2:53]; % []           
+                        delay_funcs_y = [41 42:2:57]; % []           
                     case {58, 59} % tf 3
                         delay_funcs_y = [60 61:2:76]; % []           
                 end
@@ -57,7 +57,7 @@ for pat = 2; % 4 Wide, full field
                     case {20, 21} % tf 1
                         delay_funcs_y = [22 24:2:38]; % []           
                     case {39, 40} % tf 2
-                        delay_funcs_y = [41 43:2:53]; % []           
+                        delay_funcs_y = [41 43:2:57]; % []           
                     case {58, 59} % tf 3
                         delay_funcs_y = [60 62:2:76]; % []           
                 end

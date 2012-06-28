@@ -21,7 +21,7 @@ function make_rev_phi_phase_delay_functions_8_wide
 
 %% Set up some default values
 
-project = 'rev_phi_phase_delay';
+project = 'rev_phi_phase_delay_8_wide';
 temporal_freqs = [.5 1 2 3];    % the .5 is hard coded below to show up as 0pt5
 sampling_rate = 400;            % 200 hz allows for 5ms precision in offsets
 pattern_y_length = 2;           % on and off flicker for the rev phi
@@ -136,8 +136,8 @@ for temp_freq = temporal_freqs
                         case -1
                             function_name = [chan_name, '_', delay_val, 'ms_before_' num2str(sampling_rate) 'Hz'];
                             % SHIFT IT TO HAPPEN EARLIER
-                            func = funct((delay):end);
-                            
+                            func = funct((delay+1):end); % add 1 because offset requires inclusion
+
                             counter = counter + 1;
                             save_function(project,function_name,func,counter);
                             func = [];

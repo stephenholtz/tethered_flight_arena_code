@@ -32,7 +32,7 @@ frequency = 400;
 
 for pat = 2; % 4 Wide, full field
     % the different temporal frequency position functions
-    for pos_funcX = [1 2 20 21 39 40 58 59]; % [.5cc cw 1cc cw 2cc cw 3cc cw]
+    for pos_funcX = [20 21 39 40 58 59]; %[1 2 20 21 39 40 58 59]; % [.5cc cw 1cc cw 2cc cw 3cc cw]
     % Sym conds will be sequential except for the last, which is the closed
     % loop condition       
     
@@ -40,26 +40,26 @@ for pat = 2; % 4 Wide, full field
             if flick == 1;
                 switch pos_funcX
                     % different delays in ms for each flicker after movement
-                    case {1, 2} % tf 0.5
-                        delay_funcs_y = [3 4:2:19]; % []
+                    % case {1, 2} % tf 0.5
+                    %    delay_funcs_y = [3 4 6:4:19]; % []
                     case {20, 21} % tf 1
-                        delay_funcs_y = [22 23:2:38]; % []           
+                        delay_funcs_y = [22 23 25:4:38]; % []           
                     case {39, 40} % tf 2
-                        delay_funcs_y = [41 42:2:57]; % []           
+                        delay_funcs_y = [41 42 44:4:57]; % []           
                     case {58, 59} % tf 3
-                        delay_funcs_y = [60 61:2:76]; % []           
+                        delay_funcs_y = [60 61 63:4:76]; % []
                 end
             else
                 switch pos_funcX
                     % different delays in ms for each flicker before movement
-                    case {1, 2} % tf 0.5
-                        delay_funcs_y = [3 5:2:19]; % []
+                    % case {1, 2} % tf 0.5
+                    %    delay_funcs_y = [3 5 7:2:19]; % []
                     case {20, 21} % tf 1
-                        delay_funcs_y = [22 24:2:38]; % []           
+                        delay_funcs_y = [22 24 26:4:38]; % []           
                     case {39, 40} % tf 2
-                        delay_funcs_y = [41 43:2:57]; % []           
+                        delay_funcs_y = [41 43 45:4:57]; % []           
                     case {58, 59} % tf 3
-                        delay_funcs_y = [60 62:2:76]; % []           
+                        delay_funcs_y = [60 62 64:4:76]; % []           
                 end
             end
         
@@ -80,7 +80,7 @@ for pat = 2; % 4 Wide, full field
             
             Conditions(cond_num).PosFuncLoc = pos_func_loc;            
             Conditions(cond_num).PosFuncNameX = position_functions{pos_funcX};
-            Conditions(cond_num).PosFuncNameY = position_functions{pos_funcY};    
+            Conditions(cond_num).PosFuncNameY = position_functions{pos_funcY};
             
             Conditions(cond_num).Duration = 3;
             total_ol_dur = total_ol_dur + Conditions(cond_num).Duration;
@@ -123,5 +123,5 @@ end
 % value of the closed loop portion!
 Conditions(numel(Conditions)).Voltage   =  0;
 
-% total_dur = total_ol_dur + numel(Conditions)*Conditions(numel(Conditions)).Duration;
-% disp(total_dur/60);
+total_dur = total_ol_dur + numel(Conditions)*Conditions(numel(Conditions)).Duration;
+disp(total_dur/60);

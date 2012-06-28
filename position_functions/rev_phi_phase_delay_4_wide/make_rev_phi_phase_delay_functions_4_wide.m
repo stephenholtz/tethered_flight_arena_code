@@ -136,7 +136,7 @@ for temp_freq = temporal_freqs
                         case -1
                             function_name = [chan_name, '_', delay_val, 'ms_before_' num2str(sampling_rate) 'Hz'];
                             % SHIFT IT TO HAPPEN EARLIER
-                            func = funct((delay):end);
+                            func = funct((delay+1):end); % add 1 because offset requires inclusion
                             
                             counter = counter + 1;
                             save_function(project,function_name,func,counter);

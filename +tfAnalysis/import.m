@@ -41,6 +41,10 @@ classdef import < handle
                     genotype_file = varargin{1};
                     experiments = dir(genotype_file); experiments = {experiments.name}; 
                     experiments = experiments(3:end); exps = [];
+                    if isempty(experiments)
+                        error_string = ['Iteratable list of experiments not found in ' genotype_file];
+                        error(error_string) 
+                    end
                     for e = 1:numel(experiments)
                         exps = [exps, {fullfile(genotype_file, experiments{e})}];
                     end
@@ -55,6 +59,10 @@ classdef import < handle
                     if varargin{2} > numel(experiments)
                         fprintf('%d experiments requested, only %d exist',varargin{2},numel(experiments))
                         error('Select less experiments');
+                    end
+                    if isempty(experiments)
+                        error_string = ['Experiment not found in ' genotype_file];
+                        error(error_string)
                     end
                     for e = 1:numel(experiments)
                         exps = [exps, {fullfile(genotype_file, experiments{e})}];

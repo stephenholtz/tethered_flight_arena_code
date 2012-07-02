@@ -39,8 +39,8 @@ switch time % Prevents me from messing up the light cycles, kinda.
 end
 
 % Don't generally change.
-[~,metadata.Arena]          = system('echo %COMPUTERNAME%'); % REISERLAB-WW11
-[~,metadata.Experimenter]   = system('echo %USERNAME%');     % HOLTZS
+[~,metadata.Arena]          = system('echo %COMPUTERNAME%');    metadata.Arena = metadata.Arena(1:end-1);
+[~,metadata.Experimenter]   = system('echo %USERNAME%');        metadata.Experimenter = metadata.Experimenter(1:end-1);
 metadata.AssayType          = 'tf';
 metadata.DateTime           = datestr(now,30);
 metadata.ExperimentName     = [metadata.AssayType '-' metadata.Protocol '-' metadata.DateTime '-' metadata.Line];

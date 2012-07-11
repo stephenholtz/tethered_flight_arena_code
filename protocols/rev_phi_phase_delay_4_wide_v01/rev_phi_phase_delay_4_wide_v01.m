@@ -16,6 +16,7 @@ end
 % gather some information
     cf = pwd;
     patterns = what(fullfile(dir,'patterns','reverse_phi'));
+    pattern_loc = patterns.path;
     patterns = patterns.mat;
     pos_func_loc = fullfile(dir,'position_functions','rev_phi_phase_delay_4_wide_v01');
     position_functions = what(pos_func_loc);
@@ -68,6 +69,7 @@ for pat = 2; % 4 Wide, full field
         for pos_funcY = delay_funcs_y; % temporal freq sepecific delays pos function numbers
             Conditions(cond_num).PatternID = pat; %#ok<*AGROW>
             Conditions(cond_num).PatternName = patterns{pat};
+            Conditions(cond_num).PatternLoc  = pattern_loc;
             
             % Mode = pos func control for x and y, init pos = 1 for both
             Conditions(cond_num).Mode           = [4 4];
@@ -95,6 +97,7 @@ end
 % closed loop inter trial stimulus
 Conditions(cond_num).PatternID      = numel(patterns); % single stripe 8 wide, same contrast as rev phi stims
 Conditions(cond_num).PatternName    = patterns(numel(patterns));
+Conditions(cond_num).PatternLoc     = pattern_loc;
 Conditions(cond_num).Mode           = [1 0];
 Conditions(cond_num).InitialPosition= [49 1];
 Conditions(cond_num).Gains          = [-12 0 0 0]; % seems to work pretty well, 42-48 is another regime that looks nice

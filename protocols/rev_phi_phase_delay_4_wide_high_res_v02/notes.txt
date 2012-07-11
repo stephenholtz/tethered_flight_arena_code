@@ -1,0 +1,5 @@
+This version of reverse phi phase delay has circshifted position functions, instead of offsets. It has very high resolution for just one temporal frequency.
+
+This is an attempt to nail down the source of the before vs after motion flicker asymmetry that has been observed in the 8 wide, 4 wide high res, and 4 wide version 1 reverse phi stimuli.
+
+This protocol also has identical before and after timing offsets.

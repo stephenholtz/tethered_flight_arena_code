@@ -5,16 +5,39 @@ function make_rev_phi_phase_delay_4_wide_figure(fig_type,geno)
 a = 0; b = 0; c = 0;
 
 if a == 1
-    gmr_48a08dbd_gal80ts_kir21 = tfAnalysis.import('/Users/holtzs/Desktop/rev_phi_phase_delay_4_wide/gmr_48a08dbd_gal80ts_kir21','all');
+    gmr_20c11ad_48d11dbd_gal80ts_kir21 = tfAnalysis.import('/Users/holtzs/Desktop/rev_phi_phase_delay/gmr_20c11ad_48d11dbd_gal80ts_kir21','all');
+    save('gmr_20c11ad_48d11dbd_gal80ts_kir21','gmr_20c11ad_48d11dbd_gal80ts_kir21')
+    gmr_25b02ad_48d11dbd_gal80ts_kir21 = tfAnalysis.import('/Users/holtzs/Desktop/rev_phi_phase_delay/gmr_25b02ad_48d11dbd_gal80ts_kir21','all');
+    save('gmr_25b02ad_48d11dbd_gal80ts_kir21','gmr_25b02ad_48d11dbd_gal80ts_kir21') 
+    gmr_35a03ad_29g11dbd_gal80ts_kir21 = tfAnalysis.import('/Users/holtzs/Desktop/rev_phi_phase_delay/gmr_35a03ad_29g11dbd_gal80ts_kir21','all');
+    save('gmr_35a03ad_29g11dbd_gal80ts_kir21','gmr_35a03ad_29g11dbd_gal80ts_kir21')
+    gmr_48a08dbd_gal80ts_kir21 = tfAnalysis.import('/Users/holtzs/Desktop/rev_phi_phase_delay/gmr_48a08dbd_gal80ts_kir21','all');
     save('gmr_48a08dbd_gal80ts_kir21','gmr_48a08dbd_gal80ts_kir21')
+    gmr_31c06ad_34g07dbd_gal80ts_kir21 = tfAnalysis.import('/Users/holtzs/Desktop/rev_phi_phase_delay/gmr_31c06ad_34g07dbd_gal80ts_kir21','all');
+    save('gmr_31c06ad_34g07dbd_gal80ts_kir21','gmr_31c06ad_34g07dbd_gal80ts_kir21')
+    gmr_52h01ad_17c11dbd_gal80ts_kir21 = tfAnalysis.import('/Users/holtzs/Desktop/rev_phi_phase_delay/gmr_52h01ad_17c11dbd_gal80ts_kir21','all');
+    save('gmr_52h01ad_17c11dbd_gal80ts_kir21','gmr_52h01ad_17c11dbd_gal80ts_kir21')
+    
 end
 
 if b == 1
+    load('gmr_20c11ad_48d11dbd_gal80ts_kir21')
+    load('gmr_25b02ad_48d11dbd_gal80ts_kir21') 
+    load('gmr_35a03ad_29g11dbd_gal80ts_kir21')
     load('gmr_48a08dbd_gal80ts_kir21');
+    load('gmr_31c06ad_34g07dbd_gal80ts_kir21');
+    load('gmr_52h01ad_17c11dbd_gal80ts_kir21');
+    
 end
 
 if c == 1;
-    geno.gmr_48a08dbd_gal80ts_kir21 = tfAnalysis.ExpSet(gmr_48a08dbd_gal80ts_kir21);
+    geno.gmr_20c11ad_48d11dbd_gal80ts_kir21  = tfAnalysis.ExpSet(gmr_20c11ad_48d11dbd_gal80ts_kir21);
+    geno.gmr_25b02ad_48d11dbd_gal80ts_kir21  = tfAnalysis.ExpSet(gmr_25b02ad_48d11dbd_gal80ts_kir21);
+    geno.gmr_35a03ad_29g11dbd_gal80ts_kir21  = tfAnalysis.ExpSet(gmr_35a03ad_29g11dbd_gal80ts_kir21);
+    geno.gmr_48a08dbd_gal80ts_kir21          = tfAnalysis.ExpSet(gmr_48a08dbd_gal80ts_kir21);
+    geno.gmr_31c06ad_34g07dbd_gal80ts_kir21  = tfAnalysis.ExpSet(gmr_31c06ad_34g07dbd_gal80ts_kir21);
+    geno.gmr_52h01ad_17c11dbd_gal80ts_kir21  = tfAnalysis.ExpSet(gmr_52h01ad_17c11dbd_gal80ts_kir21);
+    
 end
 
 switch fig_type

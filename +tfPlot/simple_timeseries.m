@@ -20,6 +20,8 @@ function handle = simple_timeseries(data_cell,varargin)
 %   should not change, but when the actual timeseries is plotted, it should
 %   be hold all, so that it can be moved to the next value in the color map
 
+    render_mode = 'no_alpha';
+
     % Make sure the data_cell has a multple of 3
     if mod(numel(data_cell),3)
        error('wrong number of elements in data_cell') 
@@ -30,7 +32,7 @@ function handle = simple_timeseries(data_cell,varargin)
     sem_plus_values = data_cell{2};
     sem_minus_values= data_cell{3};
     
-    len_data_vec = 1:numel(average_values);
+    len_data_vec = 1:size(average_values,1);
     
     % Deal with varargin
     if nargin == 3
@@ -67,44 +69,49 @@ function handle = simple_timeseries(data_cell,varargin)
         zero_color = [0 0 0];
     end
     
-    if ~sum(strcmpi('zero_line',get(data_handles,'Tag')))   
-        hold('on')
-        plot(len_data_vec,zeros(1,numel(len_data_vec)),'LineStyle','--','Color',zero_color);
-        set(max(get(gca,'Children')),'Tag','zero_line')
-    end
+%     if ~sum(strcmpi('zero_line',get(data_handles,'Tag')))   
+%         hold('on')
+%         plot(len_data_vec,zeros(1,numel(len_data_vec)),'LineStyle','--','Color',zero_color);
+%         set(max(get(gca,'Children')),'Tag','zero_line')
+%     end
     
     % Plot the mean
-    
-    handle = plot(len_data_vec, average_values, line_string);
-    hold('on');
-    % Get the color of the last line drawn (after refreshing the vars)
-    potential_handles = get(gca,'Children');
-    data_handles = potential_handles(find(strcmpi('line',get(get(gca,'Children'),'type')) == 1 | ...
-                                          strcmpi('axes',get(get(gca,'Children'),'type')) == 1)); %#ok<*FNDSB>
-    color_handle = max(potential_handles(strcmpi('line',get(get(gca,'Children'),'type')))); %#ok<*FNDSB>
-    line_color_matrix = get(color_handle,'Color');
-    
-    % Increase the 'brightness' by 75%
-    line_color_matrix = line_color_matrix+(1-line_color_matrix)*.75;
-    
-    % This method does not work due to the openGL renderer, will break the axes
-    %     patch(  'XData',    sem_transparency_x_vals,...
-    %             'YData',    sem_transparency_y_vals,...
-    %             'FaceColor', line_color_matrix,...
-    %             'EdgeColor', 'none',...
-    %             'FaceAlpha', .35);
-    
-    % Calculate the transparency values
-    sem_transparency_x_vals = [len_data_vec, fliplr(len_data_vec)];
-    sem_transparency_y_vals = [sem_minus_values, fliplr(sem_plus_values)];
-    sem_trasnparency_z_vals = -eps*ones(1,numel(sem_transparency_y_vals));
-    
-    patch(  'XData',    sem_transparency_x_vals,...
-            'YData',    sem_transparency_y_vals,...
-            'ZData',    sem_trasnparency_z_vals,...
-            'FaceColor', line_color_matrix,...
-            'EdgeColor', 'none');
-    
+    for i = 1:size(average_values,2)
+        handle = plot(len_data_vec, average_values(:,i), line_string);
+        hold('on');
+        % Get the color of the last line drawn (after refreshing the vars)
+        potential_handles = get(gca,'Children');
+        data_handles = potential_handles(find(strcmpi('line',get(get(gca,'Children'),'type')) == 1 | ...
+                                              strcmpi('axes',get(get(gca,'Children'),'type')) == 1)); %#ok<*FNDSB>
+        color_handle = max(potential_handles(strcmpi('line',get(get(gca,'Children'),'type')))); %#ok<*FNDSB>
+        line_color_matrix = get(color_handle,'Color');
+        
+        % Increase the 'brightness' by 75%
+        line_color_matrix = line_color_matrix+(1-line_color_matrix)*.75;
+
+        % Calculate the transparency values
+        len_data_vec_no_x_overlap =[(1+(1*eps))*len_data_vec(1) len_data_vec(2:end-1) (1-eps)*len_data_vec(end)];
+        % len_data_vec_no_x_overlap =len_data_vec;
+        sem_transparency_x_vals = [len_data_vec_no_x_overlap, fliplr(len_data_vec_no_x_overlap)];
+        sem_transparency_y_vals = [sem_minus_values(:,i)', fliplr(sem_plus_values(:,i)')];
+        sem_trasnparency_z_vals = -eps*ones(1,numel(sem_transparency_y_vals));
+        switch render_mode
+            case 'no_alpha'
+                patch(  'XData',    sem_transparency_x_vals,...
+                        'YData',    sem_transparency_y_vals,...
+                        'ZData',    sem_trasnparency_z_vals,...
+                        'FaceColor', line_color_matrix,...
+                        'EdgeColor', 'none');
+            case 'alpha'
+                % This method does not work due to the openGL renderer, will break the axes
+                patch(  'XData',    sem_transparency_x_vals,...
+                        'YData',    sem_transparency_y_vals,...
+                        'FaceColor', line_color_matrix,...
+                        'EdgeColor', 'none',...
+                        'FaceAlpha', .35);
+        end
+        hold all
+    end
     % Two modes of X axis:
     %       1) -3.1 3.1 if max < 3.15
     %       2) -5.1 5.1 if max >= 3.15
@@ -123,6 +130,9 @@ function handle = simple_timeseries(data_cell,varargin)
     else
         set(gca,'YLim',[-y_max_value y_max_value])
     end
+    
+    % hard coded for now...
+    % set(gca,'YLim',[-4.1 4.1],'Xlim',x_max_vec)
     
     % Set back to hold all so the color can change!
     hold('on')

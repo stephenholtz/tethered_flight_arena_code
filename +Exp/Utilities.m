@@ -137,7 +137,7 @@ classdef Utilities
     methods (Static)
     % Common methods for running the tethered flight arena
     
-        function metadata = do_all_protocol_checks(protocol)
+        function [metadata cond_struct path_files] = do_all_protocol_checks(protocol)
             
             if ~ischar(protocol);
                 error('protocol must be a string.')
@@ -146,7 +146,7 @@ classdef Utilities
                 Exp.Utilities.unixy_output_pt1(string)
             end
 
-            [result condition_func meta_file funcs_on_SD_path pats_on_SD_path cfgs_on_SD_path] = Exp.Utilities.get_check_protocol_input(protocol);
+            [result condition_func meta_file path_files.funcs_on_SD_path path_files.pats_on_SD_path path_files.cfgs_on_SD_path] = Exp.Utilities.get_check_protocol_input(protocol);
             % The result of this function is informative. Nice to see what went wrong.
             if result.has_funcs && result.has_pats && result.has_cfgs && result.has_conds && result.has_meta
                 Exp.Utilities.unixy_output_pt2(1)
@@ -358,7 +358,7 @@ classdef Utilities
             
         end
         
-        function [metadata cond_struct] = testing_metadata
+        function metadata = testing_metadata
         % make a metadata struct that is just for testing purposes - useful
         % for debugging
         	metadata = [];
@@ -406,7 +406,7 @@ classdef Utilities
             end
         end
         
-        function result = move_save_files(daq_location,data_location)
+        function result = move_save_files(daq_location,data_location,metadata)
             % Make the directory, move the daq file, and save metadata/conditions
             
             result = 1;
@@ -449,7 +449,7 @@ classdef Utilities
 
             try
                 mkdir(fullfile(data_location),'patterns_on_SD_card');
-                copyfile(pats_on_SD_path,fullfile(data_location,'patterns_on_SD_card'));
+                copyfile(path_files.pats_on_SD_path,fullfile(data_location,'patterns_on_SD_card'));
             catch cpyErr
                 result = 0;
                 disp(cpyErr.message)
@@ -458,7 +458,7 @@ classdef Utilities
 
             try
                 mkdir(fullfile(data_location),'functions_on_SD_card');
-                copyfile(funcs_on_SD_path,fullfile(data_location,'functions_on_SD_card'));
+                copyfile(path_files.funcs_on_SD_path,fullfile(data_location,'functions_on_SD_card'));
             catch cpyErr
                 result = 0;
                 disp(cpyErr.message)
@@ -467,7 +467,7 @@ classdef Utilities
 
             try
                 mkdir(fullfile(data_location),'cfgs_on_SD_card');
-                copyfile(cfgs_on_SD_path,fullfile(data_location,'cfgs_on_SD_card'));
+                copyfile(path_files.cfgs_on_SD_path,fullfile(data_location,'cfgs_on_SD_card'));
             catch cpyErr
                 result = 0;
                 disp(cpyErr.message)

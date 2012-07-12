@@ -44,7 +44,7 @@ function Run(protocol,varargin)
     %% Primary checks in this order: For folder. Folder contents. Condition function. Metadata. Genotype.
     % Start a timer + Check the metadata is correct with a(n overly complex) gui.
     tID = tic;
-    [metadata cond_struct] = Exp.Utilities.do_all_protocol_checks(protocol);
+    [metadata cond_struct path_files] = Exp.Utilities.do_all_protocol_checks(protocol);
     Exp.Utilities.make_metadata_gui(metadata);
 
     %% Initialize the hardware and neccessary channels. Hard coded for sanity.
@@ -277,7 +277,7 @@ function Run(protocol,varargin)
         stop(DAQ_dev);
     end
 
-    res = Exp.Utilities.move_save_files(daq_location,data_location);
+    res = Exp.Utilities.move_save_files(daq_location,data_location,metadata,path_files);
 
     % Stop the timer.
     timer = toc(tID);

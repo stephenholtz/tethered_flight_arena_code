@@ -406,9 +406,8 @@ classdef Utilities
             end
         end
         
-        function result = move_save_files(daq_location,data_location,metadata,path_files)
+        function result = move_save_files(daq_location,data_location,conditions,metadata,path_files)
             % Make the directory, move the daq file, and save metadata/conditions
-            
             result = 1;
             
             try mkdir(data_location);
@@ -431,6 +430,7 @@ classdef Utilities
             % A set of save and copies to get all relevant data to the experiment's
             % folder
             try
+                metadata; %#ok<*VUNUS>
                 save(fullfile(data_location,'metadata'),'metadata');
             catch cpyErr
                 result = 0;
@@ -439,7 +439,7 @@ classdef Utilities
             end
 
             try
-                conditions = cond_struct; %#ok<*NASGU>
+                conditions;
                 save(fullfile(data_location,'conditions'),'conditions');
             catch cpyErr
                 result = 0;

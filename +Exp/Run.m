@@ -277,7 +277,7 @@ function Run(protocol,varargin)
         stop(DAQ_dev);
     end
 
-    res = Exp.Utilities.move_save_files(daq_location,data_location,,cond_struct,metadata,path_files);
+    res = Exp.Utilities.move_save_files(daq_location,data_location,cond_struct,metadata,path_files);
 
     % Stop the timer.
     timer = toc(tID);

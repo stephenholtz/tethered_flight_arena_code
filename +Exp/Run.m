@@ -45,7 +45,10 @@ function Run(protocol,varargin)
     % Start a timer + Check the metadata is correct with a(n overly complex) gui.
     tID = tic;
     [metadata cond_struct path_files] = Exp.Utilities.do_all_protocol_checks(protocol);
-    Exp.Utilities.make_metadata_gui(metadata);
+    choice = Exp.Utilities.make_metadata_gui(metadata);
+    if ~choice
+        return
+    end
 
     %% Initialize the hardware and neccessary channels. Hard coded for sanity.
     string = ('Initializing hardware');

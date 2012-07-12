@@ -515,7 +515,7 @@ classdef Utilities
         end
         end     
     
-        function make_metadata_gui(metadata)
+        function decision = make_metadata_gui(metadata)
             % Double check the metadata is correct with a(n overly complex) gui.
             %
             % Additional option to save a temporary experiment with all fields

@@ -246,8 +246,6 @@ function Run(protocol,varargin)
                     end
                     reluctant_email_sent = 1;
                 end
-
-                pause(base_time/2) % let the fly have some time in closed loop before going back to the stims
             end
 
             Panel_com('stop');

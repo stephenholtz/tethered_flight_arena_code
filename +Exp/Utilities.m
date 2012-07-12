@@ -1,6 +1,6 @@
 classdef Utilities
-    %UTILITIES houses all the error checking methods and stored fields for
-    %easily running a tethered flight experiment.
+    %UTILITIES houses all the error checking/initialization methods and
+    %stored fields for easily running a tethered flight experiment.
     
     %-----PROPERTIES FOR ERROR CHECKING------------------------------------
     properties (Constant)
@@ -47,6 +47,9 @@ classdef Utilities
                                 'fly_tag',...           % for keeping track of flies that need histology etc.,
                                 'note',...              % for misc things that don't fit, but don't need a category
                                 'daqFile'};             % this shouldn't change, but it might be useful to have control of it
+                            
+        % Set the length of the strings for my unixy output, aligned with rest.
+        string_length = 70;                            
     end
     
     %-----METHODS FOR SETTING Panel_com/running experiment-----------------
@@ -101,12 +104,107 @@ classdef Utilities
                 result = 1;
             end
                 stop(monitor_channel);
-            end
+        end
+            
+        function initialize_default_hardware()
+        % Initialize the hardware and neccessary channels. Hard coded for sanity.
+            % Reset the daq
+            daqreset; % useful!
+            pause(.2);
+
+            % Setup the wbf monitor for checking if the fly is flying
+            AI_wbf = analoginput('mcc',0);
+            addchannel(AI_wbf, 0);
+            set(AI_wbf,'TriggerType','Immediate','SamplesPerTrigger',1,'ManualTriggerHwOn','Start')
+            pause(.2);
+
+            % Setup the digital trigger for the buzzer/fan
+            DIO_trig = digitalio('mcc',0);
+            addline(DIO_trig,0,'Out');
+            pause(.2);
+
+            % Setup the stimulus sync-er for ensuring full stim presentation
+            AI_stim_sync = analoginput('mcc',0);
+            addchannel(AI_stim_sync, 1);
+            set(AI_stim_sync,'TriggerType','Immediate','SamplesPerTrigger',1,'ManualTriggerHwOn','Start')
+            pause(.2);
+        
+        end
+        
 	end
     
     %-----METHODS FOR ERROR CHECKING---------------------------------------
     methods (Static)
     % Common methods for running the tethered flight arena
+    
+        function metadata = do_all_protocol_checks(protocol)
+            
+            if ~ischar(protocol);
+                error('protocol must be a string.')
+            else
+                string = (['Loading ', protocol, ' (specified protocol).']);
+                Exp.Utilities.unixy_output_pt1(string)
+            end
+
+            [result condition_func meta_file funcs_on_SD_path pats_on_SD_path cfgs_on_SD_path] = Exp.Utilities.get_check_protocol_input(protocol);
+            % The result of this function is informative. Nice to see what went wrong.
+            if result.has_funcs && result.has_pats && result.has_cfgs && result.has_conds && result.has_meta
+                Exp.Utilities.unixy_output_pt2(1)
+                string = (['Found ', protocol, ' SD card info.']);
+                Exp.Utilities.unixy_output_pt1(string)
+                Exp.Utilities.unixy_output_pt2(1)
+            else
+                Exp.Utilities.unixy_output_pt2(0)
+                disp('Protocol folder must contain SD card info!')
+                disp(result)
+                error('SD card info requred');
+            end
+
+            [result cond_struct] = Exp.Utilities.get_checked_cond_input(condition_func);
+            string = ('Checking condition function');
+            Exp.Utilities.unixy_output_pt1(string)
+            if ~result;
+                Exp.Utilities.unixy_output_pt2(0)
+                error('Conditions failed to load');
+            else
+                Exp.Utilities.unixy_output_pt2(1)
+
+            end
+
+            result = Exp.Utilities.check_cond_file(cond_struct);
+            string = ('Verifying condition function contents');
+            Exp.Utilities.unixy_output_pt1(string)
+            if ~result;
+                Exp.Utilities.unixy_output_pt2(0)
+                error('Improper conditions file');
+            else
+                Exp.Utilities.unixy_output_pt2(1)
+            end
+
+            metadata.Protocol = protocol;
+            [result metadata] = Exp.Utilities.get_check_meta_file(meta_file,metadata);
+            string = ('Checking metadata file and contents');
+            Exp.Utilities.unixy_output_pt1(string)
+            if ~result;
+                Exp.Utilities.unixy_output_pt2(0)
+                disp(Exp.Utilities.metadataFieldList);
+                error('Metadata failed to load/missing fields from meta file.');
+            else
+                Exp.Utilities.unixy_output_pt2(1)
+            end
+
+            string = ('Checking for appropriate grouped conditions');
+            Exp.Utilities.unixy_output_pt1(string)
+            [result grouped_conds_out] = Exp.Utilities.get_check_grouped_conds_file(protocol);
+            if result
+                Exp.Utilities.unixy_output_pt2(1)
+                metadata.grouped_conditions = grouped_conds_out;
+            else
+                Exp.Utilities.unixy_output_pt2(0)
+                metadata.grouped_conditions = 'null';    
+            end
+
+        end    
         
 		function [result varargout] = get_check_protocol_input(protocol)
 		% function [result condition_func meta_file funcs_on_SD pats_on_SD cfgs_on_SD] = get_check_protocol_input(protocol)
@@ -308,6 +406,74 @@ classdef Utilities
             end
         end
         
+        function result = move_save_files(daq_location,data_location)
+            % Make the directory, move the daq file, and save metadata/conditions
+            
+            result = 1;
+            
+            try mkdir(data_location);
+            catch mkErr
+                result = 0;
+                disp(mkErr.message);
+                disp(data_location);
+                disp('Problem making directory for daq file! DO ALL MANUALLY')
+                return
+            end
+            
+            try movefile(daq_location,data_location);
+            catch moveErr
+                result = 0;
+                disp(moveErr.message);
+                disp(data_location);
+                disp('Problem moving daq file to above location! Do manually.')
+            end
+
+            % A set of save and copies to get all relevant data to the experiment's
+            % folder
+            try
+                save(fullfile(data_location,'metadata'),'metadata');
+            catch cpyErr
+                result = 0;
+                disp(cpyErr.message)
+                disp('Problem saving metadata.')
+            end
+
+            try
+                conditions = cond_struct; %#ok<*NASGU>
+                save(fullfile(data_location,'conditions'),'conditions');
+            catch cpyErr
+                result = 0;
+                disp(cpyErr.message)
+                disp('Problem evaluating/copying conditions')
+            end
+
+            try
+                mkdir(fullfile(data_location),'patterns_on_SD_card');
+                copyfile(pats_on_SD_path,fullfile(data_location,'patterns_on_SD_card'));
+            catch cpyErr
+                result = 0;
+                disp(cpyErr.message)
+                disp('Problem moving/copying patterns')
+            end
+
+            try
+                mkdir(fullfile(data_location),'functions_on_SD_card');
+                copyfile(funcs_on_SD_path,fullfile(data_location,'functions_on_SD_card'));
+            catch cpyErr
+                result = 0;
+                disp(cpyErr.message)
+                disp('Problem moving/copying functions')
+            end
+
+            try
+                mkdir(fullfile(data_location),'cfgs_on_SD_card');
+                copyfile(cfgs_on_SD_path,fullfile(data_location,'cfgs_on_SD_card'));
+            catch cpyErr
+                result = 0;
+                disp(cpyErr.message)
+                disp('Problem moving/copying panel_cfgs')
+            end
+        end
     end
     
     %-----MISC METHODS---------------------------------------
@@ -332,6 +498,106 @@ classdef Utilities
 				result = 0;
 				disp(mailErr.message);
             end
-		end
+        end
+        
+        function unixy_output_pt1(string)
+        string = [string, repmat(' ',1,(Exp.Utilities.string_length-numel(string)))];
+        fprintf(string)
+        end
+    
+        function unixy_output_pt2(worked)
+        if worked == 1 
+            fprintf('[Done]\n')
+        elseif worked == 0
+            fprintf('[Failed]\n')
+        elseif worked == -1
+            fprintf('[Failed: No Flight. Added back to queue.]\n')
+        end
+        end     
+    
+        function make_metadata_gui(metadata)
+            % Double check the metadata is correct with a(n overly complex) gui.
+            %
+            % Additional option to save a temporary experiment with all fields
+            % changed to testing, when saved.
+            
+            main_fh = figure;
+            figName = 'Metadata for Current Experiment';
+            set(main_fh,'NumberTitle','off','Name',figName,'Position',[350,75,470,355],'PaperOrientation','portrait','Color','w');
+            annotation(main_fh, 'textbox',[.035 .885 .1 .1],'String',figName,'FontSize',12, 'FontWeight','demi', 'EdgeColor', 'white')
+            
+            decision = 0;
+            [type value] = return_type_value(metadata);
+            make_popup_metadata_ui(main_fh,type,value);
+
+            % Function to get a type and value cell for display on the 'gui'
+                function [value_cell type_cell] = return_type_value(metadata)
+                    fields = fieldnames(metadata);
+                    for ind = 1:numel(fieldnames(metadata))
+                    value_cell{ind} = {getfield(metadata, fields{ind})}; %#ok<*GFLD,*AGROW>            
+                    if ~iscell(value_cell{ind}{1})
+                        value_cell{ind} = {getfield(metadata, fields{ind})}; %#ok<*GFLD,*AGROW>
+                    else
+                        value_cell{ind} = 'values exist';
+                    end            
+                        type_cell{ind} = fields(ind);
+                    end
+                end
+
+            % Function to make the popup ui.
+                function make_popup_metadata_ui(fig_handle,type,value)
+                    uitable('Parent',fig_handle, 'Units','normalized','Position',[.05 .05 .68 .85],'ColumnWidth',{175},...
+                        'RowName',[value{:}]','ColumnName','Values',...
+                        'Data',[type{:}]');
+                    uicontrol('style','pushbutton','Units','normalized','string','Accept',...
+                        'Position',[0.74 0.7 0.2 0.125],'BackgroundColor',[.6 .9 .6],...
+                        'callback',{@MetaChoice,'Accepted',fig_handle});
+                    uicontrol('style','pushbutton','Units','normalized','string','Deny',...
+                        'Position',[0.74 0.5 0.2 0.125],'BackgroundColor',[.9 .6 .6],...
+                        'callback',{@MetaChoice,'Denied',fig_handle});
+                    uicontrol('style','pushbutton','Units','normalized','string','ModifyFile',...
+                        'Position',[0.74 0.3 0.2 0.125],'BackgroundColor',[.6 .9 .9],...
+                        'callback',{@MetaChoice,'ModifyFile',fig_handle});
+                    uicontrol('style','pushbutton','Units','normalized','string','Testing Defaults',...
+                        'Position',[0.74 0.1 0.2 0.125],'BackgroundColor',[.6 .6 .9],...
+                        'callback',{@MetaChoice,'Defaults',fig_handle});
+                end
+
+            % A short callback for the metadata doublecheck gui.
+                function MetaChoice(~, ~, choice, fig_handle)
+                    switch choice
+                        case 'Denied'
+                            decision = 0;
+                            close(fig_handle);
+                        case 'Accepted'
+                            decision = 1;
+                            close(fig_handle);
+                        case 'Defaults'
+                            % reload the testing values to show they changed, then
+                            % close/continue.
+                            decision = 2;
+                            [metadata] = Exp.Utilities.testing_metadata;
+                            [type_cell value_cell] = return_type_value(metadata);
+                            make_popup_metadata_ui(fig_handle,type_cell,value_cell);
+                            pause(1);
+                            close(fig_handle);
+                        case 'ModifyFile'
+                            open(meta_file);
+                            help_dlg_h = helpdlg('Edit file, save and rerun experiment.');
+                            uiwait(help_dlg_h)
+                            close(fig_handle);
+                    end
+                end
+
+            % Wait for the figure to close before continuing. End experiment if
+            % the choice was rejected
+            waitfor(main_fh);
+            if ~decision
+                disp('Metadata choice rejected. Ending experiment.')
+                return
+            end
+            
+        end
+        
     end
 end

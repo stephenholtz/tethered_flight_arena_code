@@ -117,12 +117,22 @@ function handle = simple_timeseries(data_cell,varargin)
     %       2) -5.1 5.1 if max >= 3.15
     
     % Append all these together and take the max/min values
-    YData = get(data_handles,'YData');
-    y_max_value = max([YData{:}]);
-    XData = get(data_handles,'XData');
-    x_max_vec = [min([XData{:}]) max([XData{:}])];
     
-    % Also need to reapply the X and Y axis for some reason after a patch
+    YData = get(data_handles,'YData');
+    if iscell(YData)
+        y_max_value = max([YData{:}]);
+    else
+        y_max_value = max(YData);
+    end
+    
+    XData = get(data_handles,'XData');
+    if iscell(XData)
+        x_max_vec = [min([XData{:}]) max([XData{:}])];        
+    else
+        x_max_vec = [min(XData) max(XData)];        
+    end
+    
+        % Also need to reapply the X and Y axis for some reason after a patch
     if y_max_value(1) < 3.15
         set(gca,'YLim',[-3.1 3.1],'XLim',x_max_vec)
     elseif y_max_value(1) < 10

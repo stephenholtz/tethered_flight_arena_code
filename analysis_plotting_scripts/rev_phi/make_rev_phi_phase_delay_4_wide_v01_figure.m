@@ -40,7 +40,7 @@ if c == 1;
     geno.gmr_48a08dbd_gal80ts_kir21          = tfAnalysis.ExpSet(gmr_48a08dbd_gal80ts_kir21);
     geno.gmr_31c06ad_34g07dbd_gal80ts_kir21  = tfAnalysis.ExpSet(gmr_31c06ad_34g07dbd_gal80ts_kir21);
     geno.gmr_52h01ad_17c11dbd_gal80ts_kir21  = tfAnalysis.ExpSet(gmr_52h01ad_17c11dbd_gal80ts_kir21);
-    
+
 end
 
 cd /Users/holtzs/Desktop/rev_phi_phase_delay_4_wide_v01_figures
@@ -172,6 +172,7 @@ end
 
 % summary figures across all 
 if summ_fig_flag
+
     % Make a regular and out of phase reverse phi comparison across
     % genotypes
     sumFigHand(1) = figure('Name','RP + RPOOP Summary Figure','NumberTitle','off','Color',[1 1 1],'Position',[50 50 750 750]);
@@ -189,7 +190,7 @@ if summ_fig_flag
     legend(reshape(reshape(repmat(geno_fieldnames,2,1),numel(geno_fieldnames),2)',numel(geno_fieldnames)*2,1),'Interpreter','none')
     ylabel('\Sigma LmR WBA [V]')
     xlabel('Temporal Frequency [Hz]')
-    title('Out of phase flicker: before')
+    title('Standard Reverse Phi')
     box off    
     
     % Compare the completely out of phase responses    
@@ -222,59 +223,198 @@ if summ_fig_flag
     box off
     
     annotation('Textbox',[.3 .85 .6 .15],'String','Standard and Out of Phase Reverse Phi Across Gal4 Lines','edgecolor','none')
+    export_fig(gcf,['standard_oop_rev_phi_'  geno_fieldnames{f}],'-pdf')
     
     % Make the 'zero crossing' figure
-    sumFigHand(2) = figure('Name','Summary Zero Crossing Point','NumberTitle','off','Color',[1 1 1],'Position',[50 50 750 750]);
     
     for f = 1:numel(geno_fieldnames)
+        grouped_conditions = getfield(geno,geno_fieldnames{f},'grouped_conditions');
         for i = 1:numel(grouped_conditions)
             cond_list = grouped_conditions{i}.list;
             % Get the points for one speed of the before flicker conditions
-            for c = 1:median(numel(cond_list));
+            for c = 1:median(1:numel(cond_list))+1;
                 temp_genotype = eval(['geno.' geno_fieldnames{f}]);
-                [means(c) sems(c)]= temp_genotype.get_trial_data([cond_list{c}(1),cond_list{c}(2)],'lmr','mean','yes','all');
+                [means(c) sems(c)] = temp_genotype.get_trial_data([cond_list{c}(1),cond_list{c}(2)],'lmr','mean','yes','all');
                 x_values(c) = temp_genotype.grouped_conditions{i}.x_axis(c);
             end
+            means = means(2:end);sems = sems(2:end);x_values = x_values(2:end);
+            % Do splines on means and +/- sems
+            b_zero_cross(f).x_interpolant=min(x_values):.25:max(x_values); %#ok<*AGROW>
+            b_zero_cross(f).splined_means = spline(x_values,means,b_zero_cross(f).x_interpolant);
+            b_zero_cross(f).splined_sems_p = spline(x_values,means+sems,b_zero_cross(f).x_interpolant);
+            b_zero_cross(f).splined_sems_m = spline(x_values,means-sems,b_zero_cross(f).x_interpolant);
             
-            splined_means = spline(x_values,means,min(x_values):max(x_values));
+            % Find the zeros of the splines and then plot them to sanity
+            % check!
+            [~,min_ind]=min(abs(b_zero_cross(f).splined_means));
+            b_zero_cross(f).mean(i) = b_zero_cross(f).x_interpolant(min_ind);
             
-            zero_cross.mean(i)  = fzero(splined_means);
-            zero_cross.sem(i)   = [];
-            %handle_array(i) = tfPlot.simple_tuning_curve({[means{:}],[sems{:}],[temp_genotype.grouped_conditions{i}.x_axis]},0);
-            %title_array{i} = temp_genotype.grouped_conditions{i}.name;
-            means = []; sems = [];
+            [~,min_ind_p]=min(abs(b_zero_cross(f).splined_sems_p));
+            b_zero_cross(f).sem_p(i) = b_zero_cross(f).x_interpolant(min_ind_p);
+            
+            [~,min_ind_m]=min(abs(b_zero_cross(f).splined_sems_m));                    
+            b_zero_cross(f).sem_m(i)  = b_zero_cross(f).x_interpolant(min_ind_m);
+            b_x_axis_vals(i) = temp_genotype.grouped_conditions{i}.tf;
+
+            means = []; sems = []; x_values = []; c = 0;
+            for c_iter = 1+median(1:numel(cond_list)):numel(cond_list);
+                c = c + 1;
+                temp_genotype = eval(['geno.' geno_fieldnames{f}]);
+                [means(c) sems(c)] = temp_genotype.get_trial_data([cond_list{c_iter}(1),cond_list{c_iter}(2)],'lmr','mean','yes','all');
+                x_values(c) = temp_genotype.grouped_conditions{i}.x_axis(c_iter);
+            end
+            
+            means = means(1:end-2);sems = sems(1:end-2);x_values = x_values(1:end-2);
+            % Do splines on means and +/- sems
+            a_zero_cross(f).x_interpolant=min(x_values):.25:max(x_values);
+            a_zero_cross(f).splined_means = spline(x_values,means,a_zero_cross(f).x_interpolant);
+            a_zero_cross(f).splined_sems_p = spline(x_values,means+sems,a_zero_cross(f).x_interpolant);
+            a_zero_cross(f).splined_sems_m = spline(x_values,means-sems,a_zero_cross(f).x_interpolant);
+            
+            % Find the zeros of the splines and then plot them to sanity
+            % check!
+            [~,min_ind]=min(abs(a_zero_cross(f).splined_means));
+            a_zero_cross(f).mean(i)  = a_zero_cross(f).x_interpolant(min_ind);
+            
+            [~,min_ind_p]=min(abs(a_zero_cross(f).splined_sems_p));
+            a_zero_cross(f).sem_p(i)      = a_zero_cross(f).x_interpolant(min_ind_p);
+                 
+            [~,min_ind_m]=min(abs(a_zero_cross(f).splined_sems_m));                    
+            a_zero_cross(f).sem_m(i)  = a_zero_cross(f).x_interpolant(min_ind_m);
+            a_x_axis_vals(i) = temp_genotype.grouped_conditions{i}.tf;
+                
+            
+            %Explanatory plot for data to come
+                figure('Name',[num2str(i) ' Hz Zero Crossing Point ',geno_fieldnames{f}],'NumberTitle','off','Color',[1 1 1],'Position',[50 50 750 750]);
+                subplot(2,3,1)
+            %     plot(b_zero_cross(f).x_interpolant,b_zero_cross(f).splined_sems_m); hold all
+            %     plot(x_values,means-sems); hold on
+            %     plot(b_zero_cross(f).sem_p(i),b_zero_cross(f).splined_sems_m(min_ind_p),'o')
+            %     
+                plot(a_zero_cross(f).x_interpolant,a_zero_cross(f).splined_sems_m); hold all
+                plot(x_values,means-sems); hold on
+                plot(a_zero_cross(f).sem_p(i),a_zero_cross(f).splined_sems_m(min_ind_p),'o')    
+
+                title('SEM -, spline and zero crossing')
+                ylabel('LMR Means')
+
+                subplot(2,3,2)
+            %     plot(b_zero_cross(f).x_interpolant,b_zero_cross(f).splined_means);hold all
+            %     plot(x_values,means); hold on            
+            %     plot(b_zero_cross(f).mean(i),b_zero_cross(f).splined_means(min_ind),'o')
+
+                plot(a_zero_cross(f).x_interpolant,a_zero_cross(f).splined_means);hold all
+                plot(x_values,means); hold on            
+                plot(a_zero_cross(f).mean(i),a_zero_cross(f).splined_means(min_ind),'o')
+
+                title('Mean , spline and zero crossing')
+
+                subplot(2,3,3)
+            %     plot(b_zero_cross(f).x_interpolant,b_zero_cross(f).splined_sems_p); hold all
+            %     plot(x_values,means+sems); hold on            
+            %     plot(b_zero_cross(f).sem_p(i),b_zero_cross(f).splined_sems_p(min_ind_p),'o')
+
+                plot(a_zero_cross(f).x_interpolant,a_zero_cross(f).splined_sems_p); hold all
+                plot(x_values,means+sems); hold on            
+                plot(a_zero_cross(f).sem_p(i),a_zero_cross(f).splined_sems_p(min_ind_p),'o')
+
+                title('SEM +, spline and zero crossing')
+
+                subplot(2,3,[4 5 6])
+                hold all
+            %     plot(x_values,means);        
+            %     plot(b_zero_cross(f).x_interpolant,b_zero_cross(f).splined_means); hold on
+            %     plot(b_zero_cross(f).mean(i),b_zero_cross(f).splined_means(min_ind),'o')
+                hold all
+                plot(a_zero_cross(f).x_interpolant,a_zero_cross(f).splined_means); hold on
+                plot(a_zero_cross(f).mean(i),a_zero_cross(f).splined_means(min_ind),'o')
+                hold all
+            %     plot(b_zero_cross(f).x_interpolant,b_zero_cross(f).splined_sems_p,'--'); hold on
+            %     plot(b_zero_cross(f).sem_p(i),b_zero_cross(f).splined_sems_p(min_ind_p),'o')
+            %     hold all
+                plot(a_zero_cross(f).x_interpolant,a_zero_cross(f).splined_sems_p,'--'); hold on
+                plot(a_zero_cross(f).sem_p(i),a_zero_cross(f).splined_sems_p(min_ind_p),'o')    
+                hold all
+            %     plot(b_zero_cross(f).x_interpolant,b_zero_cross(f).splined_sems_m,'--'); hold on
+            %     plot(b_zero_cross(f).sem_m(i),b_zero_cross(f).splined_sems_m(min_ind_m),'o')
+            %     hold all
+                plot(a_zero_cross(f).x_interpolant,a_zero_cross(f).splined_sems_m,'--'); hold on
+                plot(a_zero_cross(f).sem_m(i),a_zero_cross(f).splined_sems_m(min_ind_m),'o')
+
+                xlabel('Flicker Motion offset [ms]')
+                title('Zero Crossing and Likely Error Determined...')
+                
+                annotation('Textbox',[.3 .85 .6 .15],'String',[ num2str(i) ' Hz Zero Crossing: ',geno_fieldnames{i} '  N = ',num2str(numel(temp_genotype.experiment))],'edgecolor','none','Interpreter','none')
+                export_fig(gcf,[ num2str(i) 'hz_zero_point_cross_'  geno_fieldnames{f}],'-pdf')
+                
         end
-        % Determine the 
-        
+        % Plot each genotypes tf's zero crossing
+        % handle_array(i) = tfPlot.simple_tuning_curve({[a_zero_cross(f).mean],[a_zero_cross(f).mean]-[a_zero_cross(f).sem_p],[b_x_axis_vals{:}]},0);
+        %title_array{i} = temp_genotype.grouped_conditions{i}.name;
     end
     
     % Zero cross for all temp freq: before
-    subplot(2,2,1)
-    
+    sumFigHand(2) = figure('Name','Summary Zero Crossing Point','NumberTitle','off','Color',[1 1 1],'Position',[50 50 750 750]);    
+    subplot(2,3,1)
+    for f = 1:numel(b_zero_cross)
+        tfPlot.simple_tuning_curve({[b_zero_cross(f).mean],[b_zero_cross(f).mean]-[b_zero_cross(f).sem_p],b_x_axis_vals},0.01,false);
+        hold all
+    end
+    %set(gca,'Xticklabel',x_axis_names)
+    box off
     title('Zero Point Cross: Fick Before Motion')
+    ylabel('Abs Val of zero crossing value for flicker offset [ms]')
+    xlabel('Stim Temporal Frequency')
     
     % Zero cross for all temp freq: after
-    subplot(2,2,2)
+    subplot(2,3,2)
     
+    for f = 1:numel(a_zero_cross)
+        tfPlot.simple_tuning_curve({[a_zero_cross(f).mean],[a_zero_cross(f).mean]-[a_zero_cross(f).sem_p],a_x_axis_vals},0.01,false);
+        hold all
+    end
+    box off
     title('Zero Point Cross: Fick After Motion')
-    
+    l_hand=legend(geno_fieldnames);
+    set(l_hand,'Position',[0.65 0.775 0.3 0.18],'Interpreter','none');
     % Make a comparison of zero crossing before vs after for each temp freq
     % 1 Hz
     subplot(2,3,4)
-    
+    for f = 1:numel(a_zero_cross)
+        hz_stim_ind = 1;
+        tfPlot.simple_tuning_curve({abs([b_zero_cross(f).mean(hz_stim_ind) a_zero_cross(f).mean(hz_stim_ind)]),abs([b_zero_cross(f).mean(hz_stim_ind)-b_zero_cross(f).sem_p(hz_stim_ind), a_zero_cross(f).mean(hz_stim_ind)-a_zero_cross(f).sem_p(hz_stim_ind)]),[1 2]},.015);
+        hold all
+    end
+    box off
+    set(gca,'xticklabel',{'','b','a',''})
+    ylabel('Abs Val of zero crossing value for flicker offset [ms]')
+    xlabel('Flicker Phase')
     title('Before vs After: 1 Hz')
     
     % 2 Hz
     subplot(2,3,5)
-    
+    for f = 1:numel(a_zero_cross)    
+        hz_stim_ind = 2;
+        tfPlot.simple_tuning_curve({abs([b_zero_cross(f).mean(hz_stim_ind) a_zero_cross(f).mean(hz_stim_ind)]),abs([b_zero_cross(f).mean(hz_stim_ind)-b_zero_cross(f).sem_p(hz_stim_ind), a_zero_cross(f).mean(hz_stim_ind)-a_zero_cross(f).sem_p(hz_stim_ind)]),[1 2]},.015);
+        hold all
+    end
+    box off    
+    set(gca,'xticklabel',{'','b','a',''})    
     title('Before vs After: 2 Hz')
-    
+
     % 3 Hz
     subplot(2,3,6)
-    
+    for f = 1:numel(a_zero_cross)    
+        hz_stim_ind = 3;
+        tfPlot.simple_tuning_curve({abs([b_zero_cross(f).mean(hz_stim_ind) a_zero_cross(f).mean(hz_stim_ind)]),abs([b_zero_cross(f).mean(hz_stim_ind)-b_zero_cross(f).sem_p(hz_stim_ind), a_zero_cross(f).mean(hz_stim_ind)-a_zero_cross(f).sem_p(hz_stim_ind)]),[1 2]},.015);
+        hold all    
+    end
+    box off    
+    set(gca,'xticklabel',{'','b','a',''})    
     title('Before vs After: 3 Hz')
 
     annotation('Textbox',[.3 .85 .6 .15],'String','Reverse Phi Zero Point Crossing Across Gal4 Lines','edgecolor','none')    
+    export_fig(gcf,'zero_point_cross_summary','-pdf')
     
 end
 

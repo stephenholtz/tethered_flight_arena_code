@@ -122,6 +122,7 @@ for size = [2 4 6 8 12 24]
         otherwise
             error('is this linux?')            
     end
+    
     counter = counter + 1;
     if numel(num2str(counter)) < 2
         count = ['00' num2str(counter)];

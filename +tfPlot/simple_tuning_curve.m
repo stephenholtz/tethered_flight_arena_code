@@ -32,7 +32,11 @@ function tune_handle = simple_tuning_curve(data_cell,varargin)
     else
         x_offset_factor    = .1;
     end
-    
+    if nargin == 3
+        use_dotted  = varargin{2};
+    else
+        use_dotted  = 1;
+    end
     % if the hold on or hold all is selected, we obviously want to plot
     % more than one curve, so have an offset, otherwise, don't mess up the
     % x positions!
@@ -75,12 +79,14 @@ function tune_handle = simple_tuning_curve(data_cell,varargin)
     y_vals = get(gca,'YLim');
     x_vals = get(gca,'XLim');
     x_len_vec = x_vals(1):diff(x_vals)/10:x_vals(2);
+    
+    if use_dotted
     if y_vals(1)*y_vals(2) < 1
         hold('all')
         plot(x_len_vec,zeros(1,numel(x_len_vec)),'LineStyle','--','Color',zero_color);
         set(max(get(gca,'Children')),'Tag','zero_line')
     end
-
+    end
 %fix_ebar_tee_width(4);
 
 % function fix_ebar_tee_width(width_mod)

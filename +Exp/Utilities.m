@@ -406,7 +406,7 @@ classdef Utilities
             end
         end
         
-        function result = move_save_files(daq_location,data_location,metadata)
+        function result = move_save_files(daq_location,data_location,path_files)
             % Make the directory, move the daq file, and save metadata/conditions
             
             result = 1;

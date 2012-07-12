@@ -106,7 +106,7 @@ classdef Utilities
                 stop(monitor_channel);
         end
             
-        function initialize_default_hardware()
+        function [AI_wbf DIO_trig AI_stim_sync] = initialize_default_hardware()
         % Initialize the hardware and neccessary channels. Hard coded for sanity.
             % Reset the daq
             daqreset; % useful!
@@ -358,7 +358,7 @@ classdef Utilities
             
         end
         
-        function metadata = testing_metadata
+        function [metadata cond_struct] = testing_metadata
         % make a metadata struct that is just for testing purposes - useful
         % for debugging
         	metadata = [];

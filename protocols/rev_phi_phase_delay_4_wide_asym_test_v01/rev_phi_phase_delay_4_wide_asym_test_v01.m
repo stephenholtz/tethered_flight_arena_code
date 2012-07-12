@@ -46,7 +46,9 @@ for pat = 2; % 4 Wide, full field
                     case {1, 2} % tf 1
 %                         delay_funcs_y = [3 4 6 8 10 12 14 16 18 20 22 24 26 28]; % [0]
 %                         delay_funcs_y = fliplr(delay_funcs_y);
-                        delay_funcs_y = [3 4:2:42 44 45:2:83]; % [0]
+%                         delay_funcs_y = [3 4:2:42 44 45:2:83]; % [0]
+%                         delay_funcs_y = fliplr(delay_funcs_y);
+                        delay_funcs_y = [3 4:4:69 70 71:4:136]; % [0]
                         delay_funcs_y = fliplr(delay_funcs_y);
                 end
             else
@@ -55,8 +57,8 @@ for pat = 2; % 4 Wide, full field
                     % This side of flicker has only before movement conditions
                     case {1, 2} % tf 1
 %                         delay_funcs_y = [4 6 8 10 12 14 16 18 20 22 24 26 28] + 1;
-                        delay_funcs_y = [5:2:43 46:2:84];
-
+%                         delay_funcs_y = [5:2:43 46:2:84];
+                        delay_funcs_y = [5:4:69 72:4:136];
                 end
             end
         

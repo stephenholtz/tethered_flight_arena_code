@@ -22,10 +22,10 @@ function make_rev_phi_phase_del_4_wide_asym_test_v01_position_functions
 %% Set up some default values
 
 project = 'rev_phi_phase_delay_4_wide_asym_test_v01'; % Determines the destination show up
-temporal_freqs = 1.25;             % Set of tf's to use, the .5 is set below to show up as 0pt5 when saved
-verbose_flag = 1;               % will make an additional position function that has out of phase flicker and movement
+temporal_freqs = .75;             % Set of tf's to use, the .5 is set below to show up as 0pt5 when saved
+verbose_flag = 0;               % will make an additional position function that has out of phase flicker and movement
 sampling_rate = 400;            % 400 hz allows for 2.5ms precision in offsets
-% THIS WILL BREAK (SEE LINE 150) IF IT IS MORE THAN A FLICKER, RECODE LATER
+% THIS WILL BREAK (SEE LINE 150?) IF IT IS MORE THAN A FLICKER RECODE LATER
 % FOR MORE GENERALITY!
 pattern_y_length = 2;           % on and off flicker for the rev phi
 max_num_delays = -1;% 8;        % if -1 it will make all, and check that the completely out of phase position function works...

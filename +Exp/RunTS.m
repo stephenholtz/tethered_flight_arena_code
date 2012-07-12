@@ -5,7 +5,7 @@ function RunTS(protocol,varargin)
 %
     tID = tic;
     metadata = Exp.Utilities.do_all_protocol_checks(protocol);
-    make_metadata_gui(metadata);
+    Exp.Utilities.make_metadata_gui(metadata);
 
 
 

@@ -44,14 +44,14 @@ function Run(protocol,varargin)
     %% Primary checks in this order: For folder. Folder contents. Condition function. Metadata. Genotype.
     % Start a timer + Check the metadata is correct with a(n overly complex) gui.
     tID = tic;
-    metadata = Exp.Utilities.do_all_protocol_checks(protocol);
-    make_metadata_gui(metadata);
+    [metadata cond_struct] = Exp.Utilities.do_all_protocol_checks(protocol);
+    Exp.Utilities.make_metadata_gui(metadata);
 
     %% Initialize the hardware and neccessary channels. Hard coded for sanity.
     string = ('Initializing hardware');
     Exp.Utilities.unixy_output_pt1(string)
-    Exp.Utilities.initialize_default_hardware;
-
+    [AI_wbf DIO_trig AI_stim_sync] = Exp.Utilities.initialize_default_hardware;
+    
     % For acquiring the actual data, if wanted
     if nargin > 2 ;
         if isnumeric(varargin{2});
@@ -62,7 +62,7 @@ function Run(protocol,varargin)
     else
         record = true;
     end
-
+    
     if record
         DAQ_dev = analoginput('nidaq','Dev1');
         addchannel(DAQ_dev,0:6);

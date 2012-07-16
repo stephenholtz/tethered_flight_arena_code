@@ -137,7 +137,7 @@ classdef Utilities
     methods (Static)
     % Common methods for running the tethered flight arena
     
-        function [metadata cond_struct path_files] = do_all_protocol_checks(protocol)
+        function [metadata cond_struct meta_file path_files] = do_all_protocol_checks(protocol)
             
             if ~ischar(protocol);
                 error('protocol must be a string.')
@@ -515,7 +515,7 @@ classdef Utilities
         end
         end     
     
-        function decision = make_metadata_gui(metadata)
+        function decision = make_metadata_gui(metadata,meta_file)
             % Double check the metadata is correct with a(n overly complex) gui.
             %
             % Additional option to save a temporary experiment with all fields

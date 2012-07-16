@@ -45,8 +45,8 @@ function Run(protocol,varargin)
     %% Primary checks in this order: For folder. Folder contents. Condition function. Metadata. Genotype.
     % Start a timer + Check the metadata is correct with a(n overly complex) gui.
     tID = tic;
-    [metadata cond_struct path_files] = Exp.Utilities.do_all_protocol_checks(protocol);
-    choice = Exp.Utilities.make_metadata_gui(metadata);
+    [metadata cond_struct meta_file path_files] = Exp.Utilities.do_all_protocol_checks(protocol);
+    choice = Exp.Utilities.make_metadata_gui(metadata,meta_file);
     if ~choice
         return
     end

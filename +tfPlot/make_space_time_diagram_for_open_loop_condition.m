@@ -96,8 +96,28 @@ if condition_struct.Mode(1) == 4
     end
     clear func
 elseif condition_struct.Mode(1) == 0
-    x_index = 1:num_frames + condition_struct.InitialPosition(1) - 1;
-    x_index = mod(x_index,pattern.x_num); %#ok<*NODEF>
+    rate_of_frames = num_frames/condition_struct.Duration;
+    frames_between_moves = rate_of_frames/condition_struct.Gains(1);
+    
+    x_index(1) = condition_struct.InitialPosition(1);
+    
+    % If the gain is zero (frames_between_moves is infinite) repmat
+    if isinf(frames_between_moves)
+        x_index = repmat(x_index(1),1,num_frames);
+    else
+
+        for frame = 2:num_frames
+
+            if ~mod(frames_between_moves,1);
+                x_index(frame) = x_index(frame-1) + sign(condition_struct.Gains(1));
+            else
+                x_index(frame) = x_index(frame-1);
+            end
+        end
+
+    end
+    x_index = mod(x_index,pattern.x_num)+1; %#ok<*NODEF>
+    
 end
 
 % Y channel
@@ -106,10 +126,30 @@ if condition_struct.Mode(2) == 4
     for frame = 1:num_frames
         y_index(frame) = func(mod(frame,numel(func)))+1;
     end
-    clear func    
+    clear func
 elseif condition_struct.Mode(2) == 0
-    y_index = 1:num_frames + condition_struct.InitialPosition(2) - 1;
-    y_index = mod(y_index,pattern.y_num);
+    rate_of_frames = num_frames/condition_struct.Duration;
+    frames_between_moves = rate_of_frames/condition_struct.Gains(3);
+    
+    y_index(1) = condition_struct.InitialPosition(2);
+    
+    % If the gain is zero (frames_between_moves is infinite) repmat
+    if isinf(frames_between_moves)
+        y_index = repmat(y_index(1),1,num_frames);
+    else
+
+        for frame = 2:num_frames
+
+            if ~mod(frames_between_moves,1);
+                y_index(frame) = y_index(frame-1) + sign(condition_struct.Gains(3));
+            else
+                y_index(frame) = y_index(frame-1);
+            end
+        end
+
+    end
+    y_index = mod(y_index,pattern.y_num)+1;
+    
 end
 
 %% Get formatting of the pattern

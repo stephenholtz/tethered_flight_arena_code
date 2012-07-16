@@ -1,0 +1,5 @@
+This reverse phi phase delay protocol is presented unilaterally in the front to back and back to front (cw and ccw for each) at three speeds.
+
+Progressive / Regressive, cw/ccw, .75 2 3.25 Hz temporal frequency, ? ms offsets for phase delay and regular motion at the two contrasts.
+
+The protocol will probably be quite long.

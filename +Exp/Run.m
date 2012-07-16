@@ -16,7 +16,8 @@ function Run(protocol,varargin)
 % The protocol folder specified must also have a folder
 % functions_on_SD_card and patterns_on_SD_card which has at least the
 % Pattern_xxx.mat files and the Function_xxx.mat files that are loaded onto
-% the SD card from PControl
+% the SD card from PControl (If no functions are used, the folder must 
+% still exist!)
 %
 % If the functions or patterns are not specified, a warning will appear and
 % an empty mat file will be stored in the final data destination
@@ -37,7 +38,7 @@ function Run(protocol,varargin)
 % number of conditions are missed, or the experiment finishes. Emails are 
 % sent as notifications.
 % 
-% Exp.Utilities has some of the common functions for cleanliness 
+% Exp.Utilities has most of the common functions for cleanliness 
 %
 % SLH - 2012
 

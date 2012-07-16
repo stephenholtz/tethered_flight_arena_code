@@ -25,7 +25,7 @@ function std_hand = make_space_time_diagram_for_open_loop_condition(condition_st
 
 %% A few flags not yet in the function call:
 video_flag = 0;
-video_desired_height = 720/4;
+video_desired_height = 720/4; %#ok<*NASGU>
 condition_info_pdf_flag = 1;
 display_figure_flag = 0;
 color_mode = 'green'; % 'alien'
@@ -97,7 +97,7 @@ if condition_struct.Mode(1) == 4
     clear func
 elseif condition_struct.Mode(1) == 0
     x_index = 1:num_frames + condition_struct.InitialPosition(1) - 1;
-    x_index = mod(x_index,pattern.x_num);
+    x_index = mod(x_index,pattern.x_num); %#ok<*NODEF>
 end
 
 % Y channel
@@ -187,7 +187,7 @@ export_fig(std_hand,save_file_path,'-pdf')
 
 % Write the video to file (the slowest part!)
 if video_flag
-    st_video = VideoWriter(save_file_path,'Motion JPEG AVI');
+    st_video = VideoWriter(save_file_path,'Motion JPEG AVI'); %#ok<*UNRCH>
     set(st_video,'Quality',95);
     open(st_video)
     writeVideo(st_video,movie_images)
@@ -201,7 +201,7 @@ if condition_info_pdf_flag
     if ~display_figure_flag
        set(info_hand,'Visible','off')
     else
-       set(info_hand,'Visible','oon')        
+       set(info_hand,'Visible','on')        
     end
     
     fields = fieldnames(condition_struct);

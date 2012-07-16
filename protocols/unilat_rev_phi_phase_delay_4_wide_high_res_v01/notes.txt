@@ -1,0 +1,5 @@
+This reverse phi phase delay protocol is presented unilaterally in the front to back and back to front (cw and ccw for each).
+
+Progressive / Regressive, cw/ccw, .75 Hz temporal frequency, 5 ms offsets for phase delay and regular motion at the two contrasts (one contrast for each part of the flicker).
+
+This will hopefully be analogous to the high res reverse phi protocol that tested the polarity asymmetry sanity check.

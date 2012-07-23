@@ -192,7 +192,7 @@ classdef import < handle
                     [rep_num, cond_num] = ind2sub(size(parsed_data{1}),index);
                     
                     trial{i} = tfAnalysis.Trial;
-
+try
                     % Populate trial
                     trial{i}.cond_num           = cond_num; % Important
                     trial{i}.pat_id             = self.temp_info.cond(cond_num).PatternID;
@@ -211,7 +211,9 @@ classdef import < handle
                     trial{i}.pattern_name       = self.temp_info.cond(cond_num).PatternName;
                     trial{i}.trial_name         = cond_num;
                     trial{i}.rep_num            = rep_num;
-                    
+catch
+    'barf'
+end
                     % might want/need to add these in for old experiments
                     % -- for now, check if they are there and then use
                     try

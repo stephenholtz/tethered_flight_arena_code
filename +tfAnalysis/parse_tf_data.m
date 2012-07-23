@@ -33,7 +33,7 @@ end
 
 
 % Constant variables. May need optimization in the future
-ANALOGTOLERANCE         = 0.05;
+ANALOGTOLERANCE         = 0.025;
 DURATIONTOLERANCE       = 0.05;
 SAMPLERATE              = 1000;
 
@@ -57,7 +57,7 @@ for flyNum = 1:numel(data_files)
     voltage_values = [];   
     for value_index = 1:numel(end_value) % Use end_value to avoid errors
         curr_voltage_values = encoded_signal(start_value(value_index):end_value(value_index));
-        curr_voltages = mean(curr_voltage_values);
+        curr_voltages = median(curr_voltage_values); % Best moct to use here
         voltage_values = [voltage_values curr_voltages];
     end
     
@@ -65,7 +65,12 @@ for flyNum = 1:numel(data_files)
     % its index == its condition number in the experiment. Much cleaner to
     % break it into two for loops.
     voltage_values = sort([voltage_values Inf]);
-    voltage_values = voltage_values(diff(voltage_values) > ANALOGTOLERANCE);
+    voltage_values = voltage_values(diff(voltage_values) > ANALOGTOLERANCE/2);
+    % Make sure there are actually a reasonable number of voltage values
+    % left... i.e. the tolerance is not set wrong
+    if (numel(voltage_values) < 1) || (numel(voltage_values) < numel(condition_lengths)*.5)
+        error('Problem with voltages parsed. Probably a bad tolerance value')
+    end
     % Some error checking on the diff between voltage_values (all should be
     % just about equal...)
     if range(diff(voltage_values)) > ANALOGTOLERANCE*2

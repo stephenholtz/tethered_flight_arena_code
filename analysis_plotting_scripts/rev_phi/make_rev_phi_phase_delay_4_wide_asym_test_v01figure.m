@@ -52,7 +52,7 @@ if tuning_fig_flag
     for f = 1:numel(geno_fieldnames)
         tuneFigHand(f) = figure('Name',['Tuning Figure ', geno_fieldnames{f}],'NumberTitle','off','Color',[1 1 1],'Position',[50 50 500 750]);
         grouped_conditions = getfield(geno,geno_fieldnames{f},'grouped_conditions');
-        
+        iter = 1;
         subplot(2,4,[1 2 3 4])
         for i = 1:numel(grouped_conditions)
             cond_list = grouped_conditions{i}.list;
@@ -61,17 +61,18 @@ if tuning_fig_flag
                 [means{c} sems{c}]= temp_genotype.get_trial_data([cond_list{c}(1),cond_list{c}(2)],'lmr','mean','yes','all');
             end
             
-            handle_array(i) = tfPlot.simple_tuning_curve({[means{:}],[sems{:}],[temp_genotype.grouped_conditions{i}.x_axis]},0);
-            title_array{i} = temp_genotype.grouped_conditions{i}.name;
+            handle_array(iter) = tfPlot.simple_tuning_curve({[means{:}],[sems{:}],[temp_genotype.grouped_conditions{i}.x_axis]},0);
+            title_array{iter} = temp_genotype.grouped_conditions{i}.name;
+            iter = iter + 1;
             means = []; sems = [];
         end
-        
+        title(temp_genotype.grouped_conditions{1}.polarity)
         legend(handle_array,title_array)
         xlabel('Flicker Offset [ms]')
         %ylabel('\Sigma LmR [V]')
         ylabel('Mean LmR [V]')
         %set(gca,'XLim',[-64 64]);
-        
+        iter = 1;
         subplot(2,4,[5 6 7 8])
         for i = 1:numel(grouped_conditions)
             cond_list = grouped_conditions{i}.list;
@@ -81,6 +82,7 @@ if tuning_fig_flag
             end
             phase_diffs = (temp_genotype.grouped_conditions{i}.tf)*(2*pi)*(temp_genotype.grouped_conditions{i}.x_axis/1000);
             tfPlot.simple_tuning_curve({[means{:}],[sems{:}],phase_diffs},0);
+            iter = iter + 1;
             means = []; sems = [];
         end
         

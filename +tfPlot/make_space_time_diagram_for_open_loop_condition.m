@@ -82,7 +82,7 @@ switch condition_struct.Mode(2)
 end
 
 % Sometimes one gain or frequency is set to zero, so use the larger one
-num_frames = max(num_frames);
+num_frames = max(abs(num_frames));
 
 % Through all of the frames for x and y channels using position function if
 % needed, folding the number of pattern repeats into the correct numbers 
@@ -222,7 +222,7 @@ else
 end
 
 image(st_image); axis off;
-% saveas(std_hand,save_file_path,'pdf')
+saveas(std_hand,save_file_path,'fig')
 export_fig(std_hand,save_file_path,'-pdf')
 
 % Write the video to file (the slowest part!)

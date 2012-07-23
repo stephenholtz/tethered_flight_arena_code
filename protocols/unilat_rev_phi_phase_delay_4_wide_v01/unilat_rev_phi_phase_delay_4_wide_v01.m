@@ -65,7 +65,7 @@ for pat = [14 20]; % [4 Wide left-side 4 wide right-side]
                         delay_funcs_y = 43:2:53;
                 end
             end
-        
+            
             for pos_funcY = delay_funcs_y; % temporal freq sepecific delays pos function numbers
                 Conditions(cond_num).PatternID = pat; %#ok<*AGROW>
                 Conditions(cond_num).PatternName = patterns{pat};

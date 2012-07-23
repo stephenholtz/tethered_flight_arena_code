@@ -18,7 +18,7 @@ end
     patterns = what(fullfile(dir,'patterns','reverse_phi'));
     pattern_loc = patterns.path;
     patterns = patterns.mat;
-    pos_func_loc = fullfile(dir,'position_functions','rev_phi_phase_delay_4_wide_v01');
+    pos_func_loc = fullfile(dir,'position_functions','unilat_rev_phi_phase_delay_4_wide_v01');
     position_functions = what(pos_func_loc);
     position_functions = position_functions.mat;
     panel_cfgs_loc = fullfile(dir,'panel_configs');
@@ -44,7 +44,9 @@ for pat = 2; % 4 Wide, full field
                     % This side of flicker has the 'no phase delay'
                     % conditions as well as before movement flickers
                     case {1, 2} % tf 1
-                        delay_funcs_y = [3 4 11 18 25 31 38 45 52]; % [0]
+                        delay_funcs_y = [3 4:2:19]; % [0]
+                        
+%                         delay_funcs_y = [3 4 11 18 25 31 38 45 52]; % [0]
                         delay_funcs_y = fliplr(delay_funcs_y);
                     case {54, 55} % tf 2
                         delay_funcs_y = [56 57 60 64 67 71 74 78 81]; % [0]

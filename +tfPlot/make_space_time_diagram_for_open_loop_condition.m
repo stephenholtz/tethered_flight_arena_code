@@ -21,13 +21,11 @@ function std_hand = make_space_time_diagram_for_open_loop_condition(condition_st
 % (condition_struct.PosFuncNameX)
 % (condition_struct.PosFuncNameY)
 % 
-% TODO: Make AVI from this as well.
-
-%% A few flags not yet in the function call:
+%% A few flags not (yet) in the function call:
 video_flag = 0;
 video_desired_height = 720/4; %#ok<*NASGU>
 condition_info_pdf_flag = 1;
-display_figure_flag = 0;
+display_figure_flag = 0; % If loading figures and set to zero, will need to set(gcf,'Visible','on') to see it...
 color_mode = 'green'; % 'alien'
 figure_color = [1 1 1];
 verbose = 1;
@@ -68,7 +66,8 @@ end
 % X Chan frames
 switch condition_struct.Mode(1)
     case 0
-        num_frames(1) = condition_struct.Gains(1) * condition_struct.Duration;
+        fps(1) = condition_struct.Gains(1) + condition_struct.Gains(2)*2.5;
+        num_frames(1) = fps(1) * condition_struct.Duration;
     case 4
         num_frames(1) = condition_struct.FuncFreqX * condition_struct.Duration;
 end
@@ -76,13 +75,14 @@ end
 % Y Chan frames
 switch condition_struct.Mode(2)
     case 0
-        num_frames(2) = condition_struct.Gains(3) * condition_struct.Duration;
+        fps(2) = condition_struct.Gains(3) + condition_struct.Gains(4)*2.5;        
+        num_frames(2) = fps(2) * condition_struct.Duration;
     case 4
         num_frames(2) = condition_struct.FuncFreqY * condition_struct.Duration;
 end
 
 % Sometimes one gain or frequency is set to zero, so use the larger one
-num_frames = max(abs(num_frames));
+num_frames = max(floor(abs(num_frames)));
 
 % Through all of the frames for x and y channels using position function if
 % needed, folding the number of pattern repeats into the correct numbers 
@@ -96,8 +96,7 @@ if condition_struct.Mode(1) == 4
     end
     clear func
 elseif condition_struct.Mode(1) == 0
-    rate_of_frames = num_frames/condition_struct.Duration;
-    frames_between_moves = rate_of_frames/condition_struct.Gains(1);
+    frames_between_moves = ceil(abs(num_frames/fps(1)));
     
     x_index(1) = condition_struct.InitialPosition(1);
     
@@ -114,9 +113,8 @@ elseif condition_struct.Mode(1) == 0
                 x_index(frame) = x_index(frame-1);
             end
         end
-
+        x_index = mod(x_index,pattern.x_num)+1; %#ok<*NODEF>
     end
-    x_index = mod(x_index,pattern.x_num)+1; %#ok<*NODEF>
     
 end
 
@@ -128,8 +126,7 @@ if condition_struct.Mode(2) == 4
     end
     clear func
 elseif condition_struct.Mode(2) == 0
-    rate_of_frames = num_frames/condition_struct.Duration;
-    frames_between_moves = rate_of_frames/condition_struct.Gains(3);
+    frames_between_moves = ceil(abs(num_frames/fps(2)));
     
     y_index(1) = condition_struct.InitialPosition(2);
     
@@ -146,9 +143,8 @@ elseif condition_struct.Mode(2) == 0
                 y_index(frame) = y_index(frame-1);
             end
         end
-
+        y_index = mod(y_index,pattern.y_num)+1;
     end
-    y_index = mod(y_index,pattern.y_num)+1;
     
 end
 
@@ -181,9 +177,9 @@ if video_flag
     % Preallocate (MxNxRGBxFrame) it takes FOREVER without doing this.
     frame = 1;
     if pattern.row_compression
-        full_frame = repmat(pattern.Pats(:,:,x_index(frame),y_index(frame))+1, 8, 1);
+        full_frame = repmat(pattern.Pats(:,:,x_index(frame),y_index(frame)), 8, 1);
     else
-        full_frame = pattern.Pats(:,:,x_index(frame),y_index(frame))+1;
+        full_frame = pattern.Pats(:,:,x_index(frame),y_index(frame));
     end
     
     [frame_height frame_width] = size(full_frame);
@@ -193,10 +189,13 @@ end
 
 for frame = 1:num_frames
     if pattern.row_compression
-        full_frame = repmat(pattern.Pats(:,:,x_index(frame),y_index(frame))+1, 8, 1);
+        full_frame = repmat(pattern.Pats(:,:,x_index(frame),y_index(frame)), 8, 1);
     else
-        full_frame = pattern.Pats(:,:,x_index(frame),y_index(frame))+1;
+        full_frame = pattern.Pats(:,:,x_index(frame),y_index(frame));
     end
+    
+    % imagesc(full_frame)
+    % pause
     
     % Keep appending to bottom of image
     rows = (1+size(st_image,1)):(size(st_image,1)+size(full_frame,1));

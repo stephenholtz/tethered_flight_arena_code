@@ -28,31 +28,70 @@ end
     cd(cf);
 
 % testing them out
-holtz = 0;
-tuthill = 1;
+holtz = 1;
+tuthill = 0;
 
 % generate all the conditions
 cond_num = 1;
 total_ol_dur = 0;
 frequency = 400;
-% The speeds and biases from john's scripts, 100+2.5*(92) = 330 fps
+% The speeds and biases from john's scripts... 100 + 92*2.5 = 330 fps
+% BUT FROM THE CONTROLLER CODE:
+% X_rate = ((X_val*gain_x)/10 + 5*bias_x)/2
+% this is actually okay, because the X_val is * 10 *2... see documentation
 open_loop_speed = 100;
 open_loop_bias = 92;
 
 % Make john's stimuli:
 if tuthill
-for pat = 1:10 % all four wide with different phase delays
+for pat = 1:8 % all four wide with different phase delays
+    % Notes for using john's old stimuli:
     % Here are where the offsets are set, will need to use subsets to get
     % the experiments short enough.
-    if     pat == 1 || pat == 2 % 48 frame pattern
-        offset_y_pos = 1:4;
-    elseif pat == 3 || pat == 4 % 96 frame pattern
-        offset_y_pos = 1:6;
-    elseif pat == 5 || pat == 6 % 192 frame pattern
-        offset_y_pos = 1:12;
-    elseif pat == 7 || pat == 8 % 384 frame pattern
-        offset_y_pos = 1:12;
+    % The delays are in frames wrt the movement. The gain/bias is constant
+    % and the total length of the pattern is stretched out to allow for
+    % slower temporal frequencies (i.e. shorter patterns are faster). These
+    % patterns do not go all the way to completely out of phase
+    %
+    % By my calculations each frame is only 3ms apart, John's code seems to
+    % show them as being 5+ms each... made space 
+    % 
+%     if     pat == 1 || pat == 2 % 48 frame pattern before || after (~4 Hz)
+%         offset_y_pos = 1:4;     % delays are [0 1 2 3] delays of flicker frames after/before the movement
+%     elseif pat == 3 || pat == 4 % 96 frame pattern before || after (~2 Hz)
+%         offset_y_pos = 1:6;     % delays are [0 1 2 3 4 6]
+%     elseif pat == 5 || pat == 6 % 192 frame pattern before || after (~1 Hz)
+%         offset_y_pos = 1:8;     % delays are [0 1 2 3 4 6 8 12]
+%     elseif pat == 7 || pat == 8 % 384 frame pattern before || after (~.5 Hz)
+%         offset_y_pos = 1:8;     % delays are [0 1 2 3 4 6 8 12]
+%     end
+    % No need to run the same exact condition twice...
+    if     pat == 1             % 48 frame pattern before || after (~4 Hz)
+        offset_y_pos = 1:4;     % delays are [0 1 2 3] delays of flicker frames after/before the movement
+                                % 0 3 6 9ms
+    elseif pat == 2             % 48 frame pattern after (~4 Hz)
+        offset_y_pos = 2:4;     % delays are [0 1 2 3]
+                                % 3 6 9ms
+    elseif pat == 3             % 96 frame pattern before || after (~2 Hz)
+        offset_y_pos = [1 2 3 5 6];  % delays are [0 1 2 3 4 6]
+                                % 0 3 6 12 15 ms
+    elseif pat == 4             % 96 frame pattern before || after (~2 Hz)
+        offset_y_pos = [2 3 5 6];     % delays are [0 1 2 3 4 6]
+                                % 3 6 12 15 ms
+    elseif pat == 5             % 192 frame pattern before || after (~1 Hz)
+        offset_y_pos = [1 3 5 6 7 8];  % delays are [0 1 2 3 4 6 8 12]
+                                % 0 6 12 15 18 21 ms
+    elseif pat == 6             % 192 frame pattern before || after (~1 Hz)
+        offset_y_pos = [3 5 6 7 8];   % delays are [0 1 2 3 4 6 8 12]
+                                % 6 12 15 18 21 ms
+    elseif pat == 7             % 384 frame pattern before || after (~.5 Hz)
+        offset_y_pos = [1 3 5 6 7 8];  % delays are [0 1 2 3 4 6 8 12]
+                                % 0 6 12 15 18 21 ms
+    elseif pat == 8             % 384 frame pattern before || after (~.5 Hz)
+        offset_y_pos = [3 5 6 7 8];     % delays are [0 1 2 3 4 6 8 12]
+                                % 6 12 15 18 21 ms
     end
+    
     
     for y_pos = offset_y_pos
         for speed = [1 2] % Both clockwise and counterclockwise
@@ -63,37 +102,38 @@ for pat = 1:10 % all four wide with different phase delays
             % Mode = pos func control for x and y, init pos = 1 for both
             Conditions(cond_num).Mode           = [0 0];
             Conditions(cond_num).InitialPosition= [1 y_pos];
-
+            
+            % Counter clockwise or clockwise stimuli
             if speed == 1
-                Conditions(cond_num).Gains          = [open_loop_speed 0 open_loop_bias 0];
+                Conditions(cond_num).Gains = [open_loop_speed open_loop_bias 0 0];
             else
-                Conditions(cond_num).Gains          = [-open_loop_speed 0 -open_loop_bias 0];            
+                Conditions(cond_num).Gains = [-open_loop_speed -open_loop_bias 0 0];
             end
 
             Conditions(cond_num).PosFunctionX   = [1 1];
             Conditions(cond_num).PosFunctionY 	= [2 1];
 
-            Conditions(cond_num).FuncFreqY 		= frequency; % all the pos funcs need to be made to work with this
+            Conditions(cond_num).FuncFreqY 		= frequency;
             Conditions(cond_num).FuncFreqX 		= frequency;
 
-            Conditions(cond_num).PosFuncLoc = pos_func_loc;            
+            Conditions(cond_num).PosFuncLoc = 'none';
             Conditions(cond_num).PosFuncNameX = 'none';
             Conditions(cond_num).PosFuncNameY = 'none';
             Conditions(cond_num).Duration = 3;
 
             total_ol_dur = total_ol_dur + Conditions(cond_num).Duration;
 
-            cond_num = cond_num + 1;   
+            cond_num = cond_num + 1;
         end
     end
 end
 end
 
-% Make my stimuli:
+% Make my stimuli: I GOT THIS STUFF BACKWARDS FIX IT IN THE MORNING DUMMY
 if holtz
 for pat = 11; % 4 wide full field
     % the different temporal frequency position functions
-    for pos_funcX = [1 2 104 105 157 158] %[.5 .5 1 1 3 3] in cw and ccw
+    for pos_funcX = [1 2  88 89 133 134 156 157] %[.5 .5 1 1 2 2 4 4] in cw and ccw
     % Sym conds will be sequential except for the last, which is the closed
     % loop condition
     
@@ -104,25 +144,31 @@ for pat = 11; % 4 wide full field
                     % This side of flicker has the 'no phase delay'
                     % conditions as well as before movement flickers
                     case {1, 2} % tf .5
-                        delay_funcs_y = [3 6 10 14 18 26 34 50]; % [0 5 10 15 20 30 40 60]
+                        delay_funcs_y = [3 4 6 8]; % 0 3 6 9ms
                         delay_funcs_y = fliplr(delay_funcs_y);
-                    case {3, 4} % tf  1
-                        delay_funcs_y = [3 4:4:69]; % [0]
+                    case {88, 89} % tf  1
+                        delay_funcs_y = [90 91 93 97 99]; % 0 3 6 12 15 ms
                         delay_funcs_y = fliplr(delay_funcs_y);
-                    case {5, 6} % tf  3
-                        delay_funcs_y = [3 4:4:69]; % [0]
+                    case {133, 134} % tf  2
+                        delay_funcs_y = [135 136 142 144 146 148]; % 0 6 12 15 18 21 ms
                         delay_funcs_y = fliplr(delay_funcs_y);
+                    case {156, 157} % tf  4
+                        delay_funcs_y = [158 161 ]; % 0 6 12 15 18 21 ms
+                        delay_funcs_y = fliplr(delay_funcs_y);                        
                 end
             else
                 switch pos_funcX
                     % different delays in ms for each flicker after movement
                     % This side of flicker has only before movement conditions
                     case {1, 2} % tf .5
-                        delay_funcs_y = [7 11 15 19 27 35 51]; % [0 5 10 15 20 30 40 60]
-                    case {3, 4} % tf  1
-                        delay_funcs_y = [4:4:69]; % [0]
-                    case {5, 6} % tf  3
-                        delay_funcs_y = [4:4:69]; % [0]
+                        delay_funcs_y = [5 7 9]; % 3 6 9ms
+                    case {88, 89} % tf  1
+                        delay_funcs_y = [92 94 98 100]; % 3 6 12 15 ms
+                    case {133, 134} % tf  2
+                        delay_funcs_y = [137 143 145 147 149]; % 6 12 15 18 21 ms
+                    case {156, 157} % tf  4
+                        delay_funcs_y = [135 136]; % 6 12 15 18 21 ms
+                        delay_funcs_y = fliplr(delay_funcs_y);                        
                 end
             end
             

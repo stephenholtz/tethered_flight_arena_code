@@ -22,9 +22,9 @@ function make_reverse_phi_double_check_v01_functions
 %% Set up some default values
 
 project = 'reverse_phi_double_check_v01_functions'; % Determines the destination show up
-temporal_freqs = [.5 1 3];      % Set of tf's to use, the .5 is set below to show up as 0pt5 when saved
+temporal_freqs = [.5 1 2 4];      % Set of tf's to use, the .5 is set below to show up as 0pt5 when saved
 verbose_flag = 0;               % will make an additional position function that has out of phase flicker and movement
-sampling_rate = 400;            % 400 hz allows for 2.5ms precision in offsets
+sampling_rate = 333;            % 400 hz allows for 2.5ms precision in offsets
 pattern_y_length = 2;           % on and off flicker for the rev phi
 max_num_delays = -1;% 8;        % if -1 it will make all, and check that the completely out of phase position function works...
 counter = 0;                    % Counter for numbering before saving (see below) s

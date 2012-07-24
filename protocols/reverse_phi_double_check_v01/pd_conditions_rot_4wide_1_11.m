@@ -3,7 +3,7 @@
 stripe_pat = 1;
 pd4b = [5:-1:2]; pd4a = [9:-1:6]; 
 pd_speed = 100; pd_bias = 94;
-
+OL_time = 3;
 condition_num = [];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 cond_num = 1;  num_CL_conditions = 0; %%rotation
@@ -48,13 +48,13 @@ for pp = 1:2
     for ii = 2 %%96 frames
         for i = 1:length(pd_bias)
                 for jj = 1:6 %%offsets are [0 1 2 3 4 6] for 96 frame pattern
-                                for k = 1:2
+                for k = 1:2
             
-                    if pp == 1
+            if pp == 1
                 condition(cond_num).pattern = pd4b(ii);
-                    else
+            else
                 condition(cond_num).pattern = pd4a(ii);
-                    end
+            end
                     
                 condition(cond_num).Y_ind = jj; 
                 condition(cond_num).X_ind = 1;
@@ -120,12 +120,12 @@ for pp = 1:2
                 for jj = 1:8 %%offsets are [0 1 2 3 4 6 8 12] for 192 and 384 frame pattern
                                 for k = 1:2
             
-                    if pp == 1
-                condition(cond_num).pattern = pd4b(ii);
-                    else
-                condition(cond_num).pattern = pd4a(ii);
-                    end
-                 
+                if pp == 1
+                    condition(cond_num).pattern = pd4b(ii);
+                else
+                    condition(cond_num).pattern = pd4a(ii);
+                end
+
                 condition(cond_num).Y_ind = jj; 
                 condition(cond_num).X_ind = 1;
                 condition(cond_num).Y_gain = 0;

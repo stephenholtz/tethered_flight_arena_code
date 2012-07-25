@@ -87,7 +87,7 @@ classdef ExpSet < handle
                     error('Invalid selection')
             end
         end
-            
+        
         function [cond_data sem] = get_trial_data(self,...
                 cond_num_mat,daq_channel,computation,use_sym_conds,average_type)
             % [cond_data sem] = return_trial_response(self,cond_num_mat,daq_channel,computation,use_sym_conds,average_type)
@@ -110,15 +110,15 @@ classdef ExpSet < handle
                 otherwise
                     resp_func = @(x)x;
                     disp(resp_func)
-            end            
+            end
             
             % If specified, 'flip' the second condition of cond_num_mat
             switch use_sym_conds
                 case {1,'yes','true'}
                     if size(temp_cond_data,2) == 2
-                    for j = 1:size(temp_cond_data,1)
-                        temp_cond_data{j,2} = -temp_cond_data{j,2};
-                    end
+                        for j = 1:size(temp_cond_data,1)
+                            temp_cond_data{j,2} = -temp_cond_data{j,2};
+                        end
                     end
             end
             
@@ -159,7 +159,7 @@ classdef ExpSet < handle
                     % Return averaged experiments (over sym conds if present)                       
                     exp_iter = 0;
                     temp_mean_mat = [];
-
+                    
                     for e = 1:size(temp_cond_data,1)
                         
                         % average an experiment's trials
@@ -194,8 +194,7 @@ classdef ExpSet < handle
                     
                 otherwise
                     error('Invalid average_type selection')
-            end        
-            
+            end
         end
         
         function cond_data = return_multi_experiment_cond_data(self,...

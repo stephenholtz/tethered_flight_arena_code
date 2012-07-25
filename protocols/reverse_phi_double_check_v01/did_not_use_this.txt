@@ -1,0 +1,1 @@
+This protocol was never used, there was a discrepancy along the X axis with the patterns John made, which confused things, so v02 just remade the patterns.

@@ -1,7 +1,7 @@
 % Create reverse phi rotation patterns: full field, front, left, and right
 
-project = 'reverse_phi_double_check_patterns';
-counter = 10;
+project = 'reverse_phi_double_check_patterns_v02';
+counter = 1;
 
 for stim_type = 1
     name = [];

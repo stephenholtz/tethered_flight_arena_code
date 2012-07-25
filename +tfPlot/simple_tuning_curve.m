@@ -2,19 +2,8 @@ function tune_handle = simple_tuning_curve(data_cell,varargin)
 % tune_handle = simple_tuning_curve(data_cell,width_mod,[x_offset_factor])
     % data_cell:    data_cell{1} should be the means
     %               data_cell{2} should be SEM
-    % data_cell:    data_cell{3:end} should be the above repeated...
-    
     % plot_options will probs change... see code
     
-    % give the option to also pass cell array pairs of mean,sem
-%     if varargin{numel(varargin)} == 2
-%         average_values = [];
-%         sem_value = [];
-%         for i = 1:numel(data_cell)
-%             average_values(i) = data_cell{i}{1};
-%             sem_value(i) = data_cell{i}{2};
-%         end
-%     else
         average_values  = data_cell{1};
         sem_value       = data_cell{2}; 
         
@@ -22,8 +11,7 @@ function tune_handle = simple_tuning_curve(data_cell,varargin)
             x_positions = data_cell{3};
         else
             x_positions = [];
-        end        
-%     end
+        end
     
     % Should check for previously plotted lines, and iterate the x_offset
     % Give option for the offset factor as varargin{1}

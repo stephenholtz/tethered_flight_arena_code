@@ -26,8 +26,8 @@ end
     panel_cfgs = what(panel_cfgs_loc);
     panel_cfgs = panel_cfgs.mat;
     cd(cf);
-    
-% testing them out
+
+% testing them out (leave both as 1!)
 holtzian = 1;
 tuthillesqe = 1;
 
@@ -98,40 +98,6 @@ for pat = 1; % 4 wide full field
                 delay_funcs_y = 41:47;
                 %delay_funcs_y = fliplr(delay_funcs_y);                 
         end
-                
-%for flick = 1:2; % for both before and after the movement
-%             if flick == 1;
-%                 switch pos_funcX
-%                     % different delays in ms for each flicker before movement
-%                     % This side of flicker has the 'no phase delay'
-%                     % conditions as well as before movement flickers
-%                     case {1, 2} % tf .75
-%                         delay_funcs_y = [3 4:2:22]; %
-%                         %delay_funcs_y = fliplr(delay_funcs_y);
-%                     case {24,25} % tf  2
-%                         delay_funcs_y = [26 27:2:37];
-%                         %delay_funcs_y = fliplr(delay_funcs_y);
-%                     case {39,40} % tf  4
-%                         delay_funcs_y = [41 42:2:46];
-%                         %delay_funcs_y = fliplr(delay_funcs_y);                 
-%                 end
-%             else
-%                 switch pos_funcX
-%                     % different delays in ms for each flicker after movement
-%                     % This side of flicker has only before movement conditions
-%                     case {1, 2} % tf .75
-%                         delay_funcs_y = (4:2:22)+1; %
-%                         %delay_funcs_y = fliplr(delay_funcs_y);
-%                     case {24,25} % tf  2
-%                         delay_funcs_y = (27:2:37)+1; %
-%                         %delay_funcs_y = fliplr(delay_funcs_y);
-%                     case {39,40} % tf  4
-%                         delay_funcs_y = (42:2:46)+1; %
-%                         %delay_funcs_y = fliplr(delay_funcs_y);    
-%                 end
-%             end
-
-
 
         for pos_funcY = delay_funcs_y; % temporal freq sepecific delays pos function numbers
             Conditions(cond_num).PatternID = pat; %#ok<*AGROW>

@@ -7,7 +7,7 @@ pattern.num_panels = 48;
 pattern.gs_val = 3;          
 pattern.row_compression = 1; % so only make [ L M N O ] with L = 4 (one per panel)
 
-project = 'reverse_phi_double_check_patterns';
+project = 'reverse_phi_double_check_patterns_v02';
 
 Pats = zeros(4, 96, pattern.x_num, pattern.y_num+1);
 Pats(:,:,1,1) = [0*ones(4,8) 6*ones(4,88)];

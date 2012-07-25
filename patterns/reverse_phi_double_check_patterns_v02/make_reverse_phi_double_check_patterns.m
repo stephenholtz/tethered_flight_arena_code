@@ -161,6 +161,7 @@ end
 function save_pat(Pats,pattern_name,pattern_loc,counter)
     %% Save the pattern
     
+    pattern.num_panels = 48;
     pattern.x_num = size(Pats,3);
     pattern.y_num = size(Pats,4);
     pattern.gs_val = 3;
@@ -181,7 +182,7 @@ function save_pat(Pats,pattern_name,pattern_loc,counter)
 %         otherwise
 %             error('is this linux?')            
 %     end
-
+    
     if numel(num2str(counter)) < 2
         count = ['00' num2str(counter)];
     elseif numel(num2str(counter)) < 3

@@ -59,7 +59,7 @@ randomize = 1;
     if ~choice
         return
     end
-
+    
     %% Initialize the hardware and neccessary channels. Hard coded for sanity.
     string = ('Initializing hardware');
     Exp.Utilities.unixy_output_pt1(string)

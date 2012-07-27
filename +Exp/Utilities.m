@@ -172,10 +172,8 @@ classdef Utilities
     methods (Static)
     % Common methods for running the tethered flight arena
         
-        function [metadata cond_struct meta_file path_files] = do_all_protocol_checks(protocol,exp_type)
-            
-            if ~exist(exp_type,'var'); exp_type = 'standard'; end
-            
+        function [metadata cond_struct meta_file path_files] = do_all_protocol_checks(protocol)
+                        
             if ~ischar(protocol);
                 error('protocol must be a string.')
             else
@@ -228,17 +226,6 @@ classdef Utilities
                 error('Metadata failed to load/missing fields from meta file.');
             else
                 Exp.Utilities.unixy_output_pt2(1)
-            end
-
-            string = ('Checking for appropriate grouped conditions');
-            Exp.Utilities.unixy_output_pt1(string)
-            [result grouped_conds_out] = Exp.Utilities.get_check_grouped_conds_file(protocol);
-            if result
-                Exp.Utilities.unixy_output_pt2(1)
-                metadata.grouped_conditions = grouped_conds_out;
-            else
-                Exp.Utilities.unixy_output_pt2(0)
-                metadata.grouped_conditions = 'null';    
             end
         end
         
@@ -369,35 +356,7 @@ classdef Utilities
                 result = false;
             end
         end
-        
-        function [result varargout] = get_check_grouped_conds_file(protocol)
-            % Checks for a file called grouped_conds.m that has a 
-            % variable called grouped_conditions containing information on
-            % how to appropriately add symmetric conditions together for
-            % the protocol selected. 
-            % This is not something appropriate for all protocols so it is
-            % not included in the metadata file or condition file etc.,
-            result = 0;
-            varargout{1} = 'null';
-			% this function working correctly depends on the +Exp package being on the same level as the protocol folder... probably a safe bet
-			exp_loc = what('+Exp');
-            
-            [~, base_dir] = fileattrib(fullfile(exp_loc.path,'..'));
-			protocol_loc = fullfile(base_dir.Name,'protocols',protocol);            
-            protocol_file_info = dir(protocol_loc);
-            grouped_file_ind=find(strcmp({protocol_file_info.name},'grouped_conds.m')==1);
-            
-            if grouped_file_ind
-                cf = pwd;
-                cd(protocol_loc);
-                eval('grouped_conds');
-                varargout{1} = grouped_conditions;
-                cd(cf)
-                result = 1;
-            end
-            
-        end
-        
+                
         function segment_struct = return_segment_struct(protocol)
 			exp_loc = what('+Exp');
             [~, base_dir] = fileattrib(fullfile(exp_loc.path,'..'));

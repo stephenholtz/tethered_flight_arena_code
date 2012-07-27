@@ -4,7 +4,7 @@ project = 'ir_blast_patterns';
 pattern_name = 'gs3_mc_71pct_expansion_4_wide';
 sizes = 4;
 counter = 0;
-pattern.x_num = size*2;         % x is all frames - shouldn't need to be more than 2 x the spatial frequency
+pattern.x_num = max(sizes)*2;         % x is all frames - shouldn't need to be more than 2 x the spatial frequency
 pattern.y_num = 1;              % y is each flicker
 pattern.num_panels = 48;
 pattern.gs_val = 3;
@@ -34,7 +34,7 @@ Pats = zeros(4, 96, pattern.x_num, pattern.y_num);
     
     for g = 1;
         for i = 1:pattern.x_num
-            Pats(:,:,i,g) = ShiftMatrix(Pats(:,:,i,g), 24, 'l', 'y');
+            Pats(:,:,i,g) = ShiftMatrix(Pats(:,:,i,g), 28, 'l', 'y');
         end
     end
     

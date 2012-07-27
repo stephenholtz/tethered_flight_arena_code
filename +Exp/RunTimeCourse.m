@@ -323,12 +323,13 @@ randomize = 0;
 
     res1 = Exp.Utilities.move_save_files(daq_location,data_location,cond_struct,metadata,path_files);
 
-    % add this in here rather than the move_save_files...
-    res2 = Exp.Utilities.copy_segments_file(path_files,segment_struct);
+    % add this in here rather than the move_save_files... a little bit
+    % hackish
+    res2 = Exp.Utilities.copy_segments_file(fileparts(path_files.pats_on_SD_card),data_location);
     
     % Stop the timer.
     timer = toc(tID);
-
+    
     if res1 && res2 
         % Send an email saying it is finished.
         email_subject = ['tfExperiment ' metadata.ExperimentName ' Finished.'];
@@ -342,7 +343,7 @@ randomize = 0;
         result = Exp.Utilities.send_email(email_subject,email_message);
         if ~result; disp('Error sending email'); end    
     end
-
+    
     if record
         clear('DAQ_dev')
         daqreset

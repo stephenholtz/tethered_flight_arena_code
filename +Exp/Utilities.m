@@ -487,10 +487,10 @@ classdef Utilities
             end
         end
         
-        function result = copy_segments_file(data_location,segment_struct)
+        function result = copy_segments_file(segments_path,data_location)
             try
-                segment_struct;
-                save(fullfile(data_location,'segment_struct'),'segment_struct');
+                copyfile(fullfile(segments_path,'segments.m'),fullfile(data_location,'segments.m'));
+                result = 1;
             catch cpyErr
                 result = 0;
                 disp(cpyErr.message)

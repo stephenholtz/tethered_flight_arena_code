@@ -2,8 +2,9 @@ function std_hand = make_space_time_diagram_for_open_loop_condition(condition_st
 % std_hand = make_space_time_diagram_for_open_loop_condition()
 % Function will make a space time diagram for a few open loop conditions.
 % 
-% Works for simple gain and bias in either channel, and position functions
-% in either channel
+% Works for simple gain and bias in either channel, and/or position
+% functions in either channel. But only patterns where row compression
+% makes sense...
 %
 % Needs: condition_struct w/fields , pattern location, and position
 % function location if the mode of the condition struct requires it
@@ -22,7 +23,7 @@ function std_hand = make_space_time_diagram_for_open_loop_condition(condition_st
 % (condition_struct.PosFuncNameY)
 % 
 %% A few flags not (yet) in the function call:
-video_flag = 0;
+video_flag = 1;
 video_desired_height = 720/4; %#ok<*NASGU>
 condition_info_pdf_flag = 1;
 display_figure_flag = 0; % If loading figures and set to zero, will need to set(gcf,'Visible','on') to see it...
@@ -92,7 +93,9 @@ num_frames = max(floor(abs(num_frames)));
 if condition_struct.Mode(1) == 4
     load(fullfile(condition_struct.PosFuncLoc,condition_struct.PosFuncNameX))
     for frame = 1:num_frames
-        x_index(frame) = func(mod(frame,numel(func)))+1;
+        ind = mod(frame,numel(func));
+        if ind == 0; ind = numel(func); end
+        x_index(frame) = func(ind)+1;
     end
     clear func
 elseif condition_struct.Mode(1) == 0
@@ -122,7 +125,9 @@ end
 if condition_struct.Mode(2) == 4
     load(fullfile(condition_struct.PosFuncLoc,condition_struct.PosFuncNameY))
     for frame = 1:num_frames
-        y_index(frame) = func(mod(frame,numel(func)))+1;
+        ind = mod(frame,numel(func));
+        if ind == 0; ind = numel(func);end
+        y_index(frame) = func(ind)+1;
     end
     clear func
 elseif condition_struct.Mode(2) == 0

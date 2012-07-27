@@ -42,6 +42,15 @@ function Run(protocol,varargin)
 %
 % SLH - 2012
 
+% Some Defaults
+default_reps = 3;
+default_record = true;
+check_flying = true;
+randomize = 1;
+
+    disp('STANDARD PROTOCOL STARTING')
+
+
     %% Primary checks in this order: For folder. Folder contents. Condition function. Metadata. Genotype.
     % Start a timer + Check the metadata is correct with a(n overly complex) gui.
     tID = tic;
@@ -61,10 +70,10 @@ function Run(protocol,varargin)
         if isnumeric(varargin{2});
             record = varargin{2};
         else
-            error('record (varargin) incorrectly specified, supply binary')
+            error('record (varargin{2}) incorrectly specified, supply binary')
         end
     else
-        record = true;
+        record = default_record;
     end
     
     if record
@@ -74,25 +83,25 @@ function Run(protocol,varargin)
         set(DAQ_dev,'LoggingMode','Disk','LogFileName',daq_file,'SampleRate',1000);
         set(DAQ_dev,'SamplesPerTrigger',Inf); %,'TimerFcn',@AcquireData
     end
-
+    
     Exp.Utilities.unixy_output_pt2(1)
-
+    
     %% Start the experiment, initial alignment (with last condition, the default
     % location for a closed loop interspersing condition) then write a
     % conditions and a metadata file to the file determined by the conditions
     % function and the genotype + datestr.
-
+    
     % Get the number of reps specified (or go to a defualt number of 3)
     if nargin > 1 ;
         if isnumeric(varargin{1});
             reps = varargin{1};
         else
-            error('reps (varargin) incorrectly specified, supply a number')
+            error('reps (varargin{1}) incorrectly specified, supply a number')
         end
     else
-        reps = 3;
+        reps = default_reps;
     end
-
+    
     % Set the panel configuration for the experiment, right now only using one
     % for the whole experiment
     string = ('Panels off, setting experiment panel config. Expect Box/Errors');
@@ -100,7 +109,7 @@ function Run(protocol,varargin)
     Panel_com('all_off'); pause(.05)
     Panel_com('set_config_id',cond_struct(1).PanelCfgNum); pause(4.5);
     Exp.Utilities.unixy_output_pt2(1)
-
+    
     % Initial alignment portion, use the last condition as the interspersal condition.
     Nconds = numel(cond_struct); num_trials_missed = 0; emailed_conds_missed = 0; reluctant_email_sent = 0;
     Exp.Utilities.set_Panel_com(cond_struct(Nconds));
@@ -111,17 +120,22 @@ function Run(protocol,varargin)
     Exp.Utilities.unixy_output_pt1(string)
     pause();
     Exp.Utilities.unixy_output_pt2(1)
-
+    
     if record;
         start(DAQ_dev);
     end
-
+    
     total_conds = (reps*(Nconds-1)); % The last condition of each doesn't count for this (it is the closed loop!)
     curr_cond_index = 1;
-
+    
     for rep = 1:reps
         % Randomize a set of conditions to decrement for each repetition
-        cond_nums = randperm(Nconds-1);
+        if randomize
+            cond_nums = randperm(Nconds-1);
+        else
+            cond_nums = 1:(Nconds-1);
+        end
+            
         while ~isempty(cond_nums)
             cond = cond_nums(1);
             % Changed to make the output more UINIXy, readable by padding
@@ -131,23 +145,23 @@ function Run(protocol,varargin)
             trial_progress = [ '[' repmat(' ',1,4-numel(num2str(curr_cond_index))) num2str(curr_cond_index) '/' repmat(' ',1,4-numel(num2str(total_conds))) num2str(total_conds) ']' ];
             condition_progress = [ '[' repmat(' ',1,4-numel(num2str(cond))) num2str(cond) '/' repmat(' ',1,4-numel(num2str(Nconds-1))) num2str(Nconds-1) ']'];
             fprintf('Repetition %s -- Trial %s -- Condition %s  ', rep_progress, trial_progress, condition_progress);
-
+            
             [time voltage] = Exp.Utilities.set_Panel_com(cond_struct(cond));
             % need to convert the voltage to 16 bit (2^15)-1
             voltage_16bit=voltage*(32767/10);
             Panel_com('stop');
-
+            
             % Set the voltage encoding
             Panel_com('set_ao',[3,voltage_16bit]);
             % Set the trigger value
             Panel_com('set_ao',[4,5*(32767/10)]);
             Panel_com('start');
-
+            
             % Trigger the analog input to take its sample
             start(AI_stim_sync)
             % Get the sample (removes it from SamplesAvailable)
             stim_start_trigger = getdata(AI_stim_sync);
-
+            
             % This depends on the analog output values
             ticHandle = tic;
             while stim_start_trigger < 2.5
@@ -157,19 +171,23 @@ function Run(protocol,varargin)
                     error('Stimulus failed to display for 6 seconds')
                 end
             end
-
+            
             flying = 1;
             ticHandle = tic;
             time_elapsed = toc(ticHandle);
             while time_elapsed < time
                 time_elapsed = toc(ticHandle);
-                if ~Exp.Utilities.simple_end_wbf_check(AI_wbf)
-                    flying = 0;
-                    pause(.15) % This is important for later decoding the stimuli.. with the AO's if it is too short it might show up as a noise spike!
-                    break
+                if check_flying
+                    if ~Exp.Utilities.simple_end_wbf_check(AI_wbf)
+                        flying = 0;
+                        pause(.15) % This is important for later decoding the stimuli.. with the AO's if it is too short it might show up as a noise spike!
+                        break
+                    end
+                else
+                    pause(.0001)
                 end
             end
-
+            
             Panel_com('stop');
             % Reset the voltage encoding
             Panel_com('set_ao',[3,0]);
@@ -179,7 +197,7 @@ function Run(protocol,varargin)
             % Set the voltage to zero as soon as possible
             % Check that the fly was flying up until the end of the condition
             % then move on to next or add the trial back in.
-
+            
             if flying
                 cond_nums = cond_nums(2:end);
                 Exp.Utilities.unixy_output_pt2(1)
@@ -224,31 +242,33 @@ function Run(protocol,varargin)
                 start(AI_stim_sync)
                 stim_start_trigger = getdata(AI_stim_sync);
             end
-
+            
             ticHandle = tic;
             time_elapsed = toc(ticHandle);
             base_time = time;
             while time_elapsed < time
                 time_elapsed = toc(ticHandle);
                 % The times in here are a bit hackish right now... but it works
-                if ~Exp.Utilities.simple_end_wbf_check(AI_wbf)
-                    flying = 0;
-                    Exp.Utilities.startle_animal(DIO_trig)
-                    time = time + 1.3;
-                    pause(1.25)
-                end
-
-                if time_elapsed > base_time*10 && reluctant_email_sent == 0;
-                    email_subject = ['WARNING: tfExperiment on ' metadata.Arena ' Requires Attention.'];
-                    email_message = ['Fly failed to start flight after ' num2str(time_elapsed) ' seconds.'];
-                    disp(email_message);
-                    result = Exp.Utilities.send_email(email_subject,email_message);
-                    if ~result; disp('Error sending too many trials missed email');
+                if check_flying
+                    if ~Exp.Utilities.simple_end_wbf_check(AI_wbf)
+                        flying = 0;
+                        Exp.Utilities.startle_animal(DIO_trig)
+                        time = time + 1.3;
+                        pause(1.25)
                     end
-                    reluctant_email_sent = 1;
+
+                    if time_elapsed > base_time*10 && reluctant_email_sent == 0;
+                        email_subject = ['WARNING: tfExperiment on ' metadata.Arena ' Requires Attention.'];
+                        email_message = ['Fly failed to start flight after ' num2str(time_elapsed) ' seconds.'];
+                        disp(email_message);
+                        result = Exp.Utilities.send_email(email_subject,email_message);
+                        if ~result; disp('Error sending too many trials missed email');
+                        end
+                        reluctant_email_sent = 1;
+                    end
                 end
             end
-
+            
             Panel_com('stop');
             Panel_com('set_ao',[4,0]);        
         end

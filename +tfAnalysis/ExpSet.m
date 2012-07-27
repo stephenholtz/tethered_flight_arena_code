@@ -89,11 +89,17 @@ classdef ExpSet < handle
         end
         
         function [cond_data sem] = get_trial_data(self,...
-                cond_num_mat,daq_channel,computation,use_sym_conds,average_type)
+                cond_num_mat,daq_channel,computation,use_sym_conds,average_type,num_samples)
             % [cond_data sem] = return_trial_response(self,cond_num_mat,daq_channel,computation,use_sym_conds,average_type)
             
+            if ~exist('num_samples','var')
+                get_samples = @(vec)(vec(:));
+            else
+                get_samples = @(vec)(vec(num_samples));
+            end
+            
             % Get all of the data in one giant cell array to work on
-            temp_cond_data = return_multi_experiment_cond_data(self,cond_num_mat,daq_channel);
+            temp_cond_data = return_multi_experiment_cond_data(self,cond_num_mat,daq_channel,get_samples);
             
             % Function performed before averaging i.e. nothing, trapz, etc.
             switch computation
@@ -198,14 +204,14 @@ classdef ExpSet < handle
         end
         
         function cond_data = return_multi_experiment_cond_data(self,...
-                cond_num_mat,daq_channel)
+                cond_num_mat,daq_channel,get_samples)
             cond_data = {};
             for g = 1:numel(cond_num_mat)
                 for i = 1:numel(self.experiment)
                     rep_idx = self.experiment{i}.cond_rep_index{cond_num_mat(g)};
                     for j = 1:numel(rep_idx);
                         if self.experiment{i}.trial{rep_idx(j)}.data{1}.isvalid
-                            cond_data{i,g}(j,:) = getfield(self.experiment{i}.trial{rep_idx(j)}.data{1},daq_channel); %#ok<*FNDSB,*GFLD>
+                            cond_data{i,g}(j,:) = get_samples(getfield(self.experiment{i}.trial{rep_idx(j)}.data{1},daq_channel)); %#ok<*FNDSB,*GFLD>
                         end
                     end
                 end

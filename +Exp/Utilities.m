@@ -131,13 +131,50 @@ classdef Utilities
         
         end
         
+        function [AI_wbf DIO_trig AI_stim_sync] = initialize_timecourse_hardware()
+        % Initialize the hardware and neccessary channels. Hard coded for sanity.
+            % Reset the daq
+            daqreset; % useful!
+            pause(.2);
+
+            % Setup the wbf monitor for checking if the fly is flying
+            AI_wbf = analoginput('mcc',0);
+            addchannel(AI_wbf, 0);
+            set(AI_wbf,'TriggerType','Immediate','SamplesPerTrigger',1,'ManualTriggerHwOn','Start')
+            pause(.2);
+
+            % Setup the digital trigger for the buzzer/fan
+            DIO_trig = digitalio('mcc',0);
+            addline(DIO_trig,0,'Out');
+            pause(.2);
+
+            % Setup the stimulus sync-er for ensuring full stim presentation
+            AI_stim_sync = analoginput('mcc',0);
+            addchannel(AI_stim_sync, 1);
+            set(AI_stim_sync,'TriggerType','Immediate','SamplesPerTrigger',1,'ManualTriggerHwOn','Start')
+            pause(.2);
+            
+%             % Needs to be validated...
+%             AI_stim_sync = analoginput('mcc',1);
+%             addchannel(AI_stim_sync, 1);
+%             set(AI_stim_sync,'TriggerType','Immediate','SamplesPerTrigger',1,'ManualTriggerHwOn','Start')
+%             pause(.2);            
+            
+        end
+        
+        function [curr_temp] = return_current_temp(temp_channel)
+            
+        end
+        
 	end
     
     %-----METHODS FOR ERROR CHECKING---------------------------------------
     methods (Static)
     % Common methods for running the tethered flight arena
-    
-        function [metadata cond_struct meta_file path_files] = do_all_protocol_checks(protocol)
+        
+        function [metadata cond_struct meta_file path_files] = do_all_protocol_checks(protocol,exp_type)
+            
+            if ~exist(exp_type,'var'); exp_type = 'standard'; end
             
             if ~ischar(protocol);
                 error('protocol must be a string.')
@@ -145,7 +182,7 @@ classdef Utilities
                 string = (['Loading ', protocol, ' (specified protocol).']);
                 Exp.Utilities.unixy_output_pt1(string)
             end
-
+            
             [result condition_func meta_file path_files.funcs_on_SD_path path_files.pats_on_SD_path path_files.cfgs_on_SD_path] = Exp.Utilities.get_check_protocol_input(protocol);
             % The result of this function is informative. Nice to see what went wrong.
             if result.has_funcs && result.has_pats && result.has_cfgs && result.has_conds && result.has_meta
@@ -203,8 +240,7 @@ classdef Utilities
                 Exp.Utilities.unixy_output_pt2(0)
                 metadata.grouped_conditions = 'null';    
             end
-
-        end    
+        end
         
 		function [result varargout] = get_check_protocol_input(protocol)
 		% function [result condition_func meta_file funcs_on_SD pats_on_SD cfgs_on_SD] = get_check_protocol_input(protocol)
@@ -218,13 +254,14 @@ classdef Utilities
 			% This error should probably go somewhere else...
             if ~isdir(protocol_loc)
 				disp('No folder for protocol!')
-            end			
+            end
 			% Check for the SD card files
 			result.has_funcs 	= 0;
 			result.has_pats 	= 0;
             result.has_cfgs     = 0;
 			result.has_conds 	= 0;
 			result.has_meta 	= 0;
+            result.has_segments = 0;
             
             protocol_file_info = dir(protocol_loc);
             
@@ -250,7 +287,10 @@ classdef Utilities
 					elseif ~isempty(strfind(name,'meta'))
 						result.has_meta = 1;
 						varargout{2} = fullfile(protocol_loc,(protocol_file_info(i).name));
-					end
+                    elseif ~isempty(strfind(name,'segments'))
+						result.has_segments = 1;
+                        varargout{6} = fullfile(protocol_loc,(protocol_file_info(i).name));                        
+                    end
 				end
             end
 		end
@@ -327,9 +367,9 @@ classdef Utilities
                 end
             else
                 result = false;
-            end            
+            end
         end
-
+        
         function [result varargout] = get_check_grouped_conds_file(protocol)
             % Checks for a file called grouped_conds.m that has a 
             % variable called grouped_conditions containing information on
@@ -355,6 +395,19 @@ classdef Utilities
                 cd(cf)
                 result = 1;
             end
+            
+        end
+        
+        function segment_struct = return_segment_struct(protocol)
+			exp_loc = what('+Exp');
+            [~, base_dir] = fileattrib(fullfile(exp_loc.path,'..'));
+            segment_loc = fullfile(base_dir.Name,'protocols',protocol,'segments.m');
+            if ~exist(segment_loc,'file'); 
+                error ('segments.m not found in protocol directory')
+            end
+            
+            run(segment_loc);
+            segment_struct = segment;
             
         end
         
@@ -473,6 +526,17 @@ classdef Utilities
                 disp(cpyErr.message)
                 disp('Problem moving/copying panel_cfgs')
             end
+        end
+        
+        function result = copy_segments_file(data_location,segment_struct)
+            try
+                segment_struct;
+                save(fullfile(data_location,'segment_struct'),'segment_struct');
+            catch cpyErr
+                result = 0;
+                disp(cpyErr.message)
+                disp('Problem evaluating/copying segment_struct')
+            end            
         end
     end
     

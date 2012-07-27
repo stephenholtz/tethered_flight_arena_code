@@ -29,10 +29,10 @@
                         72 68 64 60 56 52 71 67 63 59 55 51 70 66 62 58 54 50 69 65 61 57 53 49;...
                         48 44 40 36 32 28 47 43 39 35 31 27 46 42 38 34 30 26 45 41 37 33 29 25;...
                         24 20 16 12 8 4 23 19 15 11 7 3 22 18 14 10 6 2 21 17 13 9 5 1];
-
+    
     pattern.BitMapIndex = process_panel_map(pattern);
     pattern.data = make_pattern_vector(pattern);
-    directory_name = 'C:\tethered_flight_arena_code\patterns\free_flight_patterns\kitchen_sink\';
-
-    str = [directory_name 'Pat_01_vertical_stripes_4_8_12'];
+    directory_name = 'C:\Users\holtzs\Desktop\Dropbox\Dropbox\ReiserLab\kitchen_sink\';
+    
+    str = [directory_name 'Pattern_01_vertical_stripes_4_8_12'];
     save(str, 'pattern');

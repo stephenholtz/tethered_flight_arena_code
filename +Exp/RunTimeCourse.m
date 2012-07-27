@@ -113,7 +113,7 @@ randomize = 0;
     
     for seg = 1:numel(segment_struct)
         
-        switch segment_type
+        switch segment_struct(seg).type
             case 'pause'
                 fprintf('Press any key to start segment %d of %d',num2str(seg),num2str(numel(segment_struct)));
                 pause()

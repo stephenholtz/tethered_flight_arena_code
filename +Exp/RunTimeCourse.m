@@ -324,7 +324,7 @@ randomize = 0;
     res1 = Exp.Utilities.move_save_files(daq_location,data_location,cond_struct,metadata,path_files);
 
     % add this in here rather than the move_save_files...
-    res2 = Exp.Utilities.copy_segments_file(path_files);
+    res2 = Exp.Utilities.copy_segments_file(path_files,segment_struct);
     
     % Stop the timer.
     timer = toc(tID);

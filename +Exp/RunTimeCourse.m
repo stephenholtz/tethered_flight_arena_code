@@ -325,7 +325,7 @@ randomize = 0;
 
     % add this in here rather than the move_save_files... a little bit
     % hackish
-    res2 = Exp.Utilities.copy_segments_file(fileparts(path_files.pats_on_SD_card),data_location);
+    res2 = Exp.Utilities.copy_segments_file(fileparts(path_files.pats_on_SD_path),data_location);
     
     % Stop the timer.
     timer = toc(tID);

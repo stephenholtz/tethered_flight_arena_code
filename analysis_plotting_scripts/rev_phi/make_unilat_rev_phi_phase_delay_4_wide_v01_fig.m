@@ -12,14 +12,14 @@ end
 
 if b == 1
     cd /Users/holtzs/Desktop/unilat_rev_phi_phase_delay_4_wide_v01
-    load('gmr_11d03ad_gal80ts_kir21')    
+    load('gmr_11d03ad_gal80ts_kir21.mat')    
 end
 
 if c == 1;
     geno.gmr_11d03ad_gal80ts_kir21  = tfAnalysis.ExpSet(gmr_11d03ad_gal80ts_kir21);
 end
 
-cd /Users/holtzs/Desktop/unilat_rev_phi_phase_delay_4_wide_v01_figures
+cd /Users/holtzs/Desktop/unilat_rev_phi_phase_delay_4_wide_v01/figures
 
 switch fig_type
     case 'all'
@@ -50,47 +50,90 @@ geno_fieldnames = fieldnames(geno);
 % pre and post phase delay tuning curve per genotype
 if tuning_fig_flag
     for f = 1:numel(geno_fieldnames)
-        tuneFigHand(f) = figure('Name',['Tuning Figure ', geno_fieldnames{f}],'NumberTitle','off','Color',[1 1 1],'Position',[50 50 500 750]);
+        tuneFigHand(f) = figure('Name',['Tuning Figure ', geno_fieldnames{f}],'NumberTitle','off','Color',[1 1 1],'Position',[50 50 1050 750]);
         grouped_conditions = getfield(geno,geno_fieldnames{f},'grouped_conditions');
         iter = 1;
-        subplot(2,4,[1 2 3 4])
-        for i = [1:3 7:9] %numel(grouped_conditions)
+        subplot(2,2,1)
+        for i = [1:3] %numel(grouped_conditions)
             cond_list = grouped_conditions{i}.list;
+            
             for c = 1:numel(cond_list);
                 temp_genotype = eval(['geno.' geno_fieldnames{f}]);
                 [means{c} sems{c}]= temp_genotype.get_trial_data([cond_list{c}(1),cond_list{c}(2)],'lmr','mean','yes','all');
             end
             
             handle_array(iter) = tfPlot.simple_tuning_curve({[means{:}],[sems{:}],[temp_genotype.grouped_conditions{i}.x_axis]},0);
-%            handle_array(i) = tfPlot.simple_tuning_curve({[means{:}],[sems{:}],1:numel(means)},0);
-
             title_array{iter} = temp_genotype.grouped_conditions{i}.name;
+            
             iter = iter + 1;
             means = []; sems = [];
         end
-        
-        legend(handle_array,title_array)
+        title('Reverse Phi Progressive Motion')
         xlabel('Flicker Offset [ms]')
-        %ylabel('\Sigma LmR [V]')
         ylabel('Mean LmR [V]')
-        %set(gca,'XLim',[-64 64]);
         
-        subplot(2,4,[5 6 7 8])
-        for i = [1:3 7:9] %numel(grouped_conditions)
+        iter = 1;
+        subplot(2,2,2)
+        for i = [4:6] %numel(grouped_conditions)
             cond_list = grouped_conditions{i}.list;
+            
             for c = 1:numel(cond_list);
                 temp_genotype = eval(['geno.' geno_fieldnames{f}]);
                 [means{c} sems{c}]= temp_genotype.get_trial_data([cond_list{c}(1),cond_list{c}(2)],'lmr','mean','yes','all');
             end
-            phase_diffs = (temp_genotype.grouped_conditions{i}.tf)*(2*pi)*(temp_genotype.grouped_conditions{i}.x_axis/1000);
-            tfPlot.simple_tuning_curve({[means{:}],[sems{:}],phase_diffs},0);
+            
+            handle_array(iter) = tfPlot.simple_tuning_curve({[means{:}],[sems{:}],[1 2]},0);
+            title_array{iter} = temp_genotype.grouped_conditions{i}.name;
+            
+            iter = iter + 1;
+            means = []; sems = [];
+        end
+        title('Standard Phi Progressive Motion')
+        set(gca,'XTick',[1 2],'Xticklabel',[temp_genotype.grouped_conditions{i}.contrast]);
+        legend(handle_array,title_array,'location','northeastoutside')
+        xlabel('Contrast from rev phi parts')
+        ylabel('Mean LmR [V]')        
+        
+        iter = 1;
+        subplot(2,2,3)
+        for i = [7:9] %numel(grouped_conditions)
+            cond_list = grouped_conditions{i}.list;
+            
+            for c = 1:numel(cond_list);
+                temp_genotype = eval(['geno.' geno_fieldnames{f}]);
+                [means{c} sems{c}]= temp_genotype.get_trial_data([cond_list{c}(1),cond_list{c}(2)],'lmr','mean','yes','all');
+            end
+            
+            tfPlot.simple_tuning_curve({[means{:}],[sems{:}],temp_genotype.grouped_conditions{i}.x_axis},0);
+            
+            iter = iter + 1;
             means = []; sems = [];
         end
         
-        xlabel('Flicker Offset [rad]')
-        %ylabel('\Sigma LmR [V]') 
-        %set(gca,'XLim',[-.23 .23],'Xticklabel','');
-        set(gca,'Xticklabel','');
+        title('Rev Phi Regressive Motion')
+        xlabel('Flicker Offset [ms]')
+
+        iter = 1;
+        subplot(2,2,4)
+        for i = [10:12] %numel(grouped_conditions)
+            cond_list = grouped_conditions{i}.list;
+            
+            for c = 1:numel(cond_list);
+                temp_genotype = eval(['geno.' geno_fieldnames{f}]);
+                [means{c} sems{c}]= temp_genotype.get_trial_data([cond_list{c}(1),cond_list{c}(2)],'lmr','mean','yes','all');
+            end
+            
+            handle_array2(iter) = tfPlot.simple_tuning_curve({[means{:}],[sems{:}],[1 2]},0);
+            title_array2{iter} = temp_genotype.grouped_conditions{i}.name;
+
+            iter = iter + 1;
+            means = []; sems = [];
+        end
+        
+        legend(handle_array2,title_array2,'location','northeastoutside')
+        title('Standard Phi Regressive Motion')
+        xlabel('Contrast from rev phi parts')
+        set(gca,'XTick',[1 2],'Xticklabel',[temp_genotype.grouped_conditions{i}.contrast]);
         annotation('Textbox',[.3 .85 .6 .15],'String','Reverse Phi With Flicker Phase Delay','edgecolor','none')
         annotation('Textbox',[.825 .85 .2 .15],'String',['N=' num2str(numel(temp_genotype.experiment))],'edgecolor','none')
         export_fig(tuneFigHand(f),geno_fieldnames{f},'-pdf')

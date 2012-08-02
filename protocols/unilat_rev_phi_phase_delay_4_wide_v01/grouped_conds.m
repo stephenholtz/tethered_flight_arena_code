@@ -30,16 +30,16 @@ ccw_right.speed2 = 164:182;
 
 % 4.15 Hz
 cw_left.speed3 = 77:91;
-ccw_left.speed3 = 183:197;
+ccw_left.speed3 = 92:106;
 
-cw_right.speed3 = 92:106;
+cw_right.speed3 = 183:197;
 ccw_right.speed3 = 198:212;
 
 iter = 1;
 
 % Progressive Motion
-for speed = 1:numel(fieldnames(cw_left))
-    for i = 1:numel(cw_left.(['speed', num2str(speed)]))
+for speed = 1:numel(fieldnames(cw_right))
+    for i = 1:numel(cw_right.(['speed', num2str(speed)]))
         sym_conditions{iter}= [cw_right.(['speed', num2str(speed)])(i) ccw_left.(['speed', num2str(speed)])(i)]; %#ok<*SAGROW>
         iter = iter + 1;
         prog_motion.(['speed', num2str(speed)]){i} = [cw_right.(['speed', num2str(speed)])(i) ccw_left.(['speed', num2str(speed)])(i)];
@@ -47,8 +47,8 @@ for speed = 1:numel(fieldnames(cw_left))
 end
 
 % Regressive Motion
-for speed = 1:numel(fieldnames(cw_right))
-    for i = 1:numel(cw_right.(['speed', num2str(speed)]))
+for speed = 1:numel(fieldnames(cw_left))
+    for i = 1:numel(cw_left.(['speed', num2str(speed)]))
         sym_conditions{iter}= [cw_left.(['speed', num2str(speed)])(i) ccw_right.(['speed', num2str(speed)])(i)]; %#ok<*SAGROW>
         iter = iter + 1;
         reg_motion.(['speed', num2str(speed)]){i} = [cw_left.(['speed', num2str(speed)])(i) ccw_right.(['speed', num2str(speed)])(i)];
@@ -85,7 +85,7 @@ grouped_conditions{4}.tf = .5;
 grouped_conditions{4}.phi = 'Standard';
 grouped_conditions{4}.direction = 'F2B (Progressive)';
 grouped_conditions{4}.x_axis = [1 2];
-grouped_conditions{4}.contrast = ['low', 'high'];
+grouped_conditions{4}.contrast = {'dark','bright'};
 grouped_conditions{4}.list = prog_motion.speed1([end-1, end]);
 
 grouped_conditions{5}.name = '2.25 Hz F2B (Progressive) Motion';
@@ -93,7 +93,7 @@ grouped_conditions{5}.tf = 2.25;
 grouped_conditions{5}.phi = 'Standard';
 grouped_conditions{5}.direction = 'F2B (Progressive)';
 grouped_conditions{5}.x_axis = [1 2];
-grouped_conditions{5}.contrast = ['low', 'high'];
+grouped_conditions{5}.contrast = {'dark','bright'};
 grouped_conditions{5}.list = prog_motion.speed2([end-1, end]);
 
 grouped_conditions{6}.name = '4.15 Hz F2B (Progressive) Motion';
@@ -101,7 +101,7 @@ grouped_conditions{6}.tf = 4.15;
 grouped_conditions{6}.phi = 'Standard';
 grouped_conditions{6}.direction = 'F2B (Progressive)';
 grouped_conditions{6}.x_axis = [1 2];
-grouped_conditions{6}.contrast = ['low', 'high'];
+grouped_conditions{6}.contrast = {'dark','bright'};
 grouped_conditions{6}.list = prog_motion.speed3([end-1, end]);
 
 % Regressive Motion - Reverse Phi
@@ -135,7 +135,7 @@ grouped_conditions{10}.tf = .5;
 grouped_conditions{10}.phi = 'Standard';
 grouped_conditions{10}.direction = 'B2F (Regressive)';
 grouped_conditions{10}.x_axis = [1 2];
-grouped_conditions{10}.contrast = ['low', 'high'];
+grouped_conditions{10}.contrast = {'dark','bright'};
 grouped_conditions{10}.list = reg_motion.speed1([end-1, end]);
 
 grouped_conditions{11}.name = '2.25 Hz B2F (Regressive) Motion';
@@ -143,7 +143,7 @@ grouped_conditions{11}.tf = 2.25;
 grouped_conditions{11}.phi = 'Standard';
 grouped_conditions{11}.direction = 'B2F (Regressive)';
 grouped_conditions{11}.x_axis = [1 2];
-grouped_conditions{11}.contrast = ['low', 'high'];
+grouped_conditions{11}.contrast = {'dark','bright'};
 grouped_conditions{11}.list = reg_motion.speed2([end-1, end]);
 
 grouped_conditions{12}.name = '4.15 Hz B2F (Regressive) Motion';
@@ -151,6 +151,6 @@ grouped_conditions{12}.tf = 4.15;
 grouped_conditions{12}.phi = 'Standard';
 grouped_conditions{12}.direction = 'B2F (Regressive)';
 grouped_conditions{12}.x_axis = [1 2];
-grouped_conditions{12}.contrast = ['low', 'high'];
+grouped_conditions{12}.contrast = {'dark','bright'};
 grouped_conditions{12}.list = reg_motion.speed3([end-1, end]);
 

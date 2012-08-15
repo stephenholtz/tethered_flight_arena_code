@@ -35,7 +35,7 @@ i = 1;
 %% from telethon_vel_nulling_conditions_9_14 
 %
 Conditions(i).PatternID = 6;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [4 -48 0 0];
 Conditions(i).Mode = [0 0];
@@ -45,7 +45,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 6;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-4 48 0 0];
 Conditions(i).Mode = [0 0];
@@ -55,7 +55,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 7;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [4 -48 0 0];
 Conditions(i).Mode = [0 0];
@@ -65,7 +65,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 7;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-4 48 0 0];
 Conditions(i).Mode = [0 0];
@@ -75,7 +75,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1;
 %
 Conditions(i).PatternID = 8;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [4 -48 0 0];
 Conditions(i).Mode = [0 0];
@@ -85,7 +85,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 8;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-4 48 0 0];
 Conditions(i).Mode = [0 0];
@@ -95,7 +95,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 6;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [16 -48 0 0];
 Conditions(i).Mode = [0 0];
@@ -105,7 +105,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 6;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-16 48 0 0];
 Conditions(i).Mode = [0 0];
@@ -115,7 +115,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 7;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [16 -48 0 0];
 Conditions(i).Mode = [0 0];
@@ -125,7 +125,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 7;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-16 48 0 0];
 Conditions(i).Mode = [0 0];
@@ -135,7 +135,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 8;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [16 -48 0 0];
 Conditions(i).Mode = [0 0];
@@ -145,7 +145,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 8;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-16 48 0 0];
 Conditions(i).Mode = [0 0];
@@ -155,7 +155,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 6;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [64 -48 0 0];
 Conditions(i).Mode = [0 0];
@@ -165,7 +165,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 6;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-64 48 0 0];
 Conditions(i).Mode = [0 0];
@@ -176,7 +176,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 7;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [64 -48 0 0];
 Conditions(i).Mode = [0 0];
@@ -186,7 +186,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 7;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-64 48 0 0];
 Conditions(i).Mode = [0 0];
@@ -196,7 +196,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 8;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [64 -48 0 0];
 Conditions(i).Mode = [0 0];
@@ -206,7 +206,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 8;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-64 48 0 0];
 Conditions(i).Mode = [0 0];
@@ -216,7 +216,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 6;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [128 -48 0 0];
 Conditions(i).Mode = [0 0];
@@ -226,7 +226,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 6;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-128 48 0 0];
 Conditions(i).Mode = [0 0];
@@ -236,7 +236,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 7;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [128 -48 0 0];
 Conditions(i).Mode = [0 0];
@@ -246,7 +246,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 7;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-128 48 0 0];
 Conditions(i).Mode = [0 0];
@@ -256,7 +256,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 8;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [128 -48 0 0];
 Conditions(i).Mode = [0 0];
@@ -266,7 +266,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 8;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-128 48 0 0];
 Conditions(i).Mode = [0 0];
@@ -276,7 +276,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 6;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [192 -48 0 0];
 Conditions(i).Mode = [0 0];
@@ -286,7 +286,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 6;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-192 48 0 0];
 Conditions(i).Mode = [0 0];
@@ -296,7 +296,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 7;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [192 -48 0 0];
 Conditions(i).Mode = [0 0];
@@ -306,7 +306,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 7;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-192 48 0 0];
 Conditions(i).Mode = [0 0];
@@ -316,7 +316,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 8;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [192 -48 0 0];
 Conditions(i).Mode = [0 0];
@@ -326,7 +326,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 8;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-192 48 0 0];
 Conditions(i).Mode = [0 0];
@@ -338,7 +338,7 @@ i = i + 1;
 
 %% from telethon_tuning_shorter_conditions_9_14 
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 2];
 Conditions(i).Gains = [4 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -348,7 +348,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 2];
 Conditions(i).Gains = [-4 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -358,7 +358,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 2];
 Conditions(i).Gains = [24 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -368,7 +368,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 2];
 Conditions(i).Gains = [-24 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -378,7 +378,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 2];
 Conditions(i).Gains = [72 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -388,7 +388,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 2];
 Conditions(i).Gains = [-72 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -398,7 +398,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 2];
 Conditions(i).Gains = [144 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -408,7 +408,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 2];
 Conditions(i).Gains = [-144 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -418,7 +418,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 4;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 2];
 Conditions(i).Gains = [48 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -428,7 +428,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 4;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 2];
 Conditions(i).Gains = [-48 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -438,7 +438,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 4;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [48 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -448,7 +448,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 4;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [-48 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -458,7 +458,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 4;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 4];
 Conditions(i).Gains = [48 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -468,7 +468,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 4;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 4];
 Conditions(i).Gains = [-48 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -478,7 +478,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 4;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 5];
 Conditions(i).Gains = [48 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -490,7 +490,7 @@ i = i + 1;
 %% from telethon_tuning_conditions_9_14 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [4 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -500,7 +500,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-4 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -510,7 +510,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [24 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -520,7 +520,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-24 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -530,7 +530,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [72 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -540,7 +540,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-72 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -550,7 +550,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [144 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -560,7 +560,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-144 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -570,7 +570,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [4 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -580,7 +580,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [-4 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -590,7 +590,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [24 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -600,7 +600,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [-24 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -610,7 +610,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [72 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -620,7 +620,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [-72 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -630,7 +630,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [144 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -640,7 +640,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 2;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [-144 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -650,7 +650,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 3;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [4 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -660,7 +660,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 3;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-4 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -670,7 +670,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 3;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [72 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -680,7 +680,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 3;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-72 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -690,7 +690,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 4;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 2];
 Conditions(i).Gains = [48 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -700,7 +700,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 4;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 2];
 Conditions(i).Gains = [-48 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -710,7 +710,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 4;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [48 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -720,7 +720,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 4;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [-48 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -730,7 +730,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 4;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 4];
 Conditions(i).Gains = [48 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -740,7 +740,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 4;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 4];
 Conditions(i).Gains = [-48 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -750,7 +750,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 4;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 5];
 Conditions(i).Gains = [48 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -760,7 +760,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 4;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 5];
 Conditions(i).Gains = [-48 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -770,7 +770,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 5;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [8 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -780,7 +780,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 5;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-8 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -790,7 +790,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 5;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [24 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -800,7 +800,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 5;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-24 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -810,7 +810,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 5;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [72 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -820,7 +820,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 5;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [-72 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -830,7 +830,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 5;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [8 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -840,7 +840,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 5;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [-8 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -850,7 +850,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 5;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [24 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -860,7 +860,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 5;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [-24 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -870,7 +870,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 5;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [72 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -882,7 +882,7 @@ i = i + 1;
 %% from telethon_small_field_conditions_9_14 
 %
 Conditions(i).PatternID = 10;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [47 1];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -892,7 +892,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_1Hz_20wide_100Hzsf_1.mat';
 i = i + 1; 
 %
 Conditions(i).PatternID = 10;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [47 1];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -902,7 +902,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_1Hz_20wide_100Hzsf_2.mat';
 i = i + 1; 
 %
 Conditions(i).PatternID = 10;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [47 1];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -912,7 +912,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_3Hz_20wide_100Hzsf_1.mat';
 i = i + 1; 
 %
 Conditions(i).PatternID = 10;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [47 1];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -922,7 +922,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_3Hz_20wide_100Hzsf_2.mat';
 i = i + 1; 
 %
 Conditions(i).PatternID = 10;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [47 1];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -932,7 +932,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_5Hz_20wide_100Hzsf_1.mat';
 i = i + 1; 
 %
 Conditions(i).PatternID = 10;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [47 1];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -942,7 +942,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_5Hz_20wide_100Hzsf_2.mat';
 i = i + 1; 
 %
 Conditions(i).PatternID = 10;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [47 2];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -952,7 +952,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_1Hz_20wide_100Hzsf_1.mat';
 i = i + 1; 
 %
 Conditions(i).PatternID = 10;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [47 2];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -962,7 +962,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_1Hz_20wide_100Hzsf_2.mat';
 i = i + 1; 
 %
 Conditions(i).PatternID = 10;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [47 2];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -972,7 +972,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_3Hz_20wide_100Hzsf_1.mat';
 i = i + 1; 
 %
 Conditions(i).PatternID = 10;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [47 2];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -982,7 +982,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_3Hz_20wide_100Hzsf_2.mat';
 i = i + 1; 
 %
 Conditions(i).PatternID = 10;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [47 2];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -992,7 +992,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_5Hz_20wide_100Hzsf_1.mat';
 i = i + 1; 
 %
 Conditions(i).PatternID = 10;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [47 2];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -1002,7 +1002,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_5Hz_20wide_100Hzsf_2.mat';
 i = i + 1; 
 %
 Conditions(i).PatternID = 10;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [47 3];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -1012,7 +1012,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_1Hz_20wide_100Hzsf_1.mat';
 i = i + 1; 
 %
 Conditions(i).PatternID = 10;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [47 3];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -1022,7 +1022,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_1Hz_20wide_100Hzsf_2.mat';
 i = i + 1; 
 %
 Conditions(i).PatternID = 10;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [47 3];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -1032,7 +1032,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_3Hz_20wide_100Hzsf_1.mat';
 i = i + 1; 
 %
 Conditions(i).PatternID = 10;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [47 3];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -1042,7 +1042,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_3Hz_20wide_100Hzsf_2.mat';
 i = i + 1; 
 %
 Conditions(i).PatternID = 10;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [47 3];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -1052,7 +1052,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_5Hz_20wide_100Hzsf_1.mat';
 i = i + 1; 
 %
 Conditions(i).PatternID = 10;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [47 3];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -1063,7 +1063,7 @@ i = i + 1;
 %
 %% from telethon_optic_flow_condition_9_14 
 Conditions(i).PatternID = 16;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -1073,7 +1073,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_1Hz_20_pp_48wide_negative.m
 i = i + 1; 
 %
 Conditions(i).PatternID = 16;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -1083,7 +1083,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_1Hz_20_pp_48wide_positive.m
 i = i + 1; 
 %
 Conditions(i).PatternID = 17;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -1093,7 +1093,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_1Hz_20_pp_48wide_negative.m
 i = i + 1; 
 %
 Conditions(i).PatternID = 17;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -1103,7 +1103,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_1Hz_20_pp_48wide_positive.m
 i = i + 1; 
 %
 Conditions(i).PatternID = 18;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -1113,7 +1113,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_1Hz_20_pp_48wide_negative.m
 i = i + 1; 
 %
 Conditions(i).PatternID = 18;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -1123,7 +1123,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_1Hz_20_pp_48wide_positive.m
 i = i + 1; 
 %
 Conditions(i).PatternID = 19;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -1133,7 +1133,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_1Hz_20_pp_48wide_negative.m
 i = i + 1; 
 %
 Conditions(i).PatternID = 19;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -1143,7 +1143,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_1Hz_20_pp_48wide_positive.m
 i = i + 1; 
 %
 Conditions(i).PatternID = 20;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -1153,7 +1153,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_1Hz_20_pp_48wide_negative.m
 i = i + 1; 
 %
 Conditions(i).PatternID = 20;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -1163,7 +1163,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_1Hz_20_pp_48wide_positive.m
 i = i + 1; 
 %
 Conditions(i).PatternID = 21;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -1173,7 +1173,7 @@ Conditions(i).PosFuncNameX = 'position_function_sine_1Hz_20_pp_48wide_negative.m
 i = i + 1; 
 % 
 Conditions(i).PatternID = 21;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
@@ -1185,7 +1185,7 @@ i = i + 1;
 %% from telethon_onoff_conditions_9_14 
 %
 Conditions(i).PatternID = 12;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [1 0 1 0];
 Conditions(i).Mode = [0 0];
@@ -1195,7 +1195,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 13;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [1 0 1 0];
 Conditions(i).Mode = [0 0];
@@ -1205,7 +1205,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 14;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [1 0 1 0];
 Conditions(i).Mode = [0 0];
@@ -1215,7 +1215,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 15;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [1 0 1 0];
 Conditions(i).Mode = [0 0];
@@ -1225,7 +1225,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 11;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
 Conditions(i).Gains = [32 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -1235,7 +1235,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 11;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 2];
 Conditions(i).Gains = [-32 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -1245,7 +1245,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 11;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [32 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -1255,7 +1255,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 11;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 4];
 Conditions(i).Gains = [-32 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -1267,7 +1267,7 @@ i = i + 1;
 %
 %% from telethon_bilateral_conditions_9_14 Conditions(i).PatternID = 22;
 Conditions(i).PatternID = 22;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [8 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -1277,7 +1277,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 23;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [-8 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -1287,7 +1287,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 23;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [8 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -1297,7 +1297,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 22;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [-8 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -1307,7 +1307,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 22;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [24 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -1318,7 +1318,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 23;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [-24 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -1328,7 +1328,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 23;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [24 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -1338,7 +1338,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 22;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [-24 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -1348,7 +1348,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 22;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [96 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -1358,7 +1358,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 23;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [-96 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -1368,7 +1368,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %
 Conditions(i).PatternID = 23;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [96 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -1378,7 +1378,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 % 
 Conditions(i).PatternID = 22;
-Conditions(i).Duration = 3;
+Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [-96 0 0 0];
 Conditions(i).Mode = [0 0];
@@ -1391,7 +1391,7 @@ i = i + 1;
 %
 Conditions(i).PatternID = 35;
 Conditions(i).Duration = 5;
-Conditions(i).InitialPosition = [33 1];
+Conditions(i).InitialPosition = [1 20];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
 Conditions(i).PosFunctionX = [13 0];
@@ -1401,7 +1401,7 @@ i = i + 1;
 %
 Conditions(i).PatternID = 35;
 Conditions(i).Duration = 5;
-Conditions(i).InitialPosition = [33 1];
+Conditions(i).InitialPosition = [1 20];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
 Conditions(i).PosFunctionX = [14 0];
@@ -1411,7 +1411,7 @@ i = i + 1;
 %
 Conditions(i).PatternID = 35;
 Conditions(i).Duration = 5;
-Conditions(i).InitialPosition = [49 1];
+Conditions(i).InitialPosition = [1 20];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
 Conditions(i).PosFunctionX = [15 0];
@@ -1421,7 +1421,7 @@ i = i + 1;
 %
 Conditions(i).PatternID = 35;
 Conditions(i).Duration = 5;
-Conditions(i).InitialPosition = [49 1];
+Conditions(i).InitialPosition = [1 20];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
 Conditions(i).PosFunctionX = [16 0];
@@ -1431,7 +1431,7 @@ i = i + 1;
 %
 Conditions(i).PatternID = 35;
 Conditions(i).Duration = 5;
-Conditions(i).InitialPosition = [65 1];
+Conditions(i).InitialPosition = [1 20];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
 Conditions(i).PosFunctionX = [17 0];
@@ -1441,7 +1441,67 @@ i = i + 1;
 %
 Conditions(i).PatternID = 35;
 Conditions(i).Duration = 5;
-Conditions(i).InitialPosition = [65 1];
+Conditions(i).InitialPosition = [1 20];
+Conditions(i).Gains = [0 0 0 0];
+Conditions(i).Mode = [4 0];
+Conditions(i).PosFunctionX = [18 0];
+Conditions(i).PatternName = {'Pattern_035_variable_bar_gs3.mat'};
+Conditions(i).PosFuncNameX = 'position_function_z_018_small_obj_track_1Hz_sine_wave_pos65_negative_50Hz_samp.mat';
+i = i + 1;
+%
+Conditions(i).PatternID = 35;
+Conditions(i).Duration = 5;
+Conditions(i).InitialPosition = [1 26];
+Conditions(i).Gains = [0 0 0 0];
+Conditions(i).Mode = [4 0];
+Conditions(i).PosFunctionX = [13 0];
+Conditions(i).PatternName = {'Pattern_035_variable_bar_gs3.mat'};
+Conditions(i).PosFuncNameX = 'position_function_z_013_small_obj_track_1Hz_sine_wave_pos33_positive_50Hz_samp.mat';
+i = i + 1;
+%
+Conditions(i).PatternID = 35;
+Conditions(i).Duration = 5;
+Conditions(i).InitialPosition = [1 26];
+Conditions(i).Gains = [0 0 0 0];
+Conditions(i).Mode = [4 0];
+Conditions(i).PosFunctionX = [14 0];
+Conditions(i).PatternName = {'Pattern_035_variable_bar_gs3.mat'};
+Conditions(i).PosFuncNameX = 'position_function_z_014_small_obj_track_1Hz_sine_wave_pos33_negative_50Hz_samp.mat';
+i = i + 1;
+%
+Conditions(i).PatternID = 35;
+Conditions(i).Duration = 5;
+Conditions(i).InitialPosition = [1 26];
+Conditions(i).Gains = [0 0 0 0];
+Conditions(i).Mode = [4 0];
+Conditions(i).PosFunctionX = [15 0];
+Conditions(i).PatternName = {'Pattern_035_variable_bar_gs3.mat'};
+Conditions(i).PosFuncNameX = 'position_function_z_015_small_obj_track_1Hz_sine_wave_pos49_positive_50Hz_samp.mat.mat';
+i = i + 1;
+%
+Conditions(i).PatternID = 35;
+Conditions(i).Duration = 5;
+Conditions(i).InitialPosition = [1 26];
+Conditions(i).Gains = [0 0 0 0];
+Conditions(i).Mode = [4 0];
+Conditions(i).PosFunctionX = [16 0];
+Conditions(i).PatternName = {'Pattern_035_variable_bar_gs3.mat'};
+Conditions(i).PosFuncNameX = 'position_function_z_016_small_obj_track_1Hz_sine_wave_pos49_negative_50Hz_samp.mat';
+i = i + 1;
+%
+Conditions(i).PatternID = 35;
+Conditions(i).Duration = 5;
+Conditions(i).InitialPosition = [1 26];
+Conditions(i).Gains = [0 0 0 0];
+Conditions(i).Mode = [4 0];
+Conditions(i).PosFunctionX = [17 0];
+Conditions(i).PatternName = {'Pattern_035_variable_bar_gs3.mat'};
+Conditions(i).PosFuncNameX = 'position_function_z_017_small_obj_track_1Hz_sine_wave_pos65_positive_50Hz_samp.mat';
+i = i + 1;
+%
+Conditions(i).PatternID = 35;
+Conditions(i).Duration = 5;
+Conditions(i).InitialPosition = [1 26];
 Conditions(i).Gains = [0 0 0 0];
 Conditions(i).Mode = [4 0];
 Conditions(i).PosFunctionX = [18 0];

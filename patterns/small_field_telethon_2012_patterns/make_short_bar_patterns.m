@@ -61,13 +61,7 @@ Pats = zeros(32, 96, pattern.x_num, pattern.y_num);
     end
     
     counter = counter + 1;
-    if numel(num2str(counter)) < 2
-        count = ['00' num2str(counter)];
-    elseif numel(num2str(counter)) < 3
-        count = ['0' num2str(counter)];        
-    else
-        count = num2str(counter);        
-    end
+    count = num2str(counter);
     
     pattern_name = ['Pattern_' count '_' pattern_name];
     file_name = fullfile(root_pattern_dir,project,pattern_name);

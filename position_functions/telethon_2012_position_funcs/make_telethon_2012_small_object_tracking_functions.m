@@ -15,7 +15,7 @@ counter = 12; % This is the number of previously existing telethon position func
 name = 'small_obj_track_1Hz_sine_wave_';
 
 amplitude = 6; % 22.5 degrees @ 1 Hz, from Maimon et al 2008
-base_func = amplitude*(make_sine_wave_function(10, 50, 1));
+base_func = amplitude*(make_sine_wave_function(20, 50, 1));
 
 for loc = 1:3
     if loc == 1;
@@ -34,23 +34,17 @@ for loc = 1:3
         
         if dir == 1
             direction = 'positive_';
-            func = round(dir_func);
+            func = round(dir_func) - 1; % Need to subtract one, numbered from 0
         else
             direction = 'negative_';
-            func = round(fliplr(dir_func));
+            func = round(fliplr(dir_func)) - 1; % Need to subtract one, numbered from 0
         end
         dir_name = [loc_name direction];
 
         plot(func); hold all;
         
         counter = counter + 1;
-        if numel(num2str(counter)) < 2
-            count = ['00' num2str(counter)];
-        elseif numel(num2str(counter)) < 3
-            count = ['0' num2str(counter)];        
-        else
-            count = num2str(counter);        
-        end
+        count = num2str(counter);
         
         % Need to add the z because john doesn't have numbers on his
         % position functions -- could just number those...

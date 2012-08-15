@@ -44,13 +44,7 @@ for loc = 1:3
         plot(func); hold all;
         
         counter = counter + 1;
-        if numel(num2str(counter)) < 2
-            count = ['00' num2str(counter)];
-        elseif numel(num2str(counter)) < 3
-            count = ['0' num2str(counter)];        
-        else
-            count = num2str(counter);
-        end
+        count = num2str(counter);
         
         % Need to add the z because john doesn't have numbers on his
         % position functions -- could just number those...

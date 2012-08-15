@@ -2,10 +2,10 @@ function Conditions = telethon_experiment_2012
 %TELETHON_EXPERIMENT_2011 johns full telethon protocol all in one function.
 % It uses the same patterns and functions as
 % short_telethon_experiment_2011. All closed loop interval trial times are
-% 3.5 seconds.
+% 3 seconds.
 %
-% All 130 experimental conditions are linearly spaced from .1 to 9.9 volts.
-% closed loop portion is set to zero. 
+% This protocol is not missing some symmetrical conditions, and has an
+% additional set of small object tracking stimuli.
 %
 % Values less than .1 are used to detect the stimulus timing, the linspace
 % CANNOT be anything except .1-X or the detection is unreliable
@@ -1387,10 +1387,84 @@ Conditions(i).PatternName = {'Pattern_32_rotation_left_half_gs3.mat'};
 Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 
+%% Small object tracking new in the 2012 protocol
+%
+Conditions(i).PatternID = 35;
+Conditions(i).Duration = 5;
+Conditions(i).InitialPosition = [33 1];
+Conditions(i).Gains = [0 0 0 0];
+Conditions(i).Mode = [4 0];
+Conditions(i).PosFunctionX = [13 0];
+Conditions(i).PatternName = {'Pattern_035_variable_bar_gs3.mat'};
+Conditions(i).PosFuncNameX = 'position_function_z_013_small_obj_track_1Hz_sine_wave_pos33_positive_50Hz_samp.mat';
+i = i + 1;
+%
+Conditions(i).PatternID = 35;
+Conditions(i).Duration = 5;
+Conditions(i).InitialPosition = [33 1];
+Conditions(i).Gains = [0 0 0 0];
+Conditions(i).Mode = [4 0];
+Conditions(i).PosFunctionX = [14 0];
+Conditions(i).PatternName = {'Pattern_035_variable_bar_gs3.mat'};
+Conditions(i).PosFuncNameX = 'position_function_z_014_small_obj_track_1Hz_sine_wave_pos33_negative_50Hz_samp.mat';
+i = i + 1;
+%
+Conditions(i).PatternID = 35;
+Conditions(i).Duration = 5;
+Conditions(i).InitialPosition = [49 1];
+Conditions(i).Gains = [0 0 0 0];
+Conditions(i).Mode = [4 0];
+Conditions(i).PosFunctionX = [15 0];
+Conditions(i).PatternName = {'Pattern_035_variable_bar_gs3.mat'};
+Conditions(i).PosFuncNameX = 'position_function_z_015_small_obj_track_1Hz_sine_wave_pos49_positive_50Hz_samp.mat.mat';
+i = i + 1;
+%
+Conditions(i).PatternID = 35;
+Conditions(i).Duration = 5;
+Conditions(i).InitialPosition = [49 1];
+Conditions(i).Gains = [0 0 0 0];
+Conditions(i).Mode = [4 0];
+Conditions(i).PosFunctionX = [16 0];
+Conditions(i).PatternName = {'Pattern_035_variable_bar_gs3.mat'};
+Conditions(i).PosFuncNameX = 'position_function_z_016_small_obj_track_1Hz_sine_wave_pos49_negative_50Hz_samp.mat';
+i = i + 1;
+%
+Conditions(i).PatternID = 35;
+Conditions(i).Duration = 5;
+Conditions(i).InitialPosition = [65 1];
+Conditions(i).Gains = [0 0 0 0];
+Conditions(i).Mode = [4 0];
+Conditions(i).PosFunctionX = [17 0];
+Conditions(i).PatternName = {'Pattern_035_variable_bar_gs3.mat'};
+Conditions(i).PosFuncNameX = 'position_function_z_017_small_obj_track_1Hz_sine_wave_pos65_positive_50Hz_samp.mat';
+i = i + 1;
+%
+Conditions(i).PatternID = 35;
+Conditions(i).Duration = 5;
+Conditions(i).InitialPosition = [65 1];
+Conditions(i).Gains = [0 0 0 0];
+Conditions(i).Mode = [4 0];
+Conditions(i).PosFunctionX = [18 0];
+Conditions(i).PatternName = {'Pattern_035_variable_bar_gs3.mat'};
+Conditions(i).PosFuncNameX = 'position_function_z_018_small_obj_track_1Hz_sine_wave_pos65_negative_50Hz_samp.mat';
+i = i + 1;
+
+%% Long Closed loop segment for determining stripe fixation index
+%
+Conditions(i).PatternID = 1;
+Conditions(i).Duration = 10;
+Conditions(i).InitialPosition = [49 1];
+Conditions(i).Gains = [-15 0 0 0];
+Conditions(i).Mode = [1 0];
+Conditions(i).PosFunctionX = [1 0];
+Conditions(i).PatternName = {'Pattern_11_8wide_bothcontrasts_stripes_c49_telethon.mat'};
+Conditions(i).PosFuncNameX = 'none';
+i = i + 1;
+
 %% Closed loop condition for interspersing between trials
 %
 Conditions(i).PatternID = 1;
-Conditions(i).Duration = 3.5;
+Conditions(i).Duration = 3;
 Conditions(i).InitialPosition = [49 1];
 Conditions(i).Gains = [-15 0 0 0];
 Conditions(i).Mode = [1 0];
@@ -1419,3 +1493,9 @@ end
 % value of the closed loop portion!
 Conditions(numel(Conditions)).Voltage        =  0;
 
+time = 0;
+for g = 1:numel(Conditions)-1
+    time = time + Conditions(g).Duration + Conditions(numel(Conditions)).Duration + .01;
+end
+
+disp(time/60)

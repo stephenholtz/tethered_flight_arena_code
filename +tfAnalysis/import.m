@@ -118,7 +118,7 @@ classdef import < handle
             data_file = dir(fullfile(data_filepath, '*.daq'));
             catch file_error
                disp('Problem finding/loading metadata.mat, conditions.mat or finding *.daq')
-               rethrow(file_error)               
+               rethrow(file_error)
             end
             self.data_root_path = data_filepath;
             self.data_file_path = data_file.name;

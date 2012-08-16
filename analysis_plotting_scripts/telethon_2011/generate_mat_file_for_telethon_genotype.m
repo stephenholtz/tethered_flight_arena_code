@@ -71,12 +71,12 @@ function summ = generate_mat_file_for_telethon_genotype(genotype_object, varargi
                 [130]};
             
     for g = 1:numel(u_mat);
-
+        
         summ.unilateralData.lmr_ts_mean_sem{g} = genotype_object.get_timeseries(u_mat{g},4);
-
+        
         [summ.unilateralData.int_mean_sem{g}, summ.unilateralData.t75mean_mean_sem{g}]...
             = genotype_object.get_int_t75mean_mean_sem(u_mat{g},2);
-
+        
     end
     
     % Pull out ON OFF Conditions
@@ -90,12 +90,12 @@ function summ = generate_mat_file_for_telethon_genotype(genotype_object, varargi
                 [119]};
 
     for g = 1:numel(oo_mat);
-
+        
         summ.onOffData.lmr_ts_mean_sem{g} = genotype_object.get_timeseries(oo_mat{g},4);
-
+        
         [summ.onOffData.int_mean_sem{g}, summ.onOffData.t75mean_mean_sem{g},]...
             = genotype_object.get_int_t75mean_mean_sem(oo_mat{g},2);
-
+        
     end
     
     % Pull out Optic Flow Conditions
@@ -110,9 +110,9 @@ function summ = generate_mat_file_for_telethon_genotype(genotype_object, varargi
                 [108, 109],...
                 [110, 111],...
                 [112]};
-
+    
     for g = 1:numel(flow_mat);
-
+        
         summ.opticFlowData.lmr_ts_mean_sem{g} = genotype_object.get_timeseries(flow_mat{g},4);
         
         [summ.opticFlowData.corr_mean_sem{g}, summ.opticFlowData.lag_mean_sem{g}]...

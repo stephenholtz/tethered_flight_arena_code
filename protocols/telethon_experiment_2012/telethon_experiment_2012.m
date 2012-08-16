@@ -1285,7 +1285,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 
 %
-%% from telethon_bilateral_conditions_9_14 Conditions(i).PatternID = 22;
+%% from telethon_bilateral_conditions_9_14 ADDED 40 Hz FLICKER 
 Conditions(i).PatternID = 22;
 Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
@@ -1405,7 +1405,29 @@ Conditions(i).Mode = [0 0];
 Conditions(i).PosFunctionX = [1 0];
 Conditions(i).PatternName = {'Pattern_32_rotation_left_half_gs3.mat'};
 Conditions(i).PosFuncNameX = 'none';
+i = i + 1;
+
+%% 4 Hz Flicker (slightly faster than Duistermars et al 2012)
+% 
+Conditions(i).PatternID = 24;
+Conditions(i).Duration = 2.5;
+Conditions(i).InitialPosition = [1 1]; % Left Side
+Conditions(i).Gains = [8 0 0 0];
+Conditions(i).Mode = [0 0];
+Conditions(i).PosFunctionX = [1 0];
+Conditions(i).PatternName = {'Pattern_34_flicker_halves_gs3.mat'};
+Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
+% 
+Conditions(i).PatternID = 24;
+Conditions(i).Duration = 2.5;
+Conditions(i).InitialPosition = [1 2]; % Right Side
+Conditions(i).Gains = [8 0 0 0];
+Conditions(i).Mode = [0 0];
+Conditions(i).PosFunctionX = [1 0];
+Conditions(i).PatternName = {'Pattern_34_flicker_halves_gs3.mat'};
+Conditions(i).PosFuncNameX = 'none';
+i = i + 1;
 
 %% Small object tracking new in the 2012 protocol
 %

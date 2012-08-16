@@ -142,10 +142,24 @@ classdef ExpSet < handle
                     end
                     sem = std(cond_data)/(size(cond_data,1)^-2);
                     
-                case {'exp','experiment',1}
-                    % Return per experiment averages
+                case {'exp','experiment','fly',1}
+                    % Return per experiment averages (over sym conds if specified)
                     cond_data = [];
                     sem = [];
+                    
+                    switch use_sym_conds
+                        case {1,'yes','true'}
+                            if size(temp_cond_data,2) == 2
+                                temp_cell_array = [];
+                                for j = 1:size(temp_cond_data,1)
+                                    if ~isempty(temp_cond_data{j,2});
+                                    temp_cell_array{j,1} = [temp_cond_data{j,1}; temp_cond_data{j,2}];
+                                    end
+                                end
+                                % Is there a way to delete cells?
+                                temp_cond_data = temp_cell_array;
+                            end
+                    end
                     
                     exp_iter = 0;
                     for g = 1:numel(temp_cond_data)
@@ -159,7 +173,7 @@ classdef ExpSet < handle
                                 cond_data(exp_iter,:) = resp_func(temp_cond_data{g});
                             end
                         end
-                    end
+                    end                  
                     
                 case {'all',2}
                     % Return averaged experiments (over sym conds if present)                       

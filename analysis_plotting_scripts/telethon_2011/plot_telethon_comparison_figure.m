@@ -6,10 +6,10 @@ function [Page1 Page2 Page3] = plot_telethon_comparison_figure(varargin)
     % Page 1 - B2F+F2B*, standard phi*, rev phi*, expansion*
     % Page 2 - Stripe tracking*, on off*, contrast*, optic flow*, closed loop*
     % Page 3 - velocity nulling*, rotation tuning curve*, nulling curve!!
-%     color_order_mat = [1 0 0; 0 1 1];
-%     axes_color      = [0 0 0];
-%     figure_color    = [0 0 0];
-%     font_color      = [1 1 1];
+    %     color_order_mat = [1 0 0; 0 1 1];
+    %     axes_color      = [0 0 0];
+    %     figure_color    = [0 0 0];
+    %     font_color      = [1 1 1];
     
     color_order_mat = [1 0 0; 0 1 1];
     axes_color      = [1 1 1];
@@ -296,7 +296,7 @@ for i = 1:3
                                   'XTickLabel',{'0', '1', '2', '3'})     
             end
         end
-
+        
         if cond_iter ~= 1;
         else
             if i == 1;
@@ -307,7 +307,7 @@ for i = 1:3
                 ylabel({'90 \lambda','LmR WBA [V]'})
             end
         end
-
+        
         % move the location of the next graph, and add to the plot iterator
         location = [location(1)+.14,...
                     location(2),...

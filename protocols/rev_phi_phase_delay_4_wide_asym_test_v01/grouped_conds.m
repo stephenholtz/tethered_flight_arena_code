@@ -20,17 +20,17 @@ for i = 1:numel(cc)
     sym_conditions{i}= [cc(i) ccw(i)]; %#ok<*SAGROW>
 end
 
-% grouped_conditions{1}.name = '.75 Hz Polarity 0';
-% grouped_conditions{1}.tf = .75;
-% grouped_conditions{1}.polarity = 'on';
-% grouped_conditions{1}.x_axis = [-82.5:5:-2.5 0 2.5:5:82.5];
-% grouped_conditions{1}.list = sym_conditions([1:18 54:70]);
-% 
-% grouped_conditions{2}.name = '.75 Hz Polarity 1';
-% grouped_conditions{2}.tf = .75;
-% grouped_conditions{2}.polarity = 'off';
-% grouped_conditions{2}.x_axis = [-82.5:5:-2.5 0 2.5:5:82.5];
-% grouped_conditions{2}.list = sym_conditions(19:53);
+grouped_conditions{1}.name = '.75 Hz Polarity 0';
+grouped_conditions{1}.tf = .75;
+grouped_conditions{1}.polarity = 'on';
+grouped_conditions{1}.x_axis = [-82.5:5:-2.5 0 2.5:5:82.5];
+grouped_conditions{1}.list = sym_conditions([1:18 54:70]);
+
+grouped_conditions{2}.name = '.75 Hz Polarity 1';
+grouped_conditions{2}.tf = .75;
+grouped_conditions{2}.polarity = 'off';
+grouped_conditions{2}.x_axis = [-82.5:5:-2.5 0 2.5:5:82.5];
+grouped_conditions{2}.list = sym_conditions(19:53);
 
 % For cont plot of all
 % grouped_conditions{1}.name = '.75 Hz';
@@ -43,15 +43,15 @@ end
 % % after (cond 70) -> complete off rev phi
 % grouped_conditions{1}.list = sym_conditions([36:53 1:18 54:70 19:36]);
 % grouped_conditions{1}.x_axis = [1:numel(grouped_conditions{1}.list)];
-
+% 
 % grouped_conditions{2}.name = '.75 Hz';
 % grouped_conditions{2}.tf = .75;
 % grouped_conditions{2}.polarity = 'on to off...';
 % grouped_conditions{2}.list = sym_conditions([1:18 54:70 19:53]);
 % grouped_conditions{2}.x_axis = [1:numel(grouped_conditions{2}.list)];
 % 
-grouped_conditions{1}.name = '.75 Hz';
-grouped_conditions{1}.tf = .75;
-grouped_conditions{1}.polarity = 'off to on...';
-grouped_conditions{1}.list = sym_conditions([19:53 1:18 54:70]);
-grouped_conditions{1}.x_axis = [1:numel(grouped_conditions{1}.list)];
+% grouped_conditions{1}.name = '.75 Hz';
+% grouped_conditions{1}.tf = .75;
+% grouped_conditions{1}.polarity = 'off to on...';
+% grouped_conditions{1}.list = sym_conditions([19:53 1:18 54:70]);
+% grouped_conditions{1}.x_axis = [1:numel(grouped_conditions{1}.list)];

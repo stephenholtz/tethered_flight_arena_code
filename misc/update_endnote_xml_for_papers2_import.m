@@ -13,7 +13,7 @@ new_article_path = pwd;
 xml_file = dir(fullfile(pwd,'*.xml'));
 
 % Check for the xml file
-if isempty(xml_file); errordlg({'XML file not found in directory!',new_article_path}); end
+if isempty(xml_file); errordlg({'XML file not found in directory!',new_article_path}); return; end
 
 % If all (or any) of the pdfs in the folder are inside of folders, this
 % will copy them out

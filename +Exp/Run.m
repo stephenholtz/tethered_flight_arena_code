@@ -187,6 +187,8 @@ randomize = 1;
                     pause(.0001)
                 end
             end
+            if (time_elapsed-time) > 1; warning('Time discrepancy... '); end ;
+            
             
             Panel_com('stop');
             % Reset the voltage encoding
@@ -268,6 +270,7 @@ randomize = 1;
                     end
                 end
             end
+            if (time_elapsed-time) > 1; warning('Time discrepancy... '); end ;
             
             Panel_com('stop');
             Panel_com('set_ao',[4,0]);        
@@ -303,7 +306,7 @@ randomize = 1;
 
     % Stop the timer.
     timer = toc(tID);
-
+    
     if res
         % Send an email saying it is finished.
         email_subject = ['tfExperiment ' metadata.ExperimentName ' Finished.'];
@@ -317,7 +320,7 @@ randomize = 1;
         result = Exp.Utilities.send_email(email_subject,email_message);
         if ~result; disp('Error sending email'); end    
     end
-
+    
     if record
         clear('DAQ_dev')
         daqreset

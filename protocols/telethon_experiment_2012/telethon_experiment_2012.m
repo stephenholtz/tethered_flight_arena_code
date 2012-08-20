@@ -32,7 +32,8 @@ end
     cd(cf);    
     
 i = 1;
-%% from telethon_vel_nulling_conditions_9_14 Conditions 1 - 30
+%% from telethon_vel_nulling_conditions_9_14
+% These are all of the velocity nulling conditions (30 of them)
 % 1
 Conditions(i).PatternID = 6;
 Conditions(i).Duration = 2.5;
@@ -335,7 +336,7 @@ Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 
 %% from telethon_tuning_shorter_conditions_9_14 (16 conditions)
-%
+% here are the lam = 45 full field rotation 
 Conditions(i).PatternID = 2;
 Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 2];
@@ -415,7 +416,7 @@ Conditions(i).PosFunctionX = [1 0];
 Conditions(i).PatternName = {'Pattern_12_rotation_sf_48P_RC.mat'};
 Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
-%
+% here are the low contrast rotations
 Conditions(i).PatternID = 4;
 Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 2];
@@ -496,8 +497,8 @@ Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
 Conditions(i).PosFuncNameX = 'none';
 i = i + 1;
 
-%% from telethon_tuning_conditions_9_14 (40 conditions)
-%
+%% from telethon_tuning_conditions_9_14 (was 40 conditions)
+% here are the lam = 30 full field rotations
 Conditions(i).PatternID = 2;
 Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
@@ -577,7 +578,7 @@ Conditions(i).PosFunctionX = [1 0];
 Conditions(i).PatternName = {'Pattern_12_rotation_sf_48P_RC.mat'};
 Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
-%
+% lam = 60 full field rotation
 Conditions(i).PatternID = 2;
 Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
@@ -697,7 +698,90 @@ Conditions(i).PosFunctionX = [1 0];
 Conditions(i).PatternName = {'Pattern_13_expansion_48P_RC.mat'};
 Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
-%
+% These conditions were formerly duplicates of several contrast rotaions
+% already run above... AFTER 8/17/2012 they were changed to an equal number
+% of different conditions...
+% %
+% Conditions(i).PatternID = 4;
+% Conditions(i).Duration = 2.5;
+% Conditions(i).InitialPosition = [1 2];
+% Conditions(i).Gains = [48 0 0 0];
+% Conditions(i).Mode = [0 0];
+% Conditions(i).PosFunctionX = [1 0];
+% Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
+% Conditions(i).PosFuncNameX = 'none';
+% i = i + 1; 
+% %
+% Conditions(i).PatternID = 4;
+% Conditions(i).Duration = 2.5;
+% Conditions(i).InitialPosition = [1 2];
+% Conditions(i).Gains = [-48 0 0 0];
+% Conditions(i).Mode = [0 0];
+% Conditions(i).PosFunctionX = [1 0];
+% Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
+% Conditions(i).PosFuncNameX = 'none';
+% i = i + 1; 
+% %
+% Conditions(i).PatternID = 4;
+% Conditions(i).Duration = 2.5;
+% Conditions(i).InitialPosition = [1 3];
+% Conditions(i).Gains = [48 0 0 0];
+% Conditions(i).Mode = [0 0];
+% Conditions(i).PosFunctionX = [1 0];
+% Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
+% Conditions(i).PosFuncNameX = 'none';
+% i = i + 1; 
+% %
+% Conditions(i).PatternID = 4;
+% Conditions(i).Duration = 2.5;
+% Conditions(i).InitialPosition = [1 3];
+% Conditions(i).Gains = [-48 0 0 0];
+% Conditions(i).Mode = [0 0];
+% Conditions(i).PosFunctionX = [1 0];
+% Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
+% Conditions(i).PosFuncNameX = 'none';
+% i = i + 1; 
+% %
+% Conditions(i).PatternID = 4;
+% Conditions(i).Duration = 2.5;
+% Conditions(i).InitialPosition = [1 4];
+% Conditions(i).Gains = [48 0 0 0];
+% Conditions(i).Mode = [0 0];
+% Conditions(i).PosFunctionX = [1 0];
+% Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
+% Conditions(i).PosFuncNameX = 'none';
+% i = i + 1; 
+% %
+% Conditions(i).PatternID = 4;
+% Conditions(i).Duration = 2.5;
+% Conditions(i).InitialPosition = [1 4];
+% Conditions(i).Gains = [-48 0 0 0];
+% Conditions(i).Mode = [0 0];
+% Conditions(i).PosFunctionX = [1 0];
+% Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
+% Conditions(i).PosFuncNameX = 'none';
+% i = i + 1; 
+% %
+% Conditions(i).PatternID = 4;
+% Conditions(i).Duration = 2.5;
+% Conditions(i).InitialPosition = [1 5];
+% Conditions(i).Gains = [48 0 0 0];
+% Conditions(i).Mode = [0 0];
+% Conditions(i).PosFunctionX = [1 0];
+% Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
+% Conditions(i).PosFuncNameX = 'none';
+% i = i + 1; 
+% %
+% Conditions(i).PatternID = 4;
+% Conditions(i).Duration = 2.5;
+% Conditions(i).InitialPosition = [1 5];
+% Conditions(i).Gains = [-48 0 0 0];
+% Conditions(i).Mode = [0 0];
+% Conditions(i).PosFunctionX = [1 0];
+% Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
+% Conditions(i).PosFuncNameX = 'none';
+% i = i + 1; 
+%% Stimuli inserted to replace the duplicate contrast grating stuff
 Conditions(i).PatternID = 4;
 Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 2];
@@ -777,7 +861,7 @@ Conditions(i).PosFunctionX = [1 0];
 Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
 Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
-%
+%% Rest of the rotations from telethon_tuning_conditions_9_14
 Conditions(i).PatternID = 5;
 Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 1];
@@ -1332,7 +1416,6 @@ Conditions(i).Gains = [24 0 0 0];
 Conditions(i).Mode = [0 0];
 Conditions(i).PosFunctionX = [1 0];
 Conditions(i).PatternName = {'Pattern_32_rotation_left_half_gs3.mat'};
-
 Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
 %

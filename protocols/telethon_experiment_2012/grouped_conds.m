@@ -26,7 +26,7 @@ sym_conditions = {[1:2:148; 2:2:148]};
 % 12 - Velocity Nulling (Contrast Nulling)
 % 13 - Stripe Fixation (Interspersed 3 second and 10 second conditions)
 % 14 - Small Object Oscillation (NEW)
-% 15 - 
+% 15 - Coherent Motion (Testing Section...)
 
 % 01 - Full Field Rotation - DONE
 %
@@ -219,3 +219,14 @@ grouped_conditions{12}.list = ...
                         [141,142];...
                         [143,144];...                       
                         [145,146]};
+                    
+% 15 - Coherent Motion (Testing Secion)
+grouped_conditions{12}.name = 'Coherent Motion';
+grouped_conditions{12}.coherence = [10 20 40 60];
+grouped_conditions{12}.mc =  [1 1 1 1];
+grouped_conditions{12}.gain =  [48 48 48 48];
+grouped_conditions{12}.list = ...
+                       {[67,68];...
+                        [69,70];...
+                        [71,72];...                       
+                        [73,74]};

@@ -208,7 +208,7 @@ randomize = 1;
                 cond_nums = [cond_nums(2:end) cond];
                 total_conds = total_conds+1;
                 num_trials_missed = num_trials_missed +1;
-
+                
                 if num_trials_missed > 40 && emailed_conds_missed == 0;
                     email_subject = ['WARNING: tfExperiment on ' metadata.Arena ' Requires Attention.'];
                     email_message = ['Fly has not completed trials ' num2str(num_trials_missed) ' times.'];
@@ -217,14 +217,6 @@ randomize = 1;
                     if ~result; disp('Error sending too many trials missed email');
                     end
                     emailed_conds_missed = 1;
-                elseif num_trials_missed > 100 && emailed_conds_missed == 1;
-                    email_subject = ['WARNING: tfExperiment on ' metadata.Arena ' Requires Attention.'];
-                    email_message = ['Fly has not completed trials ' num2str(num_trials_missed) ' times.'];
-                    disp(email_message);                
-                    result = Exp.Utilities.send_email(email_subject,email_message);
-                    if ~result; disp('Error sending too many trials missed email');
-                    end
-                    emailed_conds_missed = 2;
                 end
 
             end

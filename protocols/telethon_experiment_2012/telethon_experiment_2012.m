@@ -701,108 +701,8 @@ i = i + 1;
 % These conditions were formerly duplicates of several contrast rotaions
 % already run above... AFTER 8/17/2012 they were changed to an equal number
 % of different conditions...
-% %
-% Conditions(i).PatternID = 4;
-% Conditions(i).Duration = 2.5;
-% Conditions(i).InitialPosition = [1 2];
-% Conditions(i).Gains = [48 0 0 0];
-% Conditions(i).Mode = [0 0];
-% Conditions(i).PosFunctionX = [1 0];
-% Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
-% Conditions(i).PosFuncNameX = 'none';
-% i = i + 1; 
-% %
-% Conditions(i).PatternID = 4;
-% Conditions(i).Duration = 2.5;
-% Conditions(i).InitialPosition = [1 2];
-% Conditions(i).Gains = [-48 0 0 0];
-% Conditions(i).Mode = [0 0];
-% Conditions(i).PosFunctionX = [1 0];
-% Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
-% Conditions(i).PosFuncNameX = 'none';
-% i = i + 1; 
-% %
-% Conditions(i).PatternID = 4;
-% Conditions(i).Duration = 2.5;
-% Conditions(i).InitialPosition = [1 3];
-% Conditions(i).Gains = [48 0 0 0];
-% Conditions(i).Mode = [0 0];
-% Conditions(i).PosFunctionX = [1 0];
-% Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
-% Conditions(i).PosFuncNameX = 'none';
-% i = i + 1; 
-% %
-% Conditions(i).PatternID = 4;
-% Conditions(i).Duration = 2.5;
-% Conditions(i).InitialPosition = [1 3];
-% Conditions(i).Gains = [-48 0 0 0];
-% Conditions(i).Mode = [0 0];
-% Conditions(i).PosFunctionX = [1 0];
-% Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
-% Conditions(i).PosFuncNameX = 'none';
-% i = i + 1; 
-% %
-% Conditions(i).PatternID = 4;
-% Conditions(i).Duration = 2.5;
-% Conditions(i).InitialPosition = [1 4];
-% Conditions(i).Gains = [48 0 0 0];
-% Conditions(i).Mode = [0 0];
-% Conditions(i).PosFunctionX = [1 0];
-% Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
-% Conditions(i).PosFuncNameX = 'none';
-% i = i + 1; 
-% %
-% Conditions(i).PatternID = 4;
-% Conditions(i).Duration = 2.5;
-% Conditions(i).InitialPosition = [1 4];
-% Conditions(i).Gains = [-48 0 0 0];
-% Conditions(i).Mode = [0 0];
-% Conditions(i).PosFunctionX = [1 0];
-% Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
-% Conditions(i).PosFuncNameX = 'none';
-% i = i + 1; 
-% %
-% Conditions(i).PatternID = 4;
-% Conditions(i).Duration = 2.5;
-% Conditions(i).InitialPosition = [1 5];
-% Conditions(i).Gains = [48 0 0 0];
-% Conditions(i).Mode = [0 0];
-% Conditions(i).PosFunctionX = [1 0];
-% Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
-% Conditions(i).PosFuncNameX = 'none';
-% i = i + 1; 
-% %
-% Conditions(i).PatternID = 4;
-% Conditions(i).Duration = 2.5;
-% Conditions(i).InitialPosition = [1 5];
-% Conditions(i).Gains = [-48 0 0 0];
-% Conditions(i).Mode = [0 0];
-% Conditions(i).PosFunctionX = [1 0];
-% Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
-% Conditions(i).PosFuncNameX = 'none';
-% i = i + 1; 
-%% Coherent Movement Stimuli inserted to replace the duplicate contrast grating stuff, might as well...
-Conditions(i).PatternID = 26;
-Conditions(i).Duration = 2.5;
-Conditions(i).InitialPosition = [1 1];
-Conditions(i).Gains = [48 0 0 0];
-Conditions(i).Mode = [0 0];
-Conditions(i).PosFunctionX = [1 0];
-Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
-Conditions(i).PosFuncNameX = 'none';
-i = i + 1;
 %
-Conditions(i).PatternID = 26;
-Conditions(i).Duration = 2.5;
-Conditions(i).InitialPosition = [1 1];
-Conditions(i).Gains = [-48 0 0 0];
-Conditions(i).Mode = [0 0];
-Conditions(i).PosFunctionX = [1 0];
-Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
-Conditions(i).PosFuncNameX = 'none';
-i = i + 1;
-%
-Conditions(i).PatternID = 26;
+Conditions(i).PatternID = 4;
 Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 2];
 Conditions(i).Gains = [48 0 0 0];
@@ -810,9 +710,9 @@ Conditions(i).Mode = [0 0];
 Conditions(i).PosFunctionX = [1 0];
 Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
 Conditions(i).PosFuncNameX = 'none';
-i = i + 1;
+i = i + 1; 
 %
-Conditions(i).PatternID = 26;
+Conditions(i).PatternID = 4;
 Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 2];
 Conditions(i).Gains = [-48 0 0 0];
@@ -820,9 +720,9 @@ Conditions(i).Mode = [0 0];
 Conditions(i).PosFunctionX = [1 0];
 Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
 Conditions(i).PosFuncNameX = 'none';
-i = i + 1;
+i = i + 1; 
 %
-Conditions(i).PatternID = 26;
+Conditions(i).PatternID = 4;
 Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [48 0 0 0];
@@ -830,9 +730,9 @@ Conditions(i).Mode = [0 0];
 Conditions(i).PosFunctionX = [1 0];
 Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
 Conditions(i).PosFuncNameX = 'none';
-i = i + 1;
+i = i + 1; 
 %
-Conditions(i).PatternID = 26;
+Conditions(i).PatternID = 4;
 Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 3];
 Conditions(i).Gains = [-48 0 0 0];
@@ -840,9 +740,9 @@ Conditions(i).Mode = [0 0];
 Conditions(i).PosFunctionX = [1 0];
 Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
 Conditions(i).PosFuncNameX = 'none';
-i = i + 1;
+i = i + 1; 
 %
-Conditions(i).PatternID = 26;
+Conditions(i).PatternID = 4;
 Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 4];
 Conditions(i).Gains = [48 0 0 0];
@@ -850,9 +750,9 @@ Conditions(i).Mode = [0 0];
 Conditions(i).PosFunctionX = [1 0];
 Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
 Conditions(i).PosFuncNameX = 'none';
-i = i + 1;
+i = i + 1; 
 %
-Conditions(i).PatternID = 26;
+Conditions(i).PatternID = 4;
 Conditions(i).Duration = 2.5;
 Conditions(i).InitialPosition = [1 4];
 Conditions(i).Gains = [-48 0 0 0];
@@ -861,6 +761,106 @@ Conditions(i).PosFunctionX = [1 0];
 Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
 Conditions(i).PosFuncNameX = 'none';
 i = i + 1; 
+%
+Conditions(i).PatternID = 4;
+Conditions(i).Duration = 2.5;
+Conditions(i).InitialPosition = [1 5];
+Conditions(i).Gains = [48 0 0 0];
+Conditions(i).Mode = [0 0];
+Conditions(i).PosFunctionX = [1 0];
+Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
+Conditions(i).PosFuncNameX = 'none';
+i = i + 1; 
+%
+Conditions(i).PatternID = 4;
+Conditions(i).Duration = 2.5;
+Conditions(i).InitialPosition = [1 5];
+Conditions(i).Gains = [-48 0 0 0];
+Conditions(i).Mode = [0 0];
+Conditions(i).PosFunctionX = [1 0];
+Conditions(i).PatternName = {'Pattern_14_rotation_contrasts_48P_RC.mat'};
+Conditions(i).PosFuncNameX = 'none';
+i = i + 1; 
+% %% Coherent Movement Stimuli inserted to replace the duplicate contrast grating stuff, might as well...
+% Conditions(i).PatternID = 26;
+% Conditions(i).Duration = 2.5;
+% Conditions(i).InitialPosition = [1 1];
+% Conditions(i).Gains = [24 0 0 0];
+% Conditions(i).Mode = [0 0];
+% Conditions(i).PosFunctionX = [1 0];
+% Conditions(i).PatternName = {'Pattern_36_coherence_cw_15_30_45_60_pct_medium_clutter.mat'};
+% Conditions(i).PosFuncNameX = 'none';
+% i = i + 1;
+% %
+% Conditions(i).PatternID = 26;
+% Conditions(i).Duration = 2.5;
+% Conditions(i).InitialPosition = [1 1];
+% Conditions(i).Gains = [-24 0 0 0];
+% Conditions(i).Mode = [0 0];
+% Conditions(i).PosFunctionX = [1 0];
+% Conditions(i).PatternName = {'Pattern_36_coherence_cw_15_30_45_60_pct_medium_clutter.mat'};
+% Conditions(i).PosFuncNameX = 'none';
+% i = i + 1;
+% %
+% Conditions(i).PatternID = 26;
+% Conditions(i).Duration = 2.5;
+% Conditions(i).InitialPosition = [1 2];
+% Conditions(i).Gains = [24 0 0 0];
+% Conditions(i).Mode = [0 0];
+% Conditions(i).PosFunctionX = [1 0];
+% Conditions(i).PatternName = {'Pattern_36_coherence_cw_15_30_45_60_pct_medium_clutter.mat'};
+% Conditions(i).PosFuncNameX = 'none';
+% i = i + 1;
+% %
+% Conditions(i).PatternID = 26;
+% Conditions(i).Duration = 2.5;
+% Conditions(i).InitialPosition = [1 2];
+% Conditions(i).Gains = [-24 0 0 0];
+% Conditions(i).Mode = [0 0];
+% Conditions(i).PosFunctionX = [1 0];
+% Conditions(i).PatternName = {'Pattern_36_coherence_cw_15_30_45_60_pct_medium_clutter.mat'};
+% Conditions(i).PosFuncNameX = 'none';
+% i = i + 1;
+% %
+% Conditions(i).PatternID = 26;
+% Conditions(i).Duration = 2.5;
+% Conditions(i).InitialPosition = [1 3];
+% Conditions(i).Gains = [24 0 0 0];
+% Conditions(i).Mode = [0 0];
+% Conditions(i).PosFunctionX = [1 0];
+% Conditions(i).PatternName = {'Pattern_36_coherence_cw_15_30_45_60_pct_medium_clutter.mat'};
+% Conditions(i).PosFuncNameX = 'none';
+% i = i + 1;
+% %
+% Conditions(i).PatternID = 26;
+% Conditions(i).Duration = 2.5;
+% Conditions(i).InitialPosition = [1 3];
+% Conditions(i).Gains = [-24 0 0 0];
+% Conditions(i).Mode = [0 0];
+% Conditions(i).PosFunctionX = [1 0];
+% Conditions(i).PatternName = {'Pattern_36_coherence_cw_15_30_45_60_pct_medium_clutter.mat'};
+% Conditions(i).PosFuncNameX = 'none';
+% i = i + 1;
+% %
+% Conditions(i).PatternID = 26;
+% Conditions(i).Duration = 2.5;
+% Conditions(i).InitialPosition = [1 4];
+% Conditions(i).Gains = [24 0 0 0];
+% Conditions(i).Mode = [0 0];
+% Conditions(i).PosFunctionX = [1 0];
+% Conditions(i).PatternName = {'Pattern_36_coherence_cw_15_30_45_60_pct_medium_clutter.mat'};
+% Conditions(i).PosFuncNameX = 'none';
+% i = i + 1;
+% %
+% Conditions(i).PatternID = 26;
+% Conditions(i).Duration = 2.5;
+% Conditions(i).InitialPosition = [1 4];
+% Conditions(i).Gains = [-24 0 0 0];
+% Conditions(i).Mode = [0 0];
+% Conditions(i).PosFunctionX = [1 0];
+% Conditions(i).PatternName = {'Pattern_36_coherence_cw_15_30_45_60_pct_medium_clutter.mat'};
+% Conditions(i).PosFuncNameX = 'none';
+% i = i + 1;
 %% Rest of the rotations from telethon_tuning_conditions_9_14
 Conditions(i).PatternID = 5;
 Conditions(i).Duration = 2.5;

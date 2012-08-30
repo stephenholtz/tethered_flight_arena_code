@@ -18,7 +18,7 @@ coherence = [.15 .30 .45 .60];
 
 % Values for the pattern file 
 % A gain of 48, for a 3 second stim, with 20% give
-pattern.x_num = 4;%ceil(48*3*1.20); %500; % Arbritrarily long based on desired stim
+pattern.x_num = 4; %ceil(48*3*1.20); %500; % Arbritrarily long based on desired stim
 pattern.y_num = numel(coherence)*2;  % For each coherence or clutter level...
 pattern.num_panels = 48;
 pattern.gs_val = 3;
@@ -35,8 +35,7 @@ num_squares = floor(max_num_squares*clutter);
 n_squares_mat = 1:num_squares;
 
 % Populate random subset, set up indecies that move coherently or relocate
-cw_square_inds(1,:) = randi(max_num_squares,[1,num_squares]);        
-ccw_square_inds = cw_square_inds;
+square_inds(1,:) = randi(max_num_squares,[1,num_squares]);        
 
 %For all of the y frames (coherences or clutters)
 y_ind = 1;
@@ -52,7 +51,7 @@ for g = 1:numel(coherence)
     
     % For the number of frames needed, move with the coherence wanted
     for i = 2:pattern.x_num
-
+        
         % the squares that will be completely relocated
         relocs = randi(max_num_squares,[1,num_reloc_squares]);
         
@@ -60,34 +59,24 @@ for g = 1:numel(coherence)
         % but wrapping shouldn't matter because the pattern size is > arena
         % size
         for k = 1:num_coh_squares
-            cw_moves(k) = (cw_square_inds(i-1,k)+direction*num_rows)+1;
-            ccw_moves(k) = (cw_square_inds(i-1,k)-direction*num_rows)-1;
-            if ccw_moves(k) < 1
-                ccw_moves(k) = num_cols-abs(ccw_moves(k))-1;
-            end
+            cw_moves(k) = (square_inds(i-1,k)+direction*num_rows)+1; %#ok<*SAGROW>
         end
         
         % combine the two sets of indecies
-        cw_square_inds(i,:) = [relocs cw_moves];
-        ccw_square_inds(i,:) = [relocs ccw_moves];
+        square_inds(i,:) = [relocs cw_moves];
         
         relocs = [];
         cw_moves = [];
-        ccw_moves = [];
     end
     
     % For all of the frames made, translate the pattern to the larger actual
     % arena size
-    for i = 1:size(cw_square_inds,1)
+    for i = 1:size(square_inds,1)
         for dir = [0 1]        
-            for s = 1:numel(cw_square_inds(i,:))
+            for s = 1:numel(square_inds(i,:))
                 % hard coded to a square size of two...
-                    if ~dir
-                        pat_inds = [(cw_square_inds(i,s)+(1:2)), (cw_square_inds(i,s)+1+num_rows)+(1:2)];
-                    else
-                        pat_inds = [(ccw_square_inds(i,s)+(1:2)), (ccw_square_inds(i,s)+1+num_rows)+(1:2)];
-                    end
-                    
+                    pat_inds = [(square_inds(i,s)+(1:2)), (square_inds(i,s)+1+num_rows)+(1:2)];
+
                     [m,n]=ind2sub([32 96],pat_inds);
 
                     Pats(m,n,i,y_ind) =sqr_color;
@@ -96,6 +85,16 @@ for g = 1:numel(coherence)
             
         end
     end
+end
+
+y_ind = 1;
+for dir = [0 1 0 1 0 1 0 1]
+    if ~dir
+       for k = size(Pats,3)
+            Pats(:,:,k,y_ind) = fliplr(Pats(:,:,k,y_ind));
+       end
+    end
+    y_ind = y_ind + 1;    
 end
 
 pattern.Pats = Pats;

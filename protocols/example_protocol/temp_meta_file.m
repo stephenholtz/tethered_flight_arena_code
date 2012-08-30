@@ -4,25 +4,25 @@
 % Exp.Run, in order to avoid mistakes in typing it in.
 
 % Transgene metadata
-metadata.Line               = 'gmr_48a08dbd'; %'gmr_42f06_ae_01';
+metadata.Line               = 'gmr_26a03dbd'; %'gmr_42f06_ae_01';
 metadata.Chromo2            = 'gmr; tubp_gal80ts';
-metadata.Chromo3            = 'gmr_48a08dbd; uas_kir_2.1';
+metadata.Chromo3            = 'gmr_26a03dbd; uas_kir_2.1';
 metadata.Sex                = 'female'; % 'male' 'female'
-metadata.DoB                = '6_8_12';
+metadata.DoB                = '8_24_12';
 metadata.HeadGlued          = '0'; % '1' '0'
 metadata.Effector           = 'gal80ts_kir21'; % 'gal80ts_kir21' 'gal80ts_tnt'
 metadata.daqFile            = 'raw_data.daq';
 metadata.temp_unshift_time  = '0.0.0';     % length of time unshifted in days.hours.mins
 metadata.temp_shift_time	= '0.0.0';
-metadata.temp_unshifted     = 18;
-metadata.temp_shifted       = 30;
-metadata.temp_experiment    = 20.6;
+metadata.temp_unshifted     = 25;
+metadata.temp_shifted       = 25;
+metadata.temp_experiment    = 20.1;
 metadata.temp_ambient       = metadata.temp_experiment;
-metadata.humidity_ambient   = 60;
+metadata.humidity_ambient   = 60.2;
 metadata.fly_tag            = ''; % ['pal_' datestr(now,30)];
 metadata.note               = ''; % 'ocelli_dark_paint' 'ocelli_clear_paint'
 
-time = 1;
+time = 2;
 switch time % Prevents me from messing up the light cycles, kinda.
     case 1
         metadata.LightCycle = '20_12'; % AM

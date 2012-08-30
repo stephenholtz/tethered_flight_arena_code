@@ -81,17 +81,28 @@ classdef Utilities
             voltage = cond_struct.Voltage;
         end
         
-        function startle_animal(startle_channel)
+        function startle_animal(startle_channel,startle_type)
             % Puff or Buzz the fly
-                start(startle_channel)
-                putvalue(startle_channel,1)
-                pause(.05)
-                putvalue(startle_channel,0) 
-                pause(.01)
-                putvalue(startle_channel,1)
-                pause(.075)
-                putvalue(startle_channel,0)
-                stop(startle_channel)
+            switch startle_type
+                % For the solenoid, quick puffs
+                case 1
+                    start(startle_channel)
+                    putvalue(startle_channel,1)
+                    pause(.05)
+                    putvalue(startle_channel,0) 
+                    pause(.01)
+                    putvalue(startle_channel,1)
+                    pause(.075)
+                    putvalue(startle_channel,0)
+                    stop(startle_channel)
+                % For the fan, needs longer to start up
+                case 2
+                    start(startle_channel)
+                    putvalue(startle_channel,1)
+                    pause(1.5)
+                    putvalue(startle_channel,0)
+                    stop(startle_channel)
+            end
         end
         
 		function result = simple_end_wbf_check(monitor_channel)
@@ -99,7 +110,7 @@ classdef Utilities
             start(monitor_channel);
             freq = getdata(monitor_channel); %freq = mean(WBF);
             if freq < 1.0;        % A wing beat frequency of below 120 => buzz buzz; if we want that
-                result = 0;   
+                result = 1;   
             else
                 result = 1;
             end

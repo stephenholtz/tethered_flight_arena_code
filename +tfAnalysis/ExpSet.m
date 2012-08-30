@@ -90,7 +90,7 @@ classdef ExpSet < handle
         
         function [cond_data sem] = get_trial_data(self,...
                 cond_num_mat,daq_channel,computation,use_sym_conds,average_type,num_samples)
-            % [cond_data sem] = return_trial_response(self,cond_num_mat,daq_channel,computation,use_sym_conds,average_type)
+            % [cond_data sem] = get_trial_data(self,cond_num_mat,daq_channel,computation,use_sym_conds,average_type)
             
             if ~exist('num_samples','var')
                 get_samples = @(vec)(vec(:));

@@ -42,13 +42,22 @@ function Run(protocol,varargin)
 %
 % SLH - 2012
 
-% Some Defaults
+% Set up some Defaults
 default_reps = 3;
 default_record = true;
 check_flying = true;
 randomize = 1;
 
-    disp('STANDARD PROTOCOL STARTING')
+[~,comp_name] = system('echo %COMPUTERNAME%');
+if ~strcmpi(comp_name,'REISER-WW23')
+    % By default use the puffer 'type 1' in Exp.Utilities.startle_animal
+    startle_type = 1;
+else
+    % Otherwise use the fan 'type 2' in Exp.Utilities.startle_animal    
+    startle_type = 2;
+end
+
+disp('STANDARD PROTOCOL STARTING')
 
 
     %% Primary checks in this order: For folder. Folder contents. Condition function. Metadata. Genotype.
@@ -189,7 +198,6 @@ randomize = 1;
             end
             if (time_elapsed-time) > 1; warning('Time discrepancy... '); end ;
             
-            
             Panel_com('stop');
             % Reset the voltage encoding
             Panel_com('set_ao',[3,0]);
@@ -246,7 +254,7 @@ randomize = 1;
                 if check_flying
                     if ~Exp.Utilities.simple_end_wbf_check(AI_wbf)
                         flying = 0;
-                        Exp.Utilities.startle_animal(DIO_trig)
+                        Exp.Utilities.startle_animal(DIO_trig,startle_type)
                         time = time + 1.3;
                         pause(1.25)
                     end

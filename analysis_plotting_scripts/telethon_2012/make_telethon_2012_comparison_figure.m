@@ -513,8 +513,13 @@ make_all_sub_figures(geno_data)
             
             for i = 1:numel(geno_data)
                 
-                [curve_mean(j) curve_sem(j)] = geno_data{i}.get_trial_data(list{k}{j},'lmr','trapz','yes','all');
-            
+                [graph.avg graph.variance] = geno_data{i}.get_trial_data(list{k}{1},'lmr','none','yes','all');
+                
+                graph.color = mycolormap{i};
+                
+                hold all
+                tfPlot.timeseries(graph)
+                
             end
         end
         

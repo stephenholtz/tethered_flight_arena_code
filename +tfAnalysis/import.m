@@ -91,7 +91,7 @@ classdef import < handle
                 
                 % Parse the raw experiment data
                 parsed_data = get_parsed_data(self);
-                
+
                 % Fit into the Experiment/Trial/Data Framework
                 self.experiment{i} = populate_experiment_metadata_obj(self);
                 
@@ -135,17 +135,16 @@ classdef import < handle
                 for i = 1:numel(self.temp_info.cond)
                    condition_lengths = [condition_lengths self.temp_info.cond(i).Duration]; %#ok<*AGROW>
                 end
-                % parsed_data = a cell array {trial_reps x diff_conditions} 
-                try
-                    [parsed_data, ~, ~] = tfAnalysis.parse_tf_data(raw_data_file,condition_lengths);
-                catch err
-                    disp(err.message)
-                    warning('Parse_tf_data failed with given condition lengths, using 90% of given lengths.') %#ok<WNTAG>
-                    [parsed_data, ~, ~] = tfAnalysis.parse_tf_data(raw_data_file,condition_lengths*.9);                    
-                end
+                % parsed_data = a cell array {trial_reps x diff_conditions}
+                [parsed_data, ~, ~] = tfAnalysis.parse_tf_data(raw_data_file,condition_lengths);
+                
             catch parseErr
                 disp('Error getting condition lengths or parsing raw data')
                 rethrow(parseErr)
+            end
+            
+            if size(parsed_data{1},2) > numel(condition_lengths)
+                error('number parsed conditions ~= number actual conditions')
             end
         end
         
@@ -192,7 +191,7 @@ classdef import < handle
                     [rep_num, cond_num] = ind2sub(size(parsed_data{1}),index);
                     
                     trial{i} = tfAnalysis.Trial;
-try
+            try
                     % Populate trial
                     trial{i}.cond_num           = cond_num; % Important
                     trial{i}.pat_id             = self.temp_info.cond(cond_num).PatternID;
@@ -211,9 +210,10 @@ try
                     trial{i}.pattern_name       = self.temp_info.cond(cond_num).PatternName;
                     trial{i}.trial_name         = cond_num;
                     trial{i}.rep_num            = rep_num;
-catch
-    'barf'
-end
+                    
+            catch errERRerrErr
+                disp('ERROR IN POPULATING TRIAL!!!');
+            end
                     % might want/need to add these in for old experiments
                     % -- for now, check if they are there and then use
                     try

@@ -56,7 +56,7 @@ grouped_conditions{1}.list = ...
 grouped_conditions{2}.name = 'Full Field Expansion';
 grouped_conditions{2}.lam = [30 30];
 grouped_conditions{2}.tf =  [1 9];
-grouped_conditions{3}.mc =  [1 1];
+grouped_conditions{2}.mc =  [1 1];
 grouped_conditions{2}.dps = [15 270];
 grouped_conditions{2}.list = ...
                        {[63,64];...% 30
@@ -64,11 +64,11 @@ grouped_conditions{2}.list = ...
 
 % 03 - Lateral Flicker - DONE
 %
-grouped_conditions{2}.name = 'Lateral Flicker';
-grouped_conditions{2}.lam = [30 30];
-grouped_conditions{2}.tf =  [4 4];
+grouped_conditions{3}.name = 'Lateral Flicker';
+grouped_conditions{3}.lam = [30 30];
+grouped_conditions{3}.tf =  [4 4];
 grouped_conditions{3}.mc =  [1 1];
-grouped_conditions{2}.list = ...
+grouped_conditions{3}.list = ...
                        {[137,138]};
                     
 % 04 - Low Contrast Rotation - DONE
@@ -164,7 +164,7 @@ grouped_conditions{10}.list = ...
 grouped_conditions{11}.name = 'Optic Flow Oscillation';
 grouped_conditions{11}.mc =  [1 1 1 1 1 1 1];
 grouped_conditions{11}.tf =  [1 1 1 1 1 1 1];
-grouped_conditions{11}.type =  ['Lift','Pitch','Roll','Sideslip','Thrust','Yaw'];
+grouped_conditions{11}.type =  {'Lift','Pitch','Roll','Sideslip','Thrust','Yaw'};
 grouped_conditions{11}.list = ...
                        {[105,106];...
                         [107,108];...
@@ -207,25 +207,25 @@ grouped_conditions{13}.list = ...
                         -1};
 
 % 14 - Small Object Oscillation - DONE
-grouped_conditions{12}.name = 'Small Object Oscillation';
-grouped_conditions{12}.pix = [4 4 4 4];
-grouped_conditions{12}.bar_size =  [8 8 20 20];
-grouped_conditions{12}.pos =  [33 33 49 49];
-grouped_conditions{12}.pos_deg =  [45 45 0 0];
-grouped_conditions{12}.mc =  [1 1 1 1];
-grouped_conditions{12}.tf =  [];
-grouped_conditions{12}.list = ...
+grouped_conditions{14}.name = 'Small Object Oscillation';
+grouped_conditions{14}.pix = [4 4 4 4];
+grouped_conditions{14}.bar_size =  [8 8 20 20];
+grouped_conditions{14}.pos =  [33 33 49 49];
+grouped_conditions{14}.pos_deg =  [45 45 0 0];
+grouped_conditions{14}.mc =  [1 1 1 1];
+grouped_conditions{14}.tf =  [];
+grouped_conditions{14}.list = ...
                        {[139,140];...
                         [141,142];...
                         [143,144];...                       
                         [145,146]};
 
-% 15 - Coherent Motion (Testing Section) - DONE
-grouped_conditions{12}.name = 'Coherent Motion';
-grouped_conditions{12}.coherence = [15 30 45 60];
-grouped_conditions{12}.mc =  [1 1 1 1];
-grouped_conditions{12}.gain =  [24 24 24 24];
-grouped_conditions{12}.list = ...
+% 15 - Coherent Motion (Testing Section) - NOT INCLUDED!
+grouped_conditions{15}.name = 'Coherent Motion';
+grouped_conditions{15}.coherence = [15 30 45 60];
+grouped_conditions{15}.mc =  [1 1 1 1];
+grouped_conditions{15}.gain =  [24 24 24 24];
+grouped_conditions{15}.list = ...
                        {[67,68];...
                         [69,70];...
                         [71,72];...                       

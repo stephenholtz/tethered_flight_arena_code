@@ -27,8 +27,6 @@ if nargin == 2
 else 
     data_files = varargin(1);
     condition_lengths = [];
-
-%     error('Supply both a datapath and a set of condition lengths to parse_raw_data');
 end
 
 
@@ -117,7 +115,7 @@ for flyNum = 1:numel(data_files)
             ExpData{rep, condition_number}.voltage          = encoded_signal(current_block(1:condition_length))';
             ExpData{rep, condition_number}.lmr              = RawData(current_block(1:condition_length),6)';
             end
-
+            
         else
         ExpData{rep, condition_number}.left_amp         = RawData(current_block,1)';
         ExpData{rep, condition_number}.x_pos            = RawData(current_block,4)';
@@ -138,13 +136,13 @@ for flyNum = 1:numel(data_files)
     for rep = 1:numel(ordered_segment_voltages)-1
         
         current_block = ordered_segment_voltages{rep}(2):ordered_segment_voltages{rep+1}(1);
-
+        
         if ~isempty(condition_lengths)
         condition_length = condition_lengths(numel(condition_lengths))*SAMPLERATE;
             
             if numel(current_block) >= condition_length;
             successful_rep_num = successful_rep_num +1;
-
+            
             ExpData{successful_rep_num, condition_number}.left_amp         = RawData(current_block(1:condition_length),1)';
             ExpData{successful_rep_num, condition_number}.x_pos            = RawData(current_block(1:condition_length),4)';
             ExpData{successful_rep_num, condition_number}.right_amp        = RawData(current_block(1:condition_length),2)';

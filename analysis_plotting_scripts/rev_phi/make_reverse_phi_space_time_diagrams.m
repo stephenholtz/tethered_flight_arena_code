@@ -25,8 +25,6 @@
 % end
 % close all force
 % 
-
-
 % conditions = rev_phi_phase_delay_4_wide_contrast_change_v01;
 % pbar = waitbar(0,'Progress');
 % for g = 1:numel(conditions)-1
@@ -41,15 +39,15 @@
 
 
 
-conditions = reverse_phi_double_check_v02;
+conditions = reverse_phi_high_speed_verification_v01;
 pbar = waitbar(0,'Progress');
-mkdir(fullfile('/Users/holtzs/Desktop/space_time_figures/reverse_phi_double_check_v02_fig/'));
+mkdir(fullfile('/Users/holtzs/Desktop/reverse_phi_high_speed_verification_v01_figures/'));
 
-for g = 88:numel(conditions)-1
-    %condition_name = ['cond_' num2str(g) '_' conditions(g).PosFuncNameX(end-25:end-19) '_' conditions(g).PosFuncNameY(51:end-10)];
-    condition_name = ['cond_' num2str(g) conditions(g).PatternName];
+for g = 1:numel(conditions)-1
+    condition_name = ['cond_' num2str(g) '_' conditions(g).PosFuncNameX(end-25:end-19) '_' conditions(g).PosFuncNameY(51:end-10)];
+    %condition_name = ['cond_' num2str(g) conditions(g).PatternName];
     disp(condition_name)
-    save_file_path = fullfile('/Users/holtzs/Desktop/space_time_figures/reverse_phi_double_check_v02_fig/',condition_name);
+    save_file_path = fullfile('/Users/holtzs/Desktop/reverse_phi_high_speed_verification_v01_figures/',condition_name);
     tfPlot.make_space_time_diagram_for_open_loop_condition(conditions(g),save_file_path);
     waitbar(g/numel(conditions),pbar,'Progress')
 end

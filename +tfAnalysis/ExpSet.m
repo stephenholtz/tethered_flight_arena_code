@@ -89,132 +89,6 @@ classdef ExpSet < handle
             end
         end
         
-        
-        function [cond_data sem] = get_corr_trial_data(self,...
-                cond_num_mat,daq_channel_1,daq_channel_2,average_type,num_samples)
-            % average_type is either:
-            %   {'none',0} (returns each trial),
-            %   {'exp','experiment','fly',1} (returns each experiment averaged)
-            %   {'all',2} (returns all experiments averaged)
-            % all of the average types calculate the correlation of each
-            % trial first and then perform averaging (the only correct way to do this!!)
-            %
-            % corr_type is just a placeholder variable, will add other
-            % functions if needed
-            
-            
-            % Function performed before averaging
-            computation = 'mean';
-            switch computation
-                case {'mean',2}
-                    resp_func = @mean;
-                case {'median','med',3}
-                    resp_func = @median;
-                otherwise
-                    resp_func = @mean;
-            end
-            
-            if ~exist('num_samples','var')
-                get_samples = @(vec)(vec(:));
-            else
-                get_samples = @(vec)(vec(num_samples));
-            end
-            
-            % Get all of the data in two arrays to do a corr of each
-            % component on
-            temp_cond_data_1 = return_multi_experiment_cond_data(self,cond_num_mat,daq_channel_1,get_samples);
-            
-            temp_cond_data_2 = return_multi_experiment_cond_data(self,cond_num_mat,daq_channel_2,get_samples);
-            
-            % Calculate the cross correlation on a trial by trial basis and
-            % then use this value for the rest of the computations in the
-            % function.
-            % This is the way john did it in his telethon: file
-            % called stripe_figure_11_26_2011.m ... his window was
-            % 75 because he downsampled, I still have full res.
-            
-            normalize = @(vec)(vec-mean(vec))/(max(abs(vec))-mean(vec));
-            
-            for g = 1:numel(temp_cond_data_1)
-                
-                for k = 1:size(temp_cond_data_1{g},1)
-                    
-                    norm_sig_1 = normalize(get_samples(temp_cond_data_1{g}(k,:)));
-                    norm_sig_2 = normalize(get_samples(temp_cond_data_2{g}(k,:)));
-                    
-                    [corr_coef, lags] = xcorr(norm_sig_1,norm_sig_2,150,'coeff');
-                    
-                    [max_corr{g}{k}, max_corr_ind] = max(corr_coef);
-                    
-                    % Currently unused. The lag b/n the stim and the
-                    % response in absolute time.
-                    max_corr_lag{g}{k} = lags(max_corr_ind(1));
-                    
-                end
-            end
-            
-            switch average_type
-                
-                case {'none',0}
-                    % No averaging return all trials
-                    cond_data = [];
-                    
-                    row_iter = 0;
-                    for g = 1:numel(max_corr)
-                        for k = 1:numel(max_corr{g})
-                            row_iter = row_iter + 1;
-                            cond_data(row_iter,:) = max_corr{g}{k};
-                        end
-                    end
-                    sem = 0;
-                    
-                case {'exp','experiment','fly',1}
-                    % Return per experiment averages
-                    cond_data = [];
-                    sem = [];
-                    
-                    exp_iter = 0;
-                    for g = 1:numel(max_corr)
-                        if ~isempty(max_corr{g})
-                            exp_iter = exp_iter + 1;
-                            if numel(max_corr{g}) > 1
-                                sem(exp_iter,:) = std([max_corr{g}{:}])/(numel(max_corr{g})^(1/2));
-                                cond_data(exp_iter,:) = mean(resp_func([max_corr{g}{:}]));
-                            else
-                                sem(exp_iter,:) = zeros(1,numel(max_corr{g}));
-                                cond_data(exp_iter,:) = resp_func(max_corr{g});
-                            end
-                        end
-                    end                  
-                    
-                case {'all',2}
-                    % Return averaged experiments (over sym conds if present)                       
-                    exp_iter = 0;
-                    cond_data = [];
-                    
-                    for e = 1:numel(max_corr)
-                        
-                    % average an experiment's trials
-                        if size(max_corr{e},1) > 1
-                            cond_data(e) = nanmean(resp_func([max_corr{e}{:}])); %#ok<*AGROW>
-                        elseif size(max_corr{e},1) == 1
-                            cond_data(e) = resp_func([max_corr{e}{:}]);
-                        end
-                    end
-                    
-                    % average all of the experiments together
-                    if numel(cond_data) > 1
-                        sem = nanstd(cond_data)/sqrt(numel(cond_data));                        
-                        cond_data = nanmean(cond_data);                       
-                    elseif size(cond_data,1) == 1
-                        sem = zeros(1,numel(cond_data));
-                    end
-                    
-                otherwise
-                    error('Invalid average_type selection')
-            end                
-        end
-        
         function [cond_data sem] = get_trial_data(self,...
                 cond_num_mat,daq_channel,computation,use_sym_conds,average_type,num_samples)
             % [cond_data sem] = get_trial_data(self,cond_num_mat,daq_channel,computation,use_sym_conds,average_type)
@@ -342,6 +216,174 @@ classdef ExpSet < handle
                 otherwise
                     error('Invalid average_type selection')
             end
+        end
+        
+        function [cond_data sem] = get_trial_data_set(self,...
+                cond_num_mat,daq_channel,computation,use_sym_conds,average_type,num_samples)
+        % Return a set of points from the get_trial_data method.
+        % gets rid of my innermost for loop of several figure making
+        % functions... output works directly with tfPlot.timeseries and
+        % tfPlot.tuning_curve
+            
+            if ~exist('num_samples','var')
+                
+                for i = 1:size(cond_num_mat,1)
+                    [cond_data{i} sem{i}] = self.get_trial_data(cond_num_mat{i},daq_channel,computation,use_sym_conds,average_type);
+                end
+                
+            else
+                
+                for i = 1:size(cond_num_mat,1)
+                    [cond_data{i} sem{i}] = self.get_trial_data(cond_num_mat{i},daq_channel,computation,use_sym_conds,average_type,num_samples);
+                end
+                
+            end
+        
+        end
+        
+        function [cond_data sem] = get_corr_trial_data(self,...
+                cond_num_mat,daq_channel_1,daq_channel_2,average_type,num_samples)
+            % average_type is either:
+            %   {'none',0} (returns each trial),
+            %   {'exp','experiment','fly',1} (returns each experiment averaged)
+            %   {'all',2} (returns all experiments averaged)
+            % all of the average types calculate the correlation of each
+            % trial first and then perform averaging (the only correct way to do this!!)
+            %
+            % corr_type is just a placeholder variable, will add other
+            % functions if needed
+            
+            
+            % Function performed before averaging
+            computation = 'mean';
+            switch computation
+                case {'mean',2}
+                    resp_func = @mean;
+                case {'median','med',3}
+                    resp_func = @median;
+                otherwise
+                    resp_func = @mean;
+            end
+            
+            if ~exist('num_samples','var')
+                get_samples = @(vec)(vec(:));
+            else
+                get_samples = @(vec)(vec(num_samples));
+            end
+            
+            % Get all of the data in two arrays to do a corr of each
+            % component on
+            temp_cond_data_1 = return_multi_experiment_cond_data(self,cond_num_mat,daq_channel_1,get_samples);
+            
+            temp_cond_data_2 = return_multi_experiment_cond_data(self,cond_num_mat,daq_channel_2,get_samples);
+            
+            % Calculate the cross correlation on a trial by trial basis and
+            % then use this value for the rest of the computations in the
+            % function.
+            % This is the way john did it in his telethon: file
+            % called stripe_figure_11_26_2011.m ... his window was
+            % 75 because he downsampled, I still have full res.
+            
+            normalize = @(vec)(vec-mean(vec))/(max(abs(vec))-mean(vec));
+            
+            for g = 1:numel(temp_cond_data_1)
+                
+                for k = 1:size(temp_cond_data_1{g},1)
+                    
+                    norm_sig_1 = normalize(get_samples(temp_cond_data_1{g}(k,:)));
+                    norm_sig_2 = normalize(get_samples(temp_cond_data_2{g}(k,:)));
+                    
+                    [corr_coef, lags] = xcorr(norm_sig_1,norm_sig_2,150,'coeff');
+                    
+                    [max_corr{g}{k}, max_corr_ind] = max(corr_coef);
+                    
+                    % Currently unused. The lag b/n the stim and the
+                    % response in absolute time.
+                    max_corr_lag{g}{k} = lags(max_corr_ind(1));
+                    
+                end
+            end
+            
+            switch average_type
+                
+                case {'none',0}
+                    % No averaging return all trials
+                    cond_data = [];
+                    
+                    row_iter = 0;
+                    for g = 1:numel(max_corr)
+                        for k = 1:numel(max_corr{g})
+                            row_iter = row_iter + 1;
+                            cond_data(row_iter,:) = max_corr{g}{k};
+                        end
+                    end
+                    sem = 0;
+                    
+                case {'exp','experiment','fly',1}
+                    % Return per experiment averages
+                    cond_data = [];
+                    sem = [];
+                    
+                    exp_iter = 0;
+                    for g = 1:numel(max_corr)
+                        if ~isempty(max_corr{g})
+                            exp_iter = exp_iter + 1;
+                            if numel(max_corr{g}) > 1
+                                sem(exp_iter,:) = std([max_corr{g}{:}])/(numel(max_corr{g})^(1/2));
+                                cond_data(exp_iter,:) = mean(resp_func([max_corr{g}{:}]));
+                            else
+                                sem(exp_iter,:) = zeros(1,numel(max_corr{g}));
+                                cond_data(exp_iter,:) = resp_func(max_corr{g});
+                            end
+                        end
+                    end                  
+                    
+                case {'all',2}
+                    % Return averaged experiments (over sym conds if present)                       
+                    exp_iter = 0;
+                    cond_data = [];
+                    
+                    for e = 1:numel(max_corr)
+                        
+                    % average an experiment's trials
+                        if size(max_corr{e},1) > 1
+                            cond_data(e) = nanmean(resp_func([max_corr{e}{:}])); %#ok<*AGROW>
+                        elseif size(max_corr{e},1) == 1
+                            cond_data(e) = resp_func([max_corr{e}{:}]);
+                        end
+                    end
+                    
+                    % average all of the experiments together
+                    if numel(cond_data) > 1
+                        sem = nanstd(cond_data)/sqrt(numel(cond_data));                        
+                        cond_data = nanmean(cond_data);                       
+                    elseif size(cond_data,1) == 1
+                        sem = zeros(1,numel(cond_data));
+                    end
+                    
+                otherwise
+                    error('Invalid average_type selection')
+            end                
+        end
+        
+        function [cond_data sem] = get_corr_trial_data_set(self,...
+                cond_num_mat,daq_channel_1,daq_channel_2,average_type,num_samples)
+            
+            if ~exist('num_samples','var')
+                
+                for i = 1:size(cond_num_mat,1)
+                    [cond_data{i} sem{i}] = self.get_corr_trial_data(cond_num_mat{i},daq_channel_1,daq_channel_2,average_type);
+                end
+                
+            else
+                
+                for i = 1:size(cond_num_mat,1)
+                    [cond_data{i} sem{i}] = self.get_corr_trial_data(cond_num_mat{i},daq_channel_1,daq_channel_2,average_type,num_samples);
+                end
+                
+            end        
+        
+        
         end
         
         function cond_data = return_multi_experiment_cond_data(self,...

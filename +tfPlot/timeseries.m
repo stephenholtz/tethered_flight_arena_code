@@ -1,5 +1,5 @@
 function handle = timeseries(graph)
-% handle = simple_timeseries(graph[struct])
+% handle = timeseries(graph[struct])
 % Required Fields:
 %   graph.avg{i}: mean or central line for the timeseries
 %   graph.variance{i}: the measure of variance (sem, std) of the mean (will
@@ -163,7 +163,7 @@ for i = 1:numel(graph.avg)
     
     hold all
     
-    % Two modes of X axis:
+    % Two modes of Y axis:
     %       1) -3.1 3.1 if max < 3.15
     %       2) -5.1 5.1 if max >= 3.15
     % Append all these together and take the max/min values

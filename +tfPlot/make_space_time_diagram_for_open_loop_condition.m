@@ -23,11 +23,11 @@ function std_hand = make_space_time_diagram_for_open_loop_condition(condition_st
 % (condition_struct.PosFuncNameY)
 % 
 %% A few flags not (yet) in the function call:
-video_flag = 1;
+video_flag = 0;
 video_desired_height = 10;%720/4; %#ok<*NASGU>
 condition_info_pdf_flag = 1;
 display_figure_flag = 0; % If loading figures and set to zero, will need to set(gcf,'Visible','on') to see it...
-color_mode = 'gray'; %'green'; % 'alien'
+color_mode = 'green'; %'green'; % 'alien'
 figure_color = [1 1 1];
 verbose = 1;
 

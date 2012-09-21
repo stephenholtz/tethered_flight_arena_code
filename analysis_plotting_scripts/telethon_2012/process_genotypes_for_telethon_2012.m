@@ -19,4 +19,3 @@ for i = 11:numel(genotypes);
         end
     end
 end
-

@@ -18,7 +18,7 @@ function tune_handle = simple_tuning_curve(data_cell,varargin)
     if nargin == 2
         x_offset_factor    = varargin{1};
     else
-        x_offset_factor    = 0;
+        x_offset_factor    = .01;
     end
     if nargin == 3
         use_dotted  = varargin{2};
@@ -68,13 +68,13 @@ function tune_handle = simple_tuning_curve(data_cell,varargin)
     x_vals = get(gca,'XLim');
     x_len_vec = x_vals(1):diff(x_vals)/10:x_vals(2);
     
-    if use_dotted
-    if y_vals(1)*y_vals(2) < 1
-        hold('all')
-        plot(x_len_vec,zeros(1,numel(x_len_vec)),'LineStyle','--','Color',zero_color);
-        set(max(get(gca,'Children')),'Tag','zero_line')
-    end
-    end
+%     if use_dotted
+%     if y_vals(1)*y_vals(2) < 1
+%         hold('all')
+%         plot(x_len_vec,zeros(1,numel(x_len_vec)),'LineStyle','--','Color',zero_color);
+%         set(max(get(gca,'Children')),'Tag','zero_line')
+%     end
+%     end
     
     fix_ebar_tee_width(4);
     

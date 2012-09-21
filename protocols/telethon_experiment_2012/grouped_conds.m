@@ -143,7 +143,7 @@ grouped_conditions{8}.list = ...
                         [135,136]};
 
 % 09 - ON/OFF Expansion - DONE
-grouped_conditions{9}.name = 'ON/OFF Expansion';
+grouped_conditions{9}.name = 'ON OFF Expansion';
 grouped_conditions{9}.lam = [60 60];
 grouped_conditions{9}.mc =  [1 1];
 grouped_conditions{9}.tf =  [1/3 1/3];
@@ -153,7 +153,7 @@ grouped_conditions{9}.list = ...
                         [119,120]};
 
 % 10 - ON/OFF Sawtooth - DONE
-grouped_conditions{10}.name = 'ON/OFF Sawtooth';
+grouped_conditions{10}.name = 'ON OFF Sawtooth';
 grouped_conditions{10}.lam = [60 60]; % not useful in this context
 grouped_conditions{10}.tf =  [1/3 1/3];
 grouped_conditions{10}.list = ...
@@ -170,7 +170,7 @@ grouped_conditions{11}.list = ...
                         [107,108];...
                         [109,110];...
                         [111,112];...
-                        [113,114];...                        
+                        [113,114];...
                         [115,116]};
 
 % 12 - Velocity Nulling (Contrast Nulling) - DONE
@@ -209,16 +209,16 @@ grouped_conditions{13}.list = ...
 % 14 - Small Object Oscillation - DONE
 grouped_conditions{14}.name = 'Small Object Oscillation';
 grouped_conditions{14}.pix = [4 4 4 4];
-grouped_conditions{14}.bar_size =  [8 8 20 20];
-grouped_conditions{14}.pos =  [33 49 33 49];
-grouped_conditions{14}.pos_deg =  [45 0 45 0];
+grouped_conditions{14}.bar_size =  [20 8 20 8];
+grouped_conditions{14}.pos =  [33 33 49 49];
+grouped_conditions{14}.pos_deg =  [45 45 0 0];
 grouped_conditions{14}.mc =  [1 1 1 1];
 grouped_conditions{14}.tf =  [0 0 0 0];
 grouped_conditions{14}.list = ...
-                       {[139,142];...
-                        [140,141];...
-                        [143,146];...
-                        [144,145]};
+                       {[143,146];... % 33
+                        [139,142];... 
+                        [144,145];... % 49
+                        [140,141]};
 
 % 15 - Coherent Motion (Testing Section) - NOT INCLUDED!
 grouped_conditions{15}.name = 'Coherent Motion';

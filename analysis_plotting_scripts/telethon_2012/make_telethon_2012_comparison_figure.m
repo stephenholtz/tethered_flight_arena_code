@@ -1,4 +1,4 @@
-function make_telethon_2012_comparison_figure(geno_data)
+function make_telethon_2012_comparison_figure(data_location,varargin)
 %function make_telethon_2012_comparison_figure(destination_folder,varargin)
 % 1) function make_telethon_2012_comparison_figure(destination_folder,genotype_1,genotype_2,...)
 %
@@ -25,19 +25,29 @@ function make_telethon_2012_comparison_figure(geno_data)
 % Each of these figures will be made
 % Trying out a new way for assembling screeny-type-figures
 
-if 0
+% data_location = '/Users/holtzs/Desktop/telethon_experiment_2012';
+
+destination_folder = fullfile(data_location,filesep,'..','analysis_figures');
+
+mkdir(destination_folder);
+
 % My figure testing lines (folder names)
-geno_name{1} = 'gmr_26a03dbd_gal80ts_kir21';
-geno_name{2} = 'gmr_35d04ad_gal80ts_kir21';
-data_location = '/Users/holtzs/Desktop/telethon_experiment_2012';
+% geno_names{1} = 'gmr_26a03dbd_gal80ts_kir21';
+% geno_names{2} = 'gmr_35b06dbd_gal80ts_kir21';
+% geno_names{3} = 'gmr_35d04ad_gal80ts_kir21';
+% geno_names{4} = 'gmr_91b01dbd_gal80ts_kir21';
+
+
 
 %--Begin MainFunc--%
-for g = 1:numel(geno_name)
-    stable_dir_name = dir(fullfile(data_location,[geno_name{g},'*']));
+geno_names = varargin{1};
+for g = 1:numel(geno_names)
+    stable_dir_name = dir(fullfile(data_location,[geno_names{g},'*']));
     location = fullfile(data_location,stable_dir_name.name);
-    
+
     if exist(fullfile(location,'processed_data.mat'),'file')
         load(fullfile(location,'processed_data.mat'));
+        fprintf(['Loaded: ' num2str(g) ' of ' num2str(numel(geno_names)) '\n']);
     else
         processed_data = load_data(location);
     end
@@ -46,17 +56,23 @@ for g = 1:numel(geno_name)
     
     clear processed_data force
 end
-end
 
 % Gross global colormap variable
 mycolormap = {[.8 0 .8],[.75 .5 .1],[.05 .8 1],[1 0 0],[0 1 0]};
 
-make_all_sub_figures(geno_data)
+handles = make_all_sub_figures(geno_data);
 
-%mkdir(fullfile(data_location,filesep,'..','analysis_figures'));
-%destination_folder = fullfile(data_location,filesep,'..','analysis_figures');
+subfolder = varargin{2};
 
-%save_figure(handle,destination_folder,geno_name)
+mkdir(fullfile(destination_folder,subfolder))
+
+for hand_iter = 1:numel(handles)
+    export_fig(handles{hand_iter}, fullfile(destination_folder,subfolder,['figure_' num2str(hand_iter) ]),'-pdf');
+end
+
+% large_handle = assemble_large_figure(handles,geno_data);
+
+%save_figure(large_handle,destination_folder,geno_names)
 
 %--Begin SubFuncs--%
     
@@ -64,27 +80,63 @@ make_all_sub_figures(geno_data)
         processed_data = tfAnalysis.import(location,'all');
         save(fullfile(location,'processed_data.mat'),'processed_data')
     end
-    
-    function make_all_sub_figures(geno_data)
-%          make_full_field_rotation(geno_data)    % DONE
-%          make_full_field_expansion(geno_data)   % DONE
-%          make_lateral_flicker(geno_data)        % DONE
-%          make_low_contrast_rotation(geno_data)  % DONE
-%          make_reverse_phi_rotation(geno_data)   % DONE
-%          make_stripe_oscillation(geno_data)     % DONE
-%          make_regressive_motion(geno_data)      % DONE
-%          make_progressive_motion(geno_data)     % DONE
-%          make_on_off_expansion(geno_data)       % DONE
-%          make_on_off_sawtooth(geno_data)        % DONE
-%          make_optic_flow_oscillation(geno_data) % DONE
-%          make_velocity_nulling(geno_data)      % NEED TO DESTROY SELF
-%          make_stripe_fixation(geno_data)       % DONE
-          make_small_object_oscillation(geno_data) %
+
+    function large_handle = assemble_large_figure(handles,geno_data)
+        % hardcoded movements of the smaller figures onto a bigger set of
+        % figures... ... ...
+        large_handle(1) = figure('NumberTitle','off','Color',[1 1 1],'Position',[50 50 1050 750],'PaperOrientation','portrait');
+        
+        % full field rotation
+        ax = get(handles(1),'children');
+        
+        for a = numel(ax):-1:1
+            new_position = [.5 .5 .5 .5];
+            
+            set(ax(a),'Parent',large_handle(1),'Position',new_position)
+            
+        end
+        
+        add_legend_with_n(geno_data);        
+
+    end
+
+    function handle = make_all_sub_figures(geno_data)
+        indiv_flag = 0;
+        iter = 1; 
+%         
+%         handle{iter} = make_full_field_rotation(geno_data,indiv_flag);        % DONE - still need to make raw turning figs 
+%         iter = iter + 1;
+%         handle{iter} = make_full_field_expansion(geno_data,indiv_flag);       % DONE - still need to make raw turning figs 
+%         iter = iter + 1;
+%         handle{iter} = make_lateral_flicker(geno_data,indiv_flag);            % DONE - still need to make raw turning figs 
+%         iter = iter + 1;
+%         handle{iter} = make_low_contrast_rotation(geno_data,indiv_flag);      % DONE - still need to make raw turning figs 
+%         iter = iter + 1;
+%         handle{iter} = make_reverse_phi_rotation(geno_data,indiv_flag);       % DONE - still need to make raw turning figs 
+%         iter = iter + 1;
+%         handle{iter} = make_stripe_oscillation(geno_data,indiv_flag);         % DONE - still need to make raw turning figs 
+%         iter = iter + 1;
+%         handle{iter} = make_regressive_motion(geno_data,indiv_flag);          % DONE - still need to make raw turning figs 
+%         iter = iter + 1;
+%         handle{iter} = make_progressive_motion(geno_data,indiv_flag);         % DONE - still need to make raw turning figs 
+%         iter = iter + 1;
+%         handle{iter} = make_on_off_expansion(geno_data,indiv_flag);           % DONE - still need to make raw turning figs 
+%         iter = iter + 1;
+%         handle{iter} = make_on_off_sawtooth(geno_data,indiv_flag);            % DONE - still need to make raw turning figs 
+%         iter = iter + 1;
+%         handle{iter} = make_optic_flow_oscillation(geno_data,indiv_flag);     % DONE
+%         iter = iter + 1;
+        handle{iter} = make_velocity_nulling(geno_data,indiv_flag);           % NEED TO MAKE!
+%         iter = iter + 1;
+%         handle{iter} = make_stripe_fixation(geno_data,indiv_flag);            % DONE
+%         iter = iter + 1;
+%         handle{iter} = make_small_object_oscillation(geno_data,indiv_flag);   % DONE
+        
     end
     
-    function handle = make_full_field_rotation(geno_data)
+    function handle = make_full_field_rotation(geno_data,indiv_flag)
         
-        handle = setup_figure(3);
+        handle = setup_figure_or_pos(3);
         
         graph_type = 1;
         
@@ -108,13 +160,15 @@ make_all_sub_figures(geno_data)
         dps{2} = geno_data{1}.grouped_conditions{cond_num}.dps(5:8);
         dps{3} = geno_data{1}.grouped_conditions{cond_num}.dps(9:12);
         
-        handle = do_plot(graph_type,cond_num,list,tf,dps,lam,geno_data);
+        handle = do_tune_plot(graph_type,cond_num,list,tf,dps,lam,geno_data);
+        
+        add_legend_with_n(geno_data)
         
     end
     
-    function handle = make_full_field_expansion(geno_data)
+    function handle = make_full_field_expansion(geno_data,indiv_flag)
         
-        handle = setup_figure(4);
+        handle = setup_figure_or_pos(4);
         
         graph_type = 1;        
         
@@ -130,12 +184,13 @@ make_all_sub_figures(geno_data)
         
         dps{1} = geno_data{1}.grouped_conditions{cond_num}.dps(1:2);
         
-        handle = do_plot(graph_type,cond_num,list,tf,dps,lam,geno_data);
+        handle = do_tune_plot(graph_type,cond_num,list,tf,dps,lam,geno_data);
+        
     end
     
-    function handle = make_lateral_flicker(geno_data)
+    function handle = make_lateral_flicker(geno_data,indiv_flag)
         
-        handle = setup_figure(5);
+        handle = setup_figure_or_pos(5);
         
         graph_type = 1;        
         
@@ -151,13 +206,13 @@ make_all_sub_figures(geno_data)
         
         dps{1} = 0;
         
-        handle = do_plot(graph_type,cond_num,list,tf,dps,lam,geno_data);
+        handle = do_tune_plot(graph_type,cond_num,list,tf,dps,lam,geno_data);
         
     end
     
-    function handle = make_low_contrast_rotation(geno_data)
+    function handle = make_low_contrast_rotation(geno_data,indiv_flag)
         
-        handle = setup_figure(4);
+        handle = setup_figure_or_pos(4);
 
         graph_type = 1;        
         
@@ -175,16 +230,19 @@ make_all_sub_figures(geno_data)
 
         mc{1} = geno_data{1}.grouped_conditions{cond_num}.mc(1:4);        
         
-        handle = do_plot(graph_type,cond_num,list,tf,dps,lam,geno_data);
+        handle = do_tune_plot(graph_type,cond_num,list,tf,dps,lam,geno_data);
         
         xlabel('Michelson Contrast')
         set(gca,'XTick',1:numel(tf{1}),'Xticklabel',mc{1},'LineWidth',1);
+
+        add_legend_with_n(geno_data)
+        
         
     end
     
-    function handle = make_reverse_phi_rotation(geno_data)
+    function handle = make_reverse_phi_rotation(geno_data,indiv_flag)
         
-        handle = setup_figure(3);
+        handle = setup_figure_or_pos(3);
         
         graph_type = 1;
         
@@ -204,13 +262,13 @@ make_all_sub_figures(geno_data)
         dps{1} = geno_data{1}.grouped_conditions{cond_num}.dps(1:3);
         dps{2} = geno_data{1}.grouped_conditions{cond_num}.dps(4:6);
         
-        handle = do_plot(graph_type,cond_num,list,tf,dps,lam,geno_data);
+        handle = do_tune_plot(graph_type,cond_num,list,tf,dps,lam,geno_data);
         
     end
     
-    function handle = make_stripe_oscillation(geno_data)
+    function handle = make_stripe_oscillation(geno_data,indiv_flag)
         
-        handle = setup_figure(3);
+        handle = setup_figure_or_pos(3);
         
         graph_type = 2;
         
@@ -238,13 +296,13 @@ make_all_sub_figures(geno_data)
         type{2} = geno_data{1}.grouped_conditions{cond_num}.type(4:6);
         type{3} = geno_data{1}.grouped_conditions{cond_num}.type(7:9);
         
-        handle = do_plot(graph_type,cond_num,list,tf,dps,lam,geno_data,'lmr','x_pos',type);
+        handle = do_tune_plot(graph_type,cond_num,list,tf,dps,lam,geno_data,'lmr','x_pos',type);
     
     end
     
-    function handle = make_regressive_motion(geno_data)
+    function handle = make_regressive_motion(geno_data,indiv_flag)
         
-        handle = setup_figure(4);
+        handle = setup_figure_or_pos(4);
         
         graph_type = 1;
         
@@ -260,13 +318,13 @@ make_all_sub_figures(geno_data)
         
         dps{1} = geno_data{1}.grouped_conditions{cond_num}.dps;
         
-        handle = do_plot(graph_type,cond_num,list,tf,dps,lam,geno_data);
+        handle = do_tune_plot(graph_type,cond_num,list,tf,dps,lam,geno_data);
         
     end
     
-    function handle = make_progressive_motion(geno_data)
+    function handle = make_progressive_motion(geno_data,indiv_flag)
         
-        handle = setup_figure(4);
+        handle = setup_figure_or_pos(4);
         
         graph_type = 1;
         
@@ -282,13 +340,13 @@ make_all_sub_figures(geno_data)
         
         dps{1} = geno_data{1}.grouped_conditions{cond_num}.dps;
         
-        handle = do_plot(graph_type,cond_num,list,tf,dps,lam,geno_data);
+        handle = do_tune_plot(graph_type,cond_num,list,tf,dps,lam,geno_data);
         
     end
     
-    function handle = make_on_off_expansion(geno_data)
+    function handle = make_on_off_expansion(geno_data,indiv_flag)
         
-        handle = setup_figure(4);
+        handle = setup_figure_or_pos(4);
         
         graph_type = 1;
         
@@ -304,14 +362,14 @@ make_all_sub_figures(geno_data)
         
         dps{1} = zeros(1,numel(tf{1}));
         
-        handle = do_plot(graph_type,cond_num,list,tf,dps,lam,geno_data);
+        handle = do_tune_plot(graph_type,cond_num,list,tf,dps,lam,geno_data);
         
         set(gca,'XTick',1:numel(tf{1}),'Xticklabel',{'ON','OFF'},'LineWidth',1);
     end
     
-    function handle = make_on_off_sawtooth(geno_data)
+    function handle = make_on_off_sawtooth(geno_data,indiv_flag)
         
-        handle = setup_figure(4);
+        handle = setup_figure_or_pos(4);
         
         graph_type = 1;
         
@@ -327,16 +385,16 @@ make_all_sub_figures(geno_data)
         
         dps{1} = zeros(1,numel(tf{1}));
         
-        handle = do_plot(graph_type,cond_num,list,tf,dps,lam,geno_data);
+        handle = do_tune_plot(graph_type,cond_num,list,tf,dps,lam,geno_data);
     
         set(gca,'XTick',1:numel(tf{1}),'Xticklabel',{'ON','OFF'},'LineWidth',1);
 
     end
     
-    function handle = make_optic_flow_oscillation(geno_data)
+    function handle = make_optic_flow_oscillation(geno_data,indiv_flag)
         
         % lmr figure
-        handle = setup_figure(4);
+        handle = setup_figure_or_pos(4);
         
         graph_type = 2;
         
@@ -358,10 +416,10 @@ make_all_sub_figures(geno_data)
         
         lam{1} = zeros(1,numel(tf{1}));   
         
-        handle = do_plot(graph_type,cond_num,list,tf,dps,lam,geno_data,'lmr','x_pos',type);    
+        handle = do_tune_plot(graph_type,cond_num,list,tf,dps,lam,geno_data,'lmr','x_pos',type);    
         
         % wbf figure
-        handle = setup_figure(4);
+        handle = setup_figure_or_pos(4);
         
         graph_type = 2;
         
@@ -383,18 +441,18 @@ make_all_sub_figures(geno_data)
         
         lam{1} = zeros(1,numel(tf{1}));   
         
-        handle = do_plot(graph_type,cond_num,list,tf,dps,lam,geno_data,'wbf','x_pos',type);
+        handle = do_tune_plot(graph_type,cond_num,list,tf,dps,lam,geno_data,'wbf','x_pos',type);
         
     end
     
-    function handle = make_velocity_nulling(geno_data)
+    function handle = make_velocity_nulling(geno_data,indiv_flag)
         
         cond_num = 12;
         
-        handle = setup_figure(4);
+        handle = setup_figure_or_pos(4);
         
         graph_type = 1;
-                
+        
         set(handle,'Name',[geno_data{1}.grouped_conditions{cond_num}.name ': ' geno_data{1}.experiment{1}.line_name])
         
         list{1} = geno_data{1}.grouped_conditions{cond_num}.list;
@@ -405,15 +463,15 @@ make_all_sub_figures(geno_data)
         
         dps{1} = zeros(1,numel(tf{1}));
         
-        handle = do_plot(graph_type,cond_num,list,tf,dps,lam,geno_data);
+        handle = do_tune_plot(graph_type,cond_num,list,tf,dps,lam,geno_data);
         
     end
     
-    function handle = make_stripe_fixation(geno_data)
+    function handle = make_stripe_fixation(geno_data,indiv_flag)
         
         cond_num = 13;
         
-        handle = setup_figure(5);
+        handle = setup_figure_or_pos(5);
                 
         set(handle,'Name',[geno_data{1}.grouped_conditions{cond_num}.name ': ' geno_data{1}.experiment{1}.line_name])
         
@@ -460,48 +518,24 @@ make_all_sub_figures(geno_data)
             set(gca,'ylim',[0 100])
 
         end
-                
+        add_legend_with_n(geno_data)
+
     end
     
-    function handle = make_small_object_oscillation(geno_data)
+    function handle = make_small_object_oscillation(geno_data,indiv_flag)
         
         cond_num = 14;
         
-        handle = setup_figure(3);
-        
-        graph_type = 2;
-        
+        handle = setup_figure_or_pos(3);
+                
         set(handle,'Name',[geno_data{1}.grouped_conditions{cond_num}.name ': ' geno_data{1}.experiment{1}.line_name])
         
         list{1} = geno_data{1}.grouped_conditions{cond_num}.list(1);
         list{2} = geno_data{1}.grouped_conditions{cond_num}.list(2);
         list{3} = geno_data{1}.grouped_conditions{cond_num}.list(3);
         list{4} = geno_data{1}.grouped_conditions{cond_num}.list(4);
-                
-        tf{1} = geno_data{1}.grouped_conditions{cond_num}.pos_deg(1);
-        tf{2} = geno_data{1}.grouped_conditions{cond_num}.pos_deg(2);
-        tf{3} = geno_data{1}.grouped_conditions{cond_num}.pos_deg(3);
-        tf{4} = geno_data{1}.grouped_conditions{cond_num}.pos_deg(4);        
         
-        type{1} = geno_data{1}.grouped_conditions{cond_num}.bar_size(1);
-        type{2} = geno_data{1}.grouped_conditions{cond_num}.bar_size(2);
-        type{3} = geno_data{1}.grouped_conditions{cond_num}.bar_size(3);
-        type{4} = geno_data{1}.grouped_conditions{cond_num}.bar_size(4);        
-        
-        type{1} = geno_data{1}.grouped_conditions{cond_num}.pos_deg(1);
-        type{2} = geno_data{1}.grouped_conditions{cond_num}.pos_deg(2);
-        type{3} = geno_data{1}.grouped_conditions{cond_num}.pos_deg(3);
-        type{4} = geno_data{1}.grouped_conditions{cond_num}.pos_deg(4);
-        
-        lam{1} = zeros(1,numel(tf{1}));
-        
-        dps{1} = zeros(1,numel(tf{1}));
-
-        
-        %handle = do_plot(graph_type,cond_num,list,tf,dps,lam,geno_data,'lmr','x_pos',type);
-    
-        
-        % This is too different to use the do_plot function on...
+        % This is too different to use the do_tune_plot function on...
         
         % Each of the different position/bar height combos
         for k = 1:4
@@ -516,16 +550,20 @@ make_all_sub_figures(geno_data)
                 [graph.avg graph.variance] = geno_data{i}.get_trial_data(list{k}{1},'lmr','none','yes','all');
                 
                 graph.color = mycolormap{i};
-                
+ 
                 hold all
-                tfPlot.timeseries(graph)
+                
+                title(['Bar size: ' num2str(geno_data{1}.grouped_conditions{cond_num}.bar_size(k)) ' / Position ' num2str(geno_data{1}.grouped_conditions{cond_num}.pos_deg(k)) '\circle'])
+                ylabel('LmR [V]')
+                xlabel('Time [ms]')
+                tfPlot.timeseries(graph);                
                 
             end
         end
         
     end
 
-    function handle = do_plot(graph_type,cond_num,list,tf,dps,lam,geno_data,varargin)
+    function handle = do_tune_plot(graph_type,cond_num,list,tf,dps,lam,geno_data,varargin)
         
         switch graph_type
             
@@ -545,7 +583,7 @@ make_all_sub_figures(geno_data)
                         % Each condition within the tuning curve (points in the line)
                         for j = 1:numel(list{k})
                             
-                            [curve_mean(j) curve_sem(j)] = geno_data{i}.get_trial_data(list{k}{j},'lmr','trapz','yes','all');
+                            [curve_mean(j) curve_sem(j)] = geno_data{i}.get_trial_data(list{k}{j},'lmr','mean','yes','all');
                             
                             geno_data{i}.experiment{1}.line_name;
                             
@@ -562,7 +600,7 @@ make_all_sub_figures(geno_data)
                     set(gca,'XTick',1:numel(tf{k}),'Xticklabel',x_label,'LineWidth',1);
                     clear x_label
                     
-                    title([geno_data{1}.grouped_conditions{cond_num}.name '\lambda :' num2str(lam{k}) '\circ'])
+                    title([geno_data{1}.grouped_conditions{cond_num}.name ' \lambda :' num2str(lam{k}) '\circ'])
                     xlabel('Temporal Frequency (\circ/s)')
                     ylabel('\Sigma LmR [V]')
                     
@@ -605,13 +643,14 @@ make_all_sub_figures(geno_data)
                             x_label{x} = x_label_source{x};
                         end
                     end
-        
+                    
                     xlabel('Oscillating Stim')
                     set(gca,'XTick',1:numel(tf{1}),'Xticklabel',x_label,'LineWidth',1);
 
-                    title([geno_data{1}.grouped_conditions{cond_num}.name '\lambda :' num2str(lam{k}) '\circ'])
+                    title([geno_data{1}.grouped_conditions{cond_num}.name ' \lambda :' num2str(lam{k}) '\circ'])
                     ylabel(['Correlation ' daq_channel_1 '+' daq_channel_2],'Interpreter','none')
                     
+                    ylim([-.5 1])
                 end
                 
         end
@@ -620,18 +659,20 @@ make_all_sub_figures(geno_data)
         
     end
     
-    function handle = setup_figure(type)
-        switch type
+    function handle = setup_figure_or_pos(action)
+        switch action
             case 1
-                handle = figure('NumberTitle','off','Color',[1 1 1],'Position',[50 50 1050 750],'PaperOrientation','landscape');
+                handle = figure('NumberTitle','off','Color',[1 1 1],'Position',[50 50 1050 750],'PaperOrientation','portrait');
             case 2
-                handle = figure('NumberTitle','off','Color',[1 1 1],'Position',[50 50 1050/2 750],'PaperOrientation','landscape');
+                handle = figure('NumberTitle','off','Color',[1 1 1],'Position',[50 50 1050/2 750],'PaperOrientation','portrait');
             case 3
-                handle = figure('NumberTitle','off','Color',[1 1 1],'Position',[50 50 1050 750/2],'PaperOrientation','landscape');
+                handle = figure('NumberTitle','off','Color',[1 1 1],'Position',[50 50 1050 750/2],'PaperOrientation','portrait');
             case 4
-                handle = figure('NumberTitle','off','Color',[1 1 1],'Position',[50 50 1050/2 750/2],'PaperOrientation','landscape');
+                handle = figure('NumberTitle','off','Color',[1 1 1],'Position',[50 50 1050/2 750/2],'PaperOrientation','portrait');
             case 5
-                handle = figure('NumberTitle','off','Color',[1 1 1],'Position',[50 50 1050/4 750/2],'PaperOrientation','landscape');
+                handle = figure('NumberTitle','off','Color',[1 1 1],'Position',[50 50 1050/4 750/2],'PaperOrientation','portrait');
+            otherwise
+                subplot('position',action);
         end
     end
 
@@ -643,11 +684,26 @@ make_all_sub_figures(geno_data)
             
             name{i} = geno_data{i}.experiment{1}.line_name;
             
-            n_name{i} = [name{i} 'N=' N{i}];
+            n_name{i} = [name{i} ' N=' N{i}];
             
         end
         
-        legend(n_name{:})
+        handle = legend(n_name{:});
+%         legend_markers = findobj(get(handle, 'Children'), ...
+%             'Type', 'line', '-and', '-not', 'Marker', 'none');
+%         
+% %         legend_markers = findobj(get(handle, 'Children'), ...
+% %             'Type', 'line');
+% 
+%         for i = 1:length(legend_markers)/2
+%             
+%             inds = [(i*2)-1 i*2]
+%             
+%             set(legend_markers(inds(1)), 'Color', mycolormap{i},'Linestyle', '--');
+%             set(legend_markers(inds(2)), 'Color', mycolormap{i},'Linestyle', '--');
+%         end
+        
+        set(handle,'Interpreter','none','location','southeast');
         
     end
 

@@ -52,6 +52,8 @@ classdef import < handle
                     if strfind(exps{1},'.DS_Store')
                         exps = exps(2:end);
                     end
+                elseif nargin == 2 && ischar(varargin{nargin}) && strcmpi(varargin{nargin},'testing')
+                    
                 elseif nargin == 2 && ischar(varargin{1}) && isnum(varargin{2})
                     genotype_file = varargin{1};
                     experiments = dir(genotype_file); experiments = {experiments.name}; 
@@ -234,7 +236,7 @@ classdef import < handle
                     data.y_pos          = parsed_data{1}{index}.y_pos;
                     data.wbf            = parsed_data{1}{index}.wbf;
                     data.voltage_signal = parsed_data{1}{index}.voltage;
-                    data.lmr            = parsed_data{1}{index}.lmr;
+                    data.free           = parsed_data{1}{index}.free;
                     
                     % Do all of the main functions on the object
                     trial{i}.data{1} = data.main;      

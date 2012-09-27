@@ -1,5 +1,17 @@
-function Conditions = rev_phi_phase_delay_4_wide_contrast_change_v01
-% Right now this is full field reverse phi phase delay 
+function Conditions = rev_phi_no_stagger_testing_v01
+% rev_phi_no_stagger_testing_v01 
+%
+% New way of doing reverse phi stimuli (again!) for testing:
+% The x channel has both the flicker and the movement in each pattern, in
+% either the order: flicker then move, or move then flicker, or both at the
+% same time. The position function will have built in delays to use the
+% same patterns for each -- advantage is there is no initial flicker with
+% the stimulus and there is now a much lower chance of flickering between
+% polarities as when using a position function for the movement and a
+% position function for the flicker. The functions are also slightly more
+% straightforward, and the same exact one can be used for flicker before
+% delay and flicker after delay. 
+%
 % All experimental conditions are linearly spaced from .1 to 9.9 volts.
 % closed loop portion is set to zero, and is the last condition.
 % Values less than .1 are used to detect the stimulus timing, the linspace
@@ -15,82 +27,79 @@ end
 
 % gather some information
     cf = pwd;
-    patterns = what(fullfile(dir,'patterns','reverse_phi_contrast_changes'));
+    patterns = what(fullfile(dir,'patterns','reverse_phi_no_stagger'));
     pattern_loc = patterns.path;
     patterns = patterns.mat;
-    pos_func_loc = fullfile(dir,'position_functions','unilat_rev_phi_phase_delay_4_wide_high_res_v01');
+    pos_func_loc = fullfile(dir,'position_functions','rev_phi_no_stagger_testing_v01');
     position_functions = what(pos_func_loc);
     position_functions = position_functions.mat;
     panel_cfgs_loc = fullfile(dir,'panel_configs');
     panel_cfgs = what(panel_cfgs_loc);
-    panel_cfgs = panel_cfgs.mat;    
+    panel_cfgs = panel_cfgs.mat;
     cd(cf);
 
 % generate all the conditions
 cond_num = 1;
 total_ol_dur = 0;
-frequency = 400;
+frequency = 200;
+duration = 2;
 
-for pat = [8  11]; %
-    % the different temporal frequency position functions
-    for pos_funcX = 1; % [1cc 1cw 2cc 2cw 3cc 3cw]
-    % Sym conds will be sequential except for the last, which is the closed
-    % loop condition       
-    
-        for flick = 1:2; % for both before and after the movement
-            if flick == 1;
-                switch pos_funcX
-                    % different delays in ms for each flicker before movement
-                    % This side of flicker has the 'no phase delay'
-                    % conditions as well as before movement flickers
-                    case {1, 2} % tf 1
-                        delay_funcs_y = [3 4 11 18 25 31 38 45 52]; % [0]
-                        delay_funcs_y = fliplr(delay_funcs_y);
-                    case {54, 55} % tf 2
-                        delay_funcs_y = [56 57 60 64 67 71 74 78 81]; % [0]
-                        delay_funcs_y = fliplr(delay_funcs_y);                        
-                    case {83, 84} % tf 3
-                        delay_funcs_y = [85 86 88 90 92 94 96 98 100]; % [0]
-                        delay_funcs_y = fliplr(delay_funcs_y);                        
-                end
-            else
-                switch pos_funcX
-                    % different delays in ms for each flicker after movement
-                    % This side of flicker has only before movement conditions
-                    case {1, 2} % tf 1
-                        delay_funcs_y = [4 11 18 25 31 38 45 52] + 1; % []           
-                    case {54, 55} % tf 2
-                        delay_funcs_y = [57 60 64 67 71 74 78 81] + 1; % []
-                    case {83, 84} % tf 3
-                        delay_funcs_y = [86 88 90 92 94 96 98 100] + 1; % []        
-                end
-            end
-        
-        for pos_funcY = delay_funcs_y; % temporal freq sepecific delays pos function numbers
+%    
+for pos_funcX = 1:13; % for all of the different delay position functions
+    for pat = [1 2 3 4]; % flkr_then_move_cw, flkr_then_move_ccw, move_then_flkr_cw, move_then_flkr_ccw
+
             Conditions(cond_num).PatternID = pat; %#ok<*AGROW>
             Conditions(cond_num).PatternName = patterns{pat};
             Conditions(cond_num).PatternLoc  = pattern_loc;
             
-            % Mode = pos func control for x and y, init pos = 1 for both
-            Conditions(cond_num).Mode           = [4 4];
+            % Mode = pos func control for x
+            Conditions(cond_num).Mode           = [4 0];
             Conditions(cond_num).InitialPosition= [1 1];
             Conditions(cond_num).Gains          = [0 0 0 0];
-            
+                        
             Conditions(cond_num).PosFunctionX   = [1 pos_funcX];
-        	Conditions(cond_num).PosFunctionY 	= [2 pos_funcY];
+                        
+            Conditions(cond_num).PosFunctionY 	= [2 1];
             
             Conditions(cond_num).FuncFreqY 		= frequency; % all the pos funcs need to be made to work with this
             Conditions(cond_num).FuncFreqX 		= frequency;
             
             Conditions(cond_num).PosFuncLoc = pos_func_loc;            
             Conditions(cond_num).PosFuncNameX = position_functions{pos_funcX};
-            Conditions(cond_num).PosFuncNameY = position_functions{pos_funcY};
-            Conditions(cond_num).Duration = 2;
+            Conditions(cond_num).PosFuncNameY = 'none';
+            Conditions(cond_num).Duration = duration;
             total_ol_dur = total_ol_dur + Conditions(cond_num).Duration;
             
             cond_num = cond_num + 1;
-        end
-        end
+    end
+end
+
+for pos_funcX = 14; % the 'standard' position function
+
+    for pat = [5 6 7 8 9 10]; %flkr_and_move ,and plain cw and ccw of some standard gratings for baseline
+    
+            Conditions(cond_num).PatternID = pat; %#ok<*AGROW>
+            Conditions(cond_num).PatternName = patterns{pat};
+            Conditions(cond_num).PatternLoc  = pattern_loc;
+
+            % Mode = pos func control for x
+            Conditions(cond_num).Mode           = [4 0];
+            Conditions(cond_num).InitialPosition= [1 1];
+            Conditions(cond_num).Gains          = [0 0 0 0];
+            
+            Conditions(cond_num).PosFunctionX   = [1 pos_funcX];
+            Conditions(cond_num).PosFunctionY 	= [2 1];
+            
+            Conditions(cond_num).FuncFreqY 		= frequency; % all the pos funcs need to be made to work with this
+            Conditions(cond_num).FuncFreqX 		= frequency;
+            
+            Conditions(cond_num).PosFuncLoc = pos_func_loc;            
+            Conditions(cond_num).PosFuncNameX = position_functions{pos_funcX};
+            Conditions(cond_num).PosFuncNameY = 'none';
+            Conditions(cond_num).Duration = duration;
+            total_ol_dur = total_ol_dur + Conditions(cond_num).Duration;
+            
+            cond_num = cond_num + 1;
     end
 end
 
@@ -108,7 +117,7 @@ Conditions(cond_num).FuncFreqX 		= frequency;
 Conditions(cond_num).PosFuncLoc     = 'none';            
 Conditions(cond_num).PosFuncNameX   = 'none';
 Conditions(cond_num).PosFuncNameY   = 'none';
-Conditions(cond_num).Duration       = 2.85;
+Conditions(cond_num).Duration       = 3;
 Conditions(cond_num).Voltage        = 0;
 
 % Set condition parameters that are not specified (or do not change) in the telethon
@@ -129,3 +138,4 @@ Conditions(numel(Conditions)).Voltage   =  0;
 
 total_dur = total_ol_dur + numel(Conditions)*Conditions(numel(Conditions)).Duration;
 disp(total_dur/60);
+end

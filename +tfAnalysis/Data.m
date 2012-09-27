@@ -23,6 +23,8 @@ classdef Data < handle
         wbf
         voltage_signal
         lmr
+        
+        free
     end
     
     properties (Constant = true, Access = private)

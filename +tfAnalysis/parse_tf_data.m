@@ -113,7 +113,7 @@ for flyNum = 1:numel(data_files)
             ExpData{rep, condition_number}.y_pos            = RawData(current_block(1:condition_length),5)';
             ExpData{rep, condition_number}.wbf              = RawData(current_block(1:condition_length),3)';
             ExpData{rep, condition_number}.voltage          = encoded_signal(current_block(1:condition_length))';
-            ExpData{rep, condition_number}.lmr              = RawData(current_block(1:condition_length),6)';
+            ExpData{rep, condition_number}.free              = RawData(current_block(1:condition_length),6)';
             end
             
         else
@@ -123,7 +123,7 @@ for flyNum = 1:numel(data_files)
         ExpData{rep, condition_number}.y_pos            = RawData(current_block,5)';
         ExpData{rep, condition_number}.wbf              = RawData(current_block,3)';
         ExpData{rep, condition_number}.voltage          = encoded_signal(current_block)';
-        ExpData{rep, condition_number}.lmr              = RawData(current_block,6)';
+        ExpData{rep, condition_number}.free             = RawData(current_block,6)';
             
         end
     end
@@ -149,7 +149,7 @@ for flyNum = 1:numel(data_files)
             ExpData{successful_rep_num, condition_number}.y_pos            = RawData(current_block(1:condition_length),5)';
             ExpData{successful_rep_num, condition_number}.wbf              = RawData(current_block(1:condition_length),3)';
             ExpData{successful_rep_num, condition_number}.voltage          = encoded_signal(current_block(1:condition_length))';
-            ExpData{successful_rep_num, condition_number}.lmr              = RawData(current_block(1:condition_length),6)';
+            ExpData{successful_rep_num, condition_number}.free              = RawData(current_block(1:condition_length),6)';
             end
             
         else
@@ -160,7 +160,7 @@ for flyNum = 1:numel(data_files)
         ExpData{rep, condition_number}.y_pos            = RawData(current_block,5)';
         ExpData{rep, condition_number}.wbf              = RawData(current_block,3)';
         ExpData{rep, condition_number}.voltage          = encoded_signal(current_block)';
-        ExpData{rep, condition_number}.lmr              = RawData(current_block,6)';
+        ExpData{rep, condition_number}.free              = RawData(current_block,6)';
         end       
     end
     

@@ -67,14 +67,15 @@ post_x_data = exp_1.get_trial_data(post_82(1),'x_pos','none','no','none');
 
 %%
 
-clf; hold all;
+exp_loc_2 = '/Users/holtzs/Desktop/rev_phi_no_stagger_testing_v01_photodiode/testing_photodiode';
+
+exp_2 = tfAnalysis.ExpSet(tfAnalysis.import(exp_loc_2,'all'));
+
+%%
+
+test = exp_2.get_trial_data(1,'free','none','no','none');
 
 
-plot((pre_data'-4))
-plot((pre_y_data'-8)/2)
-plot((pre_x_data'-8)/2)
 
 
-plot((post_data'+4))
-plot((post_y_data'+8)/2)
-plot((post_x_data'+8)/2)
+

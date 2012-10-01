@@ -52,7 +52,9 @@ classdef import < handle
                     if strfind(exps{1},'.DS_Store')
                         exps = exps(2:end);
                     end
-                elseif nargin == 2 && ischar(varargin{nargin}) && strcmpi(varargin{nargin},'testing')
+                elseif nargin == 2 && ischar(varargin{nargin}) && strcmpi(varargin{nargin},'no_shift')    
+                    
+                elseif nargin == 2 && ischar(varargin{nargin}) && strcmpi(varargin{nargin},'shift')
                     
                 elseif nargin == 2 && ischar(varargin{1}) && isnum(varargin{2})
                     genotype_file = varargin{1};
@@ -93,7 +95,7 @@ classdef import < handle
                 
                 % Parse the raw experiment data
                 parsed_data = get_parsed_data(self);
-
+                
                 % Fit into the Experiment/Trial/Data Framework
                 self.experiment{i} = populate_experiment_metadata_obj(self);
                 
@@ -239,7 +241,7 @@ classdef import < handle
                     data.free           = parsed_data{1}{index}.free;
                     
                     % Do all of the main functions on the object
-                    trial{i}.data{1} = data.main;      
+                    trial{i}.data{1} = data.main;
                 end
             end
         end

@@ -4,6 +4,10 @@ classdef Experiment < handle
     %
     %   EXPERIMENT and its sub objects are automatically populated by
     %   tfAnalysis.import
+    %
+    %   Recent: when flies that  escaped visual pruning made it to this
+    %   level, things broke, so checks were added at higher levels for the
+    %   method Experiment.quality
     
     properties
         % For selecting subsets of experiments
@@ -82,6 +86,42 @@ classdef Experiment < handle
                     self.cond_rep_index{c} = [self.cond_rep_index{c} temp_rep_index{r,c}];
                 end
             end
+        end
+        
+        function valid = quality(self)
+            % This is kind of a hack: make the rep index, check for values,
+            % then delete if it works. By far not the time limiting step.
+            
+            failed = 0;
+            self = make_cond_rep_index(self);
+            temp_success_index = [];
+
+            for g = 1:numel(self.cond_rep_index)
+
+                for r = 1:numel(self.cond_rep_index{g})
+                    if ~self.trial{self.cond_rep_index{g}(r)}.data{1}.successful
+                        temp_success_index{r} = 0;
+                    else
+                        temp_success_index{r} = 1;
+                    end
+                end
+
+                if ~sum(cell2mat(temp_success_index))
+                    failed = 1;
+                end
+
+                temp_success_index = [];
+
+            end
+                
+            if failed
+                valid = 0;
+            else
+                valid = 1;
+            end
+            
+            self.cond_rep_index = [];
+            
         end
         
         function self = clear_nulls(self)

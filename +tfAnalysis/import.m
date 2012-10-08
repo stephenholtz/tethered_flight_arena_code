@@ -88,28 +88,45 @@ classdef import < handle
             end
             %--------------------------------------------------------------
             % Important, the central iterator for taking data into the
-            % objects. This is tf specific.
+            % objects. Requires a separate iterator because some flies
+            % escape visual pruning and do not have enough reps of any
+            % conditions.
             %--------------------------------------------------------------
+            exp_iter = 1;
+            
+            fprintf('Experiment %4d of %4d\n',1,numel(exps));
+            
             for i  = 1:numel(exps)
+                fprintf('\b\b\b\b\b\b\b\b\b\b\b\b\b');
+                fprintf('%4d of %4d\n',i,numel(exps));
+                
                 set_get_experiment_info(self,exps{i});
                 
                 % Parse the raw experiment data
                 parsed_data = get_parsed_data(self);
                 
                 % Fit into the Experiment/Trial/Data Framework
-                self.experiment{i} = populate_experiment_metadata_obj(self);
+                self.experiment{exp_iter} = populate_experiment_metadata_obj(self);
                 
                 % All trials/data now (first recover info from parsed_data)
                 trial = populate_trial_data_obj(self, parsed_data);
                 
                 % Since there is no trial.main right now, this suffices.
                 if numel(trial) == 1;
-                    self.experiment{i}.trial{1} = trial;                                    
+                    self.experiment{exp_iter}.trial{1} = trial;                                    
                 else
-                    self.experiment{i}.trial = trial;                                    
+                    self.experiment{exp_iter}.trial = trial;                                    
                 end
-                % Apply the main functions to the object
-                self.experiment{i} = self.experiment{i}.main;
+                
+                if self.experiment{exp_iter}.quality
+                    % Apply the main functions to the object
+                    self.experiment{exp_iter} = self.experiment{exp_iter}.main;
+                    exp_iter = exp_iter + 1;
+                else
+                    % Delete the experiment
+                    self.experiment{exp_iter} = [];
+                end
+                
             end
         end
         

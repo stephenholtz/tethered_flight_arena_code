@@ -71,8 +71,8 @@ Conditions(cond_num).Voltage        = 0;
 % assign voltages to each condition as well.
 encoded_vals = linspace(.1,9.9,numel(Conditions));
 for cond_num = 1:numel(Conditions)
-    Conditions(cond_num).PanelCfgNum    = 2; % should be only the two center panels!
-    Conditions(cond_num).PanelCfgName   = panel_cfgs(2);
+    Conditions(cond_num).PanelCfgNum    = 1; % should be only the two center panels!
+    Conditions(cond_num).PanelCfgName   = panel_cfgs(1);
     Conditions(cond_num).VelFunction 	= [1 0];
 	Conditions(cond_num).VelFuncName 	= 'none';
     Conditions(cond_num).SpatialFreq    = 'none';    

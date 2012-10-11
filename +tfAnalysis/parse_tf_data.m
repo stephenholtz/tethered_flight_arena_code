@@ -44,7 +44,7 @@ for flyNum = 1:numel(data_files)
     
     % Find all the times where adjacent voltage values differ by a
     % tolerance
-    coarse_differences  = find(abs(diff(encoded_signal > ANALOGTOLERANCE*10)));
+    coarse_differences  = find(abs(diff(encoded_signal > ANALOGTOLERANCE*2)));
     coarse_differences  = [coarse_differences((diff(coarse_differences) > DURATIONTOLERANCE*SAMPLERATE)); coarse_differences(end)];
     
     % Group the similar voltage segment

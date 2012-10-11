@@ -240,17 +240,19 @@ handle(i) = figure('Name',['Comparison: ' num2str(i)],'NumberTitle','off','Color
             if i == 1 || i == 3
                 if k == 1
                 ylabel('1: GF split')
-                elseif graph_offset <5
-                ylabel('2: GF+pJFRC2')
+                title('Directional Motion')
                 elseif graph_offset <14
+                ylabel('2: GF+pJFRC2')
+                elseif graph_offset <30
                 ylabel('3: GF+pJFRC12')
                 end
             elseif i == 2 || i == 4
                 if k == 1
                 ylabel('a: UAS-DTI/Cyo; CSA')
-                elseif graph_offset <5
-                ylabel('b: 1x0-tdTmto/CyO; UAS-DTI/TM6B')
+                title('Directional Motion')                
                 elseif graph_offset <14
+                ylabel('b: 1x0-tdTmto/CyO; UAS-DTI/TM6B')
+                elseif graph_offset <30
                 ylabel('c: BB''s CS')
                 end
             end
@@ -271,6 +273,9 @@ handle(i) = figure('Name',['Comparison: ' num2str(i)],'NumberTitle','off','Color
             tfPlot.tuning_curve(graph);
             
             ylabel('L-R Amp')
+            if k == 1
+                title('Contrast Optomotor')
+            end
             
             xlabel('Contrast')
             
@@ -292,7 +297,9 @@ handle(i) = figure('Name',['Comparison: ' num2str(i)],'NumberTitle','off','Color
             tfPlot.tuning_curve(graph);
 
             xlabel('Speed')
-            
+            if k == 1
+                title('Reverse Phi')
+            end
             clear graph geno_str            
 
         subplot(rows,cols,4+graph_offset)
@@ -307,6 +314,8 @@ handle(i) = figure('Name',['Comparison: ' num2str(i)],'NumberTitle','off','Color
                 graph.avg{g} = tuning_curves.st.(sex){geno_num}.avg;
                 graph.variance{g} = tuning_curves.st.(sex){geno_num}.sem;
                 graph.color{g} = mycolormap{geno_num};
+                
+                geno_str(g) = short_geno_names(geno_num);
 
             end
 
@@ -316,17 +325,19 @@ handle(i) = figure('Name',['Comparison: ' num2str(i)],'NumberTitle','off','Color
 
             ylabel('Correlation')
             xlabel('Stripe')
-            
-            clear graph geno_str
+            if k == 1
+               title('Stripe Tracking') 
+            end
+            % Hack to get the boxes to stop breaking
+            subplot(rows,cols,5+graph_offset)
+            hand = tfPlot.tuning_curve(graph);
+            axis off
+            legend_handle = legend(geno_str(1:3),'Location','SouthEast','Interpreter','none');
+            set(legend_handle,'Position',[.83 .99-k*.29 .1 .24]);
+            set(legend_handle, 'EdgeColor', [1 1 1])
 
-        for g = 1:numel(comparison_groups{i,k})
-            geno_num = comparison_groups{i,k}(1);
         
-            geno_str(g) = short_geno_names(geno_num);
-            
-        end     
-        
-        l_hand = legend(geno_str,'Location','SouthEastOutside','Interpreter','none');            
+        clear graph geno_str
 
     end
 annotation('textbox', [.01 .01 .8 .05],'String','N = 5-8',...
@@ -385,6 +396,10 @@ for k = 1:9
         
         ylabel(geno_names{k},'Interpreter','none')
         
+            if k == 1
+                title('Directional Motion')
+            end
+            
         xlabel('Direction')
         
         clear graph geno_str            
@@ -416,7 +431,10 @@ for k = 1:9
         tfPlot.tuning_curve(graph);
 
         ylabel('L-R Wing Amp')
-
+            if k == 1
+                title('Contrast Optomotor')
+            end
+            
         xlabel('Contrast')
 
         clear graph geno_str            
@@ -448,7 +466,10 @@ for k = 1:9
         tfPlot.tuning_curve(graph);
 
         ylabel('L-R Wing Amp')        
-        
+            if k == 1
+                title('Reverse Phi')
+            end
+            
         xlabel('Speed')
 
         clear graph geno_str            
@@ -474,26 +495,34 @@ for k = 1:9
             else
                 graph.color{g} = [.15 .15 .15]; 
             end
+            
+            geno_str(g) = short_geno_names(geno_num);
+            
         end
 
         graph.zero_line = 0;
         
         tfPlot.tuning_curve(graph);
-
+        if k == 1
+            title('Stripe Tracking')
+        end
+            
         ylabel('Correlation')
         xlabel('Stripe')
-
+        
+        % Hack to get the boxes to stop breaking
+        subplot(rows,cols,5+graph_offset)
+        for g = 1:numel(graph.color)
+        graph.color{g} = [1 1 1];
+        end
+        tfPlot.tuning_curve(graph);
+        axis off
+        legend_handle = legend(geno_str(1),'Location','SouthEast','Interpreter','none');
+        set(legend_handle, 'Box', 'off')
+        set(legend_handle, 'Color', 'none')
+        
         clear graph geno_str
         
-        for g = 1:2
-            
-            geno_num = comparison_groups{i,1}(k);
-            
-            geno_str(g) = short_geno_names(geno_num);
-            
-        end
-        
-        l_hand = legend(geno_str,'Location','SouthEastOutside','Interpreter','none');
 end  
 
 saveas(gcf, fullfile(destination_dir,['Comparison: ' num2str(i)]),'fig');

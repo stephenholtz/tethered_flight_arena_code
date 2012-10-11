@@ -1,7 +1,7 @@
 %makes expansion and contraction at a few poles (changing in Y) and happen
 
-project = 'ir_blast_patterns';
-pattern_name = 'gs3_mc_71pct_expansion_4_wide';
+project = 'basic_expansion_v01';
+pattern_name = 'gs3_mc_1_expansion_4_wide';
 sizes = 4;
 counter = 0;
 pattern.x_num = max(sizes)*2;         % x is all frames - shouldn't need to be more than 2 x the spatial frequency
@@ -21,7 +21,7 @@ Pats = zeros(4, 96, pattern.x_num, pattern.y_num);
             y = y+1;
             reps = 96/(size*2);
             % contrast = 71%
-            Pats(:,:,1,y) = repmat([1*ones(4,size) 6*ones(4,size)],1,reps); 
+            Pats(:,:,1,y) = repmat([0*ones(4,size) 7*ones(4,size)],1,reps); 
             Pats(:,:,1,y) = circshift(Pats(:,:,1,y)',size/2)';
         end
     end
@@ -51,7 +51,7 @@ Pats = zeros(4, 96, pattern.x_num, pattern.y_num);
         case {'PCWIN','PCWIN64'}
             root_pattern_dir = 'C:\tethered_flight_arena_code\patterns';
         case {'MACI64'}
-            root_pattern_dir = '/Users/holtzs/tethered_flight_arena_code/patterns';
+            root_pattern_dir = '/Users/stephenholtz/tethered_flight_arena_code/patterns';
         otherwise
             error('is this linux?')            
     end

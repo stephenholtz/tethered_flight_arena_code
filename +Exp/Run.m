@@ -49,7 +49,7 @@ check_flying = true;
 randomize = 1;
 
 [~,comp_name] = system('echo %COMPUTERNAME%');
-if ~strcmpi(comp_name,'REISER-WW23')
+if isempty(strfind(comp_name,'REISER-WW6'))
     % By default use the puffer 'type 1' in Exp.Utilities.startle_animal
     startle_type = 1;
 else
@@ -176,8 +176,8 @@ disp('STANDARD PROTOCOL STARTING')
             while stim_start_trigger < 2.5
                 start(AI_stim_sync)
                 stim_start_trigger = getdata(AI_stim_sync);
-                if toc(ticHandle) > 6
-                    error('Stimulus failed to display for 6 seconds')
+                if toc(ticHandle) > 5
+                    error('Stimulus failed to display for 5 seconds')
                 end
             end
             
@@ -291,7 +291,7 @@ disp('STANDARD PROTOCOL STARTING')
 
     % If manually recording, need a notification to stop.
     if ~record
-        email_subject = ['tfExperiment ' metadata.ExperimentName ' Requires daq Stop.'];
+        email_subject = ['tfExperiment ' metadata.Arena ' Requires daq Stop.'];
         email_message =' . ';
         result = Exp.Utilities.send_email(email_subject,email_message);
         if ~result; disp('Error sending email');
@@ -309,16 +309,16 @@ disp('STANDARD PROTOCOL STARTING')
     
     if res
         % Send an email saying it is finished.
-        email_subject = ['tfExperiment ' metadata.ExperimentName ' Finished.'];
-        email_message = ['Duration = ', num2str(timer/60) ' mins .'];
+        email_subject = ['tfExperiment on' ' Finished.'];
+        email_message = ['Duration: ', num2str(timer/60) ' mins. Name: '  metadata.Arena ' .'];
         result = Exp.Utilities.send_email(email_subject,email_message);
         if ~result; disp('Error sending email'); end
     else
         % Send an email saying it is finished, but stuff failed.
-        email_subject = ['Warning: tfExperiment ' metadata.ExperimentName ' Finished with Errors.'];
-        email_message = ['Duration = ', num2str(timer/60) ' mins .'];
+        email_subject = ['tfExperiment on' ' Finished. With Errors'];
+        email_message = ['Duration: ', num2str(timer/60) ' mins. Name: '  metadata.Arena ' .'];
         result = Exp.Utilities.send_email(email_subject,email_message);
-        if ~result; disp('Error sending email'); end    
+        if ~result; disp('Error sending email'); end
     end
     
     if record

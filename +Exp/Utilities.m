@@ -110,7 +110,7 @@ classdef Utilities
             start(monitor_channel);
             freq = getdata(monitor_channel); %freq = mean(WBF);
             if freq < 1.0;        % A wing beat frequency of below 120 => buzz buzz; if we want that
-                result = 1;   
+                result = 0;   
             else
                 result = 1;
             end

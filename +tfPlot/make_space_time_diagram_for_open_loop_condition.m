@@ -48,21 +48,21 @@ load(pattern_location);
 %% Build a list of frame indicies for the buffer (from the Duration in the struct)
 
 % Convert from gains/biases to just gains for easy fps calculation
-if abs(condition_struct.Gains(1))<127
-elseif abs(condition_struct.Gains(1))>127 && condition_struct.Gains(2) == 0
-    condition_struct.Gains(2) = condition_struct.Gains(1)/2.5;
-    condition_struct.Gains(1) = 0;
-else
-    error('Need more complicated gain -> bias conversion!')
-end
-
-if abs(condition_struct.Gains(3))<127
-elseif abs(condition_struct.Gains(3))>127 && condition_struct.Gains(4) == 0
-    condition_struct.Gains(4) = condition_struct.Gains(2)/2.5;
-    condition_struct.Gains(3) = 0;
-else
-    error('Need more complicated gain -> bias conversion!')
-end
+% if abs(condition_struct.Gains(1))<127
+% elseif abs(condition_struct.Gains(1))>127 && condition_struct.Gains(2) == 0
+%     condition_struct.Gains(2) = condition_struct.Gains(1)/2.5;
+%     condition_struct.Gains(1) = 0;
+% else
+%     error('Need more complicated gain -> bias conversion!')
+% end
+% 
+% if abs(condition_struct.Gains(3))<127
+% elseif abs(condition_struct.Gains(3))>127 && condition_struct.Gains(4) == 0
+%     condition_struct.Gains(4) = condition_struct.Gains(2)/2.5;
+%     condition_struct.Gains(3) = 0;
+% else
+%     error('Need more complicated gain -> bias conversion!')
+% end
 
 % X Chan frames
 switch condition_struct.Mode(1)

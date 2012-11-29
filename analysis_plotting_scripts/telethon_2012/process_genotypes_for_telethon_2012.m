@@ -1,9 +1,12 @@
 % Process the files for the VPN telethon
-exp_dir = '/Users/holtzs/Desktop/telethon_experiment_2012';
+% exp_dir = '/Users/holtzs/Desktop/telethon_experiment_2012';
+% exp_dir = '/Volumes/STEPHEN32SD/telethon_experiment_2012';
+exp_dir = '/Volumes/STEPHEN32SD/telethon_experiment_2012_testing';
+
 cd(exp_dir);
 genotypes = dir(exp_dir);
 
-for i = 11:numel(genotypes);
+for i = 1:numel(genotypes);
     if ~sum(strcmpi(genotypes(i).name,{'.','..','DS_STORE','thumbs'}))
         if ~sum(strcmpi([genotypes(i).name '_summary'],dir(fullfile(exp_dir,genotypes(i).name))));
             try

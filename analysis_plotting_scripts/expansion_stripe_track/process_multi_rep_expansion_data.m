@@ -7,7 +7,8 @@ function [averages, variance] = process_multi_rep_expansion_data(data)
 % a cell array. i.e. data.raw{1} will be a matrix of timeseries for fly #
 % 1, data.raw{2} will be the same for fly # 2. The output of this function
 % will be the averages and standard error of groups of subsequent expansion
-% stimulus for several flies.
+% stimulus for several flies. Each row of the output matricies is the group
+% of adjacent stimuli.
 %
 % SLH - 10/2012
 
@@ -41,47 +42,53 @@ end
 
 %% Process the raw data
 
-fly_group_averages = [];
-across_fly_groups = [];
+multi_fly_turn_resp_group = [];
+fly_group_turn_resp_averages = [];
 
-% For each individual fly
+% Get the max num groups that works for all
+data.num_groups = inf;
 for i = 1:numel(data.raw)
-        
-    num_groups = numel(data.raw)/data.group_size;
-        
-    curr_group = 1:data.group_size;    
+    temp_num_groups = floor(size(data.raw{i},1)/data.group_size);
+    if temp_num_groups < data.num_groups
+        data.num_groups = temp_num_groups;
+    end
+end
+
+curr_group = 1:data.group_size;
+
+%--Iterate over each set of adjacent turning bouts
+for i = 1:data.num_groups
     
-    grouped_reps = [];
-    
-    % For all the groups of data
-    for j = 1:num_groups
-                
-        temp_grouped_rep_mat = [];
-        
-        % Assemble groups of data
-        for g = 1:numel(data.group_size)
-            
-            temp_grouped_rep_mat(g,:) = data.raw{curr_group(g)}(1:data.num_reps,:); %#ok<*AGROW>
-            
+    %--Iterate over each fly for this set of turning bouts and average 
+    % within the one fly's turning response
+
+    for j = 1:numel(data.raw)
+        %--Use appropriate averaging method    
+        if sum(strcmpi(data.moct_method,'median'))
+            multi_fly_turn_resp_group(j,:) = median(data.raw{j}(curr_group,:)); %#ok<*AGROW>
+        else
+            multi_fly_turn_resp_group(j,:) = mean(data.raw{j}(curr_group,:));
         end
-        
-        % Average the group of the single fly's data
-        grouped_reps(j,:) = mean(temp_grouped_rep_mat);
-        
-        % Assemble each group across flies into a cell array (for moct)
-        across_fly_groups{j}(i,:) = temp_grouped_rep_mat;
-        
-        curr_group = curr_group + data.group_size;
-        
+    end
+
+    %--Average across the group of averaged fly turing responses
+    
+    %--Use appropriate averaging method    
+    if sum(strcmpi(data.moct_method,'median'))
+        fly_group_turn_resp_averages{i} = median(multi_fly_turn_resp_group);
+    else
+        fly_group_turn_resp_averages{i} = mean(multi_fly_turn_resp_group);
     end
     
-    % here {i} is the fly, this is unused right now, but could be useful
-    fly_group_averages{i} = grouped_reps;
+    fly_group_turn_resp_variance{i} =  std(multi_fly_turn_resp_group) / sqrt(numel(data.raw));
+
+    clear multi_fly_turn_resp_group;
+    
+    curr_group = curr_group + data.group_size;
     
 end
 
-% Calculate averages and variances
-for i = 1:numel(across_fly_groups)
-   averages(i,:) = mean(across_fly_groups{i});
-   variance(i,:) = std(across_fly_groups{i}) / sqrt(numel(data.raw));
-end
+% Push out from function
+averages = fly_group_turn_resp_averages;
+variance = fly_group_turn_resp_variance;
+

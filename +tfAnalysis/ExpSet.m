@@ -390,11 +390,17 @@ classdef ExpSet < handle
                 cond_num_mat,daq_channel,get_samples)
             cond_data = {};
             for g = 1:numel(cond_num_mat)
+                exp_iter = 0;
                 for i = 1:numel(self.experiment)
-                    rep_idx = self.experiment{i}.cond_rep_index{cond_num_mat(g)};
-                    for j = 1:numel(rep_idx);
-                        if self.experiment{i}.trial{rep_idx(j)}.data{1}.isvalid
-                            cond_data{i,g}(j,:) = get_samples(getfield(self.experiment{i}.trial{rep_idx(j)}.data{1},daq_channel)); %#ok<*FNDSB,*GFLD>
+                    if ~isempty(self.experiment{i})
+                        exp_iter = exp_iter + 1;
+                        rep_idx = self.experiment{i}.cond_rep_index{cond_num_mat(g)};
+                        
+                        for j = 1:numel(rep_idx);
+                            % Check for isvalid
+                            if self.experiment{exp_iter}.trial{rep_idx(j)}.data{1}.isvalid
+                                cond_data{i,g}(j,:) = get_samples(getfield(self.experiment{exp_iter}.trial{rep_idx(j)}.data{1},daq_channel)); %#ok<*FNDSB,*GFLD>
+                            end
                         end
                     end
                 end

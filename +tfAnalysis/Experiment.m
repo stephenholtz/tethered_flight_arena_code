@@ -43,8 +43,8 @@ classdef Experiment < handle
         % A cell array of trials
         trial
         
-        % A cell array {C}[R] where R = condition repetitions and C =
-        % condition numbers and the values are the trial indecies
+        % A cell array {C}[r_inds] where C is the condition number and
+        % r_inds are the indices in the trial field.
         cond_rep_index
         
     end
@@ -82,7 +82,7 @@ classdef Experiment < handle
             % For each of the cols (condition numbers)
             for c = 1:size(temp_rep_index,2)
                 self.cond_rep_index{c} = [];
-                for r = 1:size(temp_rep_index,2)
+                for r = 1:size(temp_rep_index,1)
                     self.cond_rep_index{c} = [self.cond_rep_index{c} temp_rep_index{r,c}];
                 end
             end

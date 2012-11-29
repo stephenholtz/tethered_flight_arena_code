@@ -47,15 +47,7 @@ default_reps = 3;
 default_record = true;
 check_flying = true;
 randomize = 1;
-
-[~,comp_name] = system('echo %COMPUTERNAME%');
-if isempty(strfind(comp_name,'REISER-WW6'))
-    % By default use the puffer 'type 1' in Exp.Utilities.startle_animal
-    startle_type = 1;
-else
-    % Otherwise use the fan 'type 2' in Exp.Utilities.startle_animal    
-    startle_type = 2;
-end
+startle_type = 1; %1 works well with buzzer and puffer
 
 disp('STANDARD PROTOCOL STARTING')
 
@@ -301,9 +293,9 @@ disp('STANDARD PROTOCOL STARTING')
     else
         stop(DAQ_dev);
     end
-
+    
     res = Exp.Utilities.move_save_files(daq_location,data_location,cond_struct,metadata,path_files);
-
+    
     % Stop the timer.
     timer = toc(tID);
     

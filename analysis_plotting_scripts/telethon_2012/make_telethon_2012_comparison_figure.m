@@ -31,30 +31,23 @@ destination_folder = fullfile(data_location,filesep,'..','analysis_figures');
 
 mkdir(destination_folder);
 
-% My figure testing lines (folder names)
-% geno_names{1} = 'gmr_26a03dbd_gal80ts_kir21';
-% geno_names{2} = 'gmr_35b06dbd_gal80ts_kir21';
-% geno_names{3} = 'gmr_35d04ad_gal80ts_kir21';
-% geno_names{4} = 'gmr_91b01dbd_gal80ts_kir21';
-
-
 
 %--Begin MainFunc--%
 geno_names = varargin{1};
 for g = 1:numel(geno_names)
-    stable_dir_name = dir(fullfile(data_location,[geno_names{g},'*']));
-    location = fullfile(data_location,stable_dir_name.name);
-
-    if exist(fullfile(location,'processed_data.mat'),'file')
-        load(fullfile(location,'processed_data.mat'));
-        fprintf(['Loaded: ' num2str(g) ' of ' num2str(numel(geno_names)) '\n']);
-    else
-        processed_data = load_data(location);
-    end
-    
-    geno_data{g} = tfAnalysis.ExpSet(processed_data); %#ok<*AGROW>
-    
-    clear processed_data force
+        stable_dir_name = dir(fullfile(data_location,[geno_names{g},'*']));
+        location = fullfile(data_location,stable_dir_name.name);
+        file_name = dir(fullfile(location,'*summary.mat'));
+        pd= [];
+        if exist(fullfile(location,file_name.name),'file')
+            pd = load(fullfile(location,file_name.name));
+            fprintf(['Loaded: ' num2str(g) ' of ' num2str(numel(geno_names)) '\n']);
+        else
+            disp('no processed summary data!')
+        end
+        
+        geno_data{g} = tfAnalysis.ExpSet(eval(['pd.' file_name.name(1:end-4)])); %#ok<*AGROW>
+        clear pd
 end
 
 % Gross global colormap variable
@@ -103,34 +96,34 @@ end
     function handle = make_all_sub_figures(geno_data)
         indiv_flag = 0;
         iter = 1; 
-%         
-%         handle{iter} = make_full_field_rotation(geno_data,indiv_flag);        % DONE - still need to make raw turning figs 
+        
+        handle{iter} = make_full_field_rotation(geno_data,indiv_flag);        % DONE - still need to make raw turning figs 
+        iter = iter + 1;
+        handle{iter} = make_full_field_expansion(geno_data,indiv_flag);       % DONE - still need to make raw turning figs 
+        iter = iter + 1;
+        handle{iter} = make_lateral_flicker(geno_data,indiv_flag);            % DONE - still need to make raw turning figs 
+        iter = iter + 1;
+        handle{iter} = make_low_contrast_rotation(geno_data,indiv_flag);      % DONE - still need to make raw turning figs 
+        iter = iter + 1;
+        handle{iter} = make_reverse_phi_rotation(geno_data,indiv_flag);       % DONE - still need to make raw turning figs 
+        iter = iter + 1;
+        handle{iter} = make_stripe_oscillation(geno_data,indiv_flag);         % DONE - still need to make raw turning figs 
+        iter = iter + 1;
+        handle{iter} = make_regressive_motion(geno_data,indiv_flag);          % DONE - still need to make raw turning figs 
+        iter = iter + 1;
+        handle{iter} = make_progressive_motion(geno_data,indiv_flag);         % DONE - still need to make raw turning figs 
+        iter = iter + 1;
+        handle{iter} = make_on_off_expansion(geno_data,indiv_flag);           % DONE - still need to make raw turning figs 
+        iter = iter + 1;
+        handle{iter} = make_on_off_sawtooth(geno_data,indiv_flag);            % DONE - still need to make raw turning figs 
+        iter = iter + 1;
+        handle{iter} = make_optic_flow_oscillation(geno_data,indiv_flag);     % DONE
+        iter = iter + 1;
+%         handle{iter} = make_velocity_nulling(geno_data,indiv_flag);           % NEED TO MAKE!
 %         iter = iter + 1;
-%         handle{iter} = make_full_field_expansion(geno_data,indiv_flag);       % DONE - still need to make raw turning figs 
-%         iter = iter + 1;
-%         handle{iter} = make_lateral_flicker(geno_data,indiv_flag);            % DONE - still need to make raw turning figs 
-%         iter = iter + 1;
-%         handle{iter} = make_low_contrast_rotation(geno_data,indiv_flag);      % DONE - still need to make raw turning figs 
-%         iter = iter + 1;
-%         handle{iter} = make_reverse_phi_rotation(geno_data,indiv_flag);       % DONE - still need to make raw turning figs 
-%         iter = iter + 1;
-%         handle{iter} = make_stripe_oscillation(geno_data,indiv_flag);         % DONE - still need to make raw turning figs 
-%         iter = iter + 1;
-%         handle{iter} = make_regressive_motion(geno_data,indiv_flag);          % DONE - still need to make raw turning figs 
-%         iter = iter + 1;
-%         handle{iter} = make_progressive_motion(geno_data,indiv_flag);         % DONE - still need to make raw turning figs 
-%         iter = iter + 1;
-%         handle{iter} = make_on_off_expansion(geno_data,indiv_flag);           % DONE - still need to make raw turning figs 
-%         iter = iter + 1;
-%         handle{iter} = make_on_off_sawtooth(geno_data,indiv_flag);            % DONE - still need to make raw turning figs 
-%         iter = iter + 1;
-%         handle{iter} = make_optic_flow_oscillation(geno_data,indiv_flag);     % DONE
-%         iter = iter + 1;
-        handle{iter} = make_velocity_nulling(geno_data,indiv_flag);           % NEED TO MAKE!
-%         iter = iter + 1;
-%         handle{iter} = make_stripe_fixation(geno_data,indiv_flag);            % DONE
-%         iter = iter + 1;
-%         handle{iter} = make_small_object_oscillation(geno_data,indiv_flag);   % DONE
+        handle{iter} = make_stripe_fixation(geno_data,indiv_flag);            % DONE
+        iter = iter + 1;
+        handle{iter} = make_small_object_oscillation(geno_data,indiv_flag);   % DONE
         
     end
     

@@ -57,26 +57,47 @@ classdef Utilities
         function [time voltage] = set_Panel_com(cond_struct)
         % Runs a condition based on the fields of the struct. Returns the
         % time that it should be allowed to run (a pause).
-            Panel_com('set_pattern_id',cond_struct.PatternID);     
-            Panel_com('set_position',cond_struct.InitialPosition);            
-            Panel_com('set_mode',cond_struct.Mode);
-            % Deal with values over 127. By adding in a bias too -- this
-            % means for things to work properly and transparently ONLY the
-            % gains should be changed in the condition function that makes
-            % the cond_struct.
-            if abs(cond_struct.Gains(1))>127
-                cond_struct.Gains(2) = cond_struct.Gains(1)/2.5;
-                cond_struct.Gains(1) = 0;                
-            elseif abs(cond_struct.Gains(3))>127
-                cond_struct.Gains(4) = cond_struct.Gains(2)/2.5;
-                cond_struct.Gains(3) = 0;  
+        
+        % For the most recent version of the panels, there is a fast mode
+        % that can load patterns to panels, check the field 'display_type'
+        % Also can use higher gain values.
+            if isfield(cond_struct,'DisplayType') && sum(strcmpi(cond_struct.DisplayType,'panels'))
+                
+                Panel_com('load_pattern2_panels',cond_struct.PatternID);
+                pause(.005) % Takes a bit of time to load the pattern
+                Panel_com('set_position',cond_struct.InitialPosition);
+                pause(.005) % For some reason this also takes some time
+                Panel_com('set_mode',cond_struct.Mode);
+                Panel_com('send_gain_bias',cond_struct.Gains);
+                Panel_com('set_posfunc_id',cond_struct.PosFunctionY);
+                Panel_com('set_posfunc_id',cond_struct.PosFunctionX);
+                Panel_com('set_funcy_freq',cond_struct.FuncFreqY);
+                Panel_com('set_funcx_freq',cond_struct.FuncFreqX);
+                
+            else
+                
+                Panel_com('set_pattern_id',cond_struct.PatternID);     
+                Panel_com('set_position',cond_struct.InitialPosition);            
+                Panel_com('set_mode',cond_struct.Mode);
+                % Deal with values over 127. By adding in a bias too -- this
+                % means for things to work properly and transparently ONLY the
+                % gains should be changed in the condition function that makes
+                % the cond_struct.
+                if abs(cond_struct.Gains(1))>127
+                    cond_struct.Gains(2) = cond_struct.Gains(1)/2.5;
+                    cond_struct.Gains(1) = 0;                
+                elseif abs(cond_struct.Gains(3))>127
+                    cond_struct.Gains(4) = cond_struct.Gains(2)/2.5;
+                    cond_struct.Gains(3) = 0;  
+                end
+                Panel_com('send_gain_bias',cond_struct.Gains);
+                Panel_com('set_posfunc_id',cond_struct.PosFunctionY);
+                Panel_com('set_posfunc_id',cond_struct.PosFunctionX);
+                Panel_com('set_funcy_freq',cond_struct.FuncFreqY);
+                Panel_com('set_funcx_freq',cond_struct.FuncFreqX);
+                
             end
-            Panel_com('send_gain_bias',cond_struct.Gains);
-            Panel_com('set_posfunc_id',cond_struct.PosFunctionY);
-            Panel_com('set_posfunc_id',cond_struct.PosFunctionX);
-            Panel_com('set_funcy_freq',cond_struct.FuncFreqY);
-            Panel_com('set_funcx_freq',cond_struct.FuncFreqX);
-            
+        
             time = cond_struct.Duration;
             voltage = cond_struct.Voltage;
         end

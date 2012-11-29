@@ -1,26 +1,11 @@
 % Make comparison across all genotypes for turning figure
 
-geno_names{1} = 'gmr_OL00XX_gal80ts_kir21';
-geno_names{2} = 'gmr_OL0001_gal80ts_kir21';
-geno_names{3} = 'gmr_OL0004_gal80ts_kir21';
-geno_names{4} = 'gmr_OL0008_gal80ts_kir21';
-geno_names{5} = 'gmr_OL0011_gal80ts_kir21';
-geno_names{6} = 'gmr_OL0013_gal80ts_kir21';
-geno_names{7} = 'gmr_OL0016_gal80ts_kir21';
-geno_names{8} = 'gmr_OL0017_gal80ts_kir21';
-geno_names{9} = 'gmr_OL0018_gal80ts_kir21';
-geno_names{10} = 'gmr_OL0020_gal80ts_kir21';
-geno_names{11} = 'gmr_OL0021_gal80ts_kir21';
-geno_names{12} = 'gmr_OL0023_gal80ts_kir21';
-geno_names{13} = 'gmr_OL0025_gal80ts_kir21';
-geno_names{14} = 'gmr_OL0028_gal80ts_kir21';
-geno_names{15} = 'gmr_OL0030_gal80ts_kir21';
-geno_names{16} = 'gmr_OL0031_gal80ts_kir21';
-geno_names{17} = 'gmr_OL0033_gal80ts_kir21';
-geno_names{18} = 'gmr_OL0035_gal80ts_kir21';
-geno_names{19} = 'gmr_OL0038_gal80ts_kir21';
+geno_names{1} = 'gmr_OL0017_gal80ts_kir21_1';
+geno_names{2} = 'gmr_OL0017_gal80ts_kir21_2';
+geno_names{3} = 'gmr_OL0033_gal80ts_kir21_1';
+geno_names{4} = 'gmr_OL0033_gal80ts_kir21_2';
 
-data_location = '/Volumes/STEPHEN32SD/telethon_experiment_2012';
+data_location = '/Volumes/STEPHEN32SD/telethon_experiment_2012_testing/';
 
 if 0
     
@@ -140,25 +125,8 @@ ONLY_CONTROLS = 0;
 
 load(fullfile(data_location,'tuning_curves_saved'));
     
-graph_sets = {[1 1],...
-              [1 2],...    
-              [1 3],...
-              [1 4],...
-              [1 5],...
-              [1 6],... 
-              [1 7],...
-              [1 8],...
-              [1 9],...
-              [1 10],...
-              [1 11],...
-              [1 12],...
-              [1 13],...
-              [1 14],...
-              [1 15],...
-              [1 16],...
-              [1 17],...
-              [1 18],...
-              [1 19]};
+graph_sets = {[1 2],...
+              [3 4]};
 
           
 mycolormap = {[.5 .5 0],[.5 0 0],[.5 0 .5],[0 .5 .5],[.9 .25 .25]};
@@ -196,16 +164,10 @@ for f = 1:4
         end
         
         % calculate the median of all the curves and use as a control....
-        avg = [];
-        for g = 1:19
-            avg(g,:) = (tuning_curves.(field){graph_sets{g}(2)}.avg);
-            %variance{g} = (tuning_curves.(field){i}.sem);
-        end
-        
         %for g = 1:numel(graph_sets{i})
         
-        graph.avg{1} = median(avg);
-        graph.variance{1} = [];
+        graph.avg{1} = (tuning_curves.(field){graph_sets{i}(1)}.avg);
+        graph.variance{1} = (tuning_curves.(field){graph_sets{i}(1)}.sem);
         
         graph.avg{2} = (tuning_curves.(field){graph_sets{i}(2)}.avg);
         graph.variance{2} = (tuning_curves.(field){graph_sets{i}(2)}.sem);
@@ -234,8 +196,8 @@ for f = 1:4
 
         
         if numel(graph_sets{i}) == 2
-            graph.color{1} = [.15 .15 .5];%mycolormap{3};
-            graph.color{2} = [1 .65 0];%mycolormap{5};
+            graph.color{1} = [238 0 238]/255;%[.15 .15 .5];  %mycolormap{3};
+            graph.color{2} = [255 99 71]/255;%[1 .65 0];     %mycolormap{5};
         else
             graph.color{1} = mycolormap{1};
             graph.color{2} = mycolormap{2};
@@ -331,9 +293,9 @@ for f = 1:4
         
     end
     if ONLY_CONTROLS
-        export_fig(handle(1),fullfile(data_location,filesep,'..','vpn_ii_analysis_figures',['vpn_' field 'large_controls']),'-pdf')
+        export_fig(handle(1),fullfile(data_location,filesep,'..','vpn_ii_sanity_figures',['vpn_' field 'large_controls']),'-pdf')
     else
-        export_fig(handle(1),fullfile(data_location,filesep,'..','vpn_ii_analysis_figures',['vpn_' field 'shaded_w_N']),'-pdf')
+        export_fig(handle(1),fullfile(data_location,filesep,'..','vpn_ii_sanity_figures',['vpn_' field 'shaded_w_N']),'-pdf')
     end
 end
 

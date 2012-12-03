@@ -2,6 +2,8 @@ function [Conditions] = high_res_tuning_curves_v01
 % Protocol for making higher resolution tuning curves for regressive,
 % progressive, and full field motion. This will use the (now) newer panels
 % funcitonality to load patterns directly onto the panels
+% Figuring out symmetric regressive and progressive motion will NOT be
+% every other stimulus (for ease of creating this file)
 
 % get to the correct directory
 switch computer
@@ -30,17 +32,22 @@ total_ol_dur = 0;
 frequency = 50;
 duration = 2.25;
 
-% Iterate through the different optomotor stimuli
-for pattern = [1 2 3 4 5 6] % 1 2 3 = 60 degrees, 4 5 6 = 30 degrees
+% Iterate through the different optomotor stimuli.
+%
+% repeats full field, left, right for a few different pattern types
+% 1 2 3 = 30 degrees, 4 5 6 = 60 degrees, 7 8 9 = 30 rp, 10 11 12 = 60 rp 
+for pattern = [1 2 3 4 5 6 10 11 12] 
     
-    if pattern > 3
-        % For the 30 degree patterns (spat wavelength) use 12 different speeds
-        for speed = [.25 .5 2 4 6 8 12 25 50 75 100]*8; % fps/(4*2) = [.25 .5 2 4 6 8 12 25 50 75 100]Hz
+    if pattern < 4
+        % For the 30 degree patterns (spat wavelength) use 10 different speeds
+        for speed = [.25, .5, 2, 4, 8, 12, 25, 50, 75, 100]*8;
             for direction = [1 2]
                 
+                % This feeds into a switch statement in Run.Utilities.set_panel_com
                 Conditions(cond_num).DisplayType = 'panels';
-                Conditions(cond_num).PatternID = 1; %#ok<*AGROW>
-                Conditions(cond_num).PatternName = patterns{1};
+                
+                Conditions(cond_num).PatternID = pattern; %#ok<*AGROW>
+                Conditions(cond_num).PatternName = patterns{pattern};
                 Conditions(cond_num).PatternLoc  = pattern_loc;
                 Conditions(cond_num).Mode           = [0 0];
                 Conditions(cond_num).InitialPosition= [1 1];
@@ -51,8 +58,8 @@ for pattern = [1 2 3 4 5 6] % 1 2 3 = 60 degrees, 4 5 6 = 30 degrees
                     Conditions(cond_num).Gains          = [-speed 0 0 0];
                 end
                 
-                Conditions(cond_num).PosFunctionX   = [1 1];
-                Conditions(cond_num).PosFunctionY 	= [2 1];
+                Conditions(cond_num).PosFunctionX   = [1 0];
+                Conditions(cond_num).PosFunctionY 	= [2 0];
                 Conditions(cond_num).FuncFreqY 		= frequency;
                 Conditions(cond_num).FuncFreqX 		= frequency;
                 Conditions(cond_num).PosFuncLoc     = pos_func_loc;            
@@ -62,16 +69,18 @@ for pattern = [1 2 3 4 5 6] % 1 2 3 = 60 degrees, 4 5 6 = 30 degrees
                 total_ol_dur = total_ol_dur + Conditions(cond_num).Duration;
                 cond_num = cond_num + 1;
             end
-
         end
     else
         
-        % For the other patterns (diff spat wavelength) use only 6 speeds
-        for speed = [.5 4 8 12 50 75]*16 %
+        % For the 60 degree normal and reverse phi patterns use only 5 speeds
+        for speed = [.5 4 8 25 75]*16
             for direction = [1 2]
+                
+                % This feeds into a switch statement in Run.Utilities.set_panel_com                
                 Conditions(cond_num).DisplayType = 'panels';
-                Conditions(cond_num).PatternID = 1; %#ok<*AGROW>
-                Conditions(cond_num).PatternName = patterns{1};
+                
+                Conditions(cond_num).PatternID = pattern; %#ok<*AGROW>
+                Conditions(cond_num).PatternName = patterns{pattern};
                 Conditions(cond_num).PatternLoc  = pattern_loc;
                 Conditions(cond_num).Mode           = [0 0];
                 Conditions(cond_num).InitialPosition= [1 1];
@@ -82,8 +91,8 @@ for pattern = [1 2 3 4 5 6] % 1 2 3 = 60 degrees, 4 5 6 = 30 degrees
                     Conditions(cond_num).Gains          = [-speed 0 0 0];
                 end
                 
-                Conditions(cond_num).PosFunctionX   = [1 1];
-                Conditions(cond_num).PosFunctionY 	= [2 1];
+                Conditions(cond_num).PosFunctionX   = [1 0];
+                Conditions(cond_num).PosFunctionY 	= [2 0];
                 Conditions(cond_num).FuncFreqY 		= frequency;
                 Conditions(cond_num).FuncFreqX 		= frequency;
                 Conditions(cond_num).PosFuncLoc     = pos_func_loc;            
@@ -97,7 +106,7 @@ for pattern = [1 2 3 4 5 6] % 1 2 3 = 60 degrees, 4 5 6 = 30 degrees
     end
 end
 
-% closed loop inter trial stimulus
+% closed loop inter-trial stimulus
 Conditions(cond_num).PatternID      = numel(patterns); % single stripe 8 wide, same contrast as rev phi stims
 Conditions(cond_num).PatternName    = patterns(numel(patterns));
 Conditions(cond_num).PatternLoc     = pattern_loc;

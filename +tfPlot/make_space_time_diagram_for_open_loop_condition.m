@@ -24,7 +24,7 @@ function std_hand = make_space_time_diagram_for_open_loop_condition(condition_st
 % 
 %% A few flags not (yet) in the function call:
 video_flag = 0;
-video_desired_height = 10;%720/4; %#ok<*NASGU>
+video_desired_height = 10;%#ok<*NASGU> %720/4
 condition_info_pdf_flag = 1;
 display_figure_flag = 0; % If loading figures and set to zero, will need to set(gcf,'Visible','on') to see it...
 color_mode = 'green'; %'green'; % 'alien'
@@ -73,6 +73,8 @@ switch condition_struct.Mode(1)
         num_frames(1) = condition_struct.FuncFreqX * condition_struct.Duration;
 end
 
+% For finding LCM later
+if num_frames(1) == 0; num_frames(1) = 1; end
 % Y Chan frames
 switch condition_struct.Mode(2)
     case 0
@@ -82,8 +84,11 @@ switch condition_struct.Mode(2)
         num_frames(2) = condition_struct.FuncFreqY * condition_struct.Duration;
 end
 
-% Sometimes one gain or frequency is set to zero, so use the larger one
-num_frames = max(floor(abs(num_frames)));
+% For finding LCM later
+if num_frames(2) == 0; num_frames(2) = 1; end
+
+% Find the LCM
+num_frames = lcm(abs(num_frames(1)),abs(num_frames(2)));
 
 % Through all of the frames for x and y channels using position function if
 % needed, folding the number of pattern repeats into the correct numbers 
@@ -110,7 +115,7 @@ elseif condition_struct.Mode(1) == 0
 
         for frame = 2:num_frames
 
-            if ~mod(frames_between_moves,1);
+            if ~mod(frame,frames_between_moves);
                 x_index(frame) = x_index(frame-1) + sign(condition_struct.Gains(1));
             else
                 x_index(frame) = x_index(frame-1);
@@ -142,7 +147,7 @@ elseif condition_struct.Mode(2) == 0
 
         for frame = 2:num_frames
 
-            if ~mod(frames_between_moves,1);
+            if ~mod(frame,frames_between_moves);
                 y_index(frame) = y_index(frame-1) + sign(condition_struct.Gains(3));
             else
                 y_index(frame) = y_index(frame-1);

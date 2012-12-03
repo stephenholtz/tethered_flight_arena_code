@@ -56,7 +56,7 @@ classdef Experiment < handle
         function self = main(self)
             % Default the experiment to selected
             self.selected = 1;
-            self = eliminate_failed_trials(self);
+            %self = eliminate_failed_trials(self);
             self = make_cond_rep_index(self);
         end
         

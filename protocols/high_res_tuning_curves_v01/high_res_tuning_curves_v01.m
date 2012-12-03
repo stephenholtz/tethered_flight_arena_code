@@ -36,7 +36,7 @@ duration = 2.25;
 %
 % repeats full field, left, right for a few different pattern types
 % 1 2 3 = 30 degrees, 4 5 6 = 60 degrees, 7 8 9 = 30 rp, 10 11 12 = 60 rp 
-for pattern = [1 2 3 4 5 6 10 11 12] 
+for pattern = [1 2 3 4 5 6 10 11 12]
     
     if pattern < 4
         % For the 30 degree patterns (spat wavelength) use 10 different speeds

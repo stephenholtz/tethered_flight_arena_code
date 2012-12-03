@@ -68,9 +68,9 @@ load(pattern_location);
 switch condition_struct.Mode(1)
     case 0
         fps(1) = condition_struct.Gains(1) + condition_struct.Gains(2)*2.5;
-        num_frames(1) = fps(1) * condition_struct.Duration;
+        num_frames(1) = ceil(fps(1) * condition_struct.Duration);
     case 4
-        num_frames(1) = condition_struct.FuncFreqX * condition_struct.Duration;
+        num_frames(1) = ceil(ondition_struct.FuncFreqX * condition_struct.Duration);
 end
 
 % For finding LCM later
@@ -79,9 +79,9 @@ if num_frames(1) == 0; num_frames(1) = 1; end
 switch condition_struct.Mode(2)
     case 0
         fps(2) = condition_struct.Gains(3) + condition_struct.Gains(4)*2.5;        
-        num_frames(2) = fps(2) * condition_struct.Duration;
+        num_frames(2) = ceil(fps(2) * condition_struct.Duration);
     case 4
-        num_frames(2) = condition_struct.FuncFreqY * condition_struct.Duration;
+        num_frames(2) = ceil(condition_struct.FuncFreqY * condition_struct.Duration);
 end
 
 % For finding LCM later
@@ -179,7 +179,12 @@ grayscale_color_map(grayscale_color_map == -1) = linspace(0,1,pattern.gs_val^2-1
 
 %% Make the space time video and diagram
 % add 1 because there are zero values in the pattern
-st_image = [];
+% Preallocate the image
+if verbose; fprintf(1,'Preallocating Frames...'); end
+
+st_image = zeros(num_frames*size(pattern.Pats,1),num_frames*size(pattern.Pats,2));
+if verbose; fprintf(1,'\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b'); end
+
 
 if verbose; fprintf(1,'Making Frames: 000000 of 000000'); end
 
@@ -197,6 +202,8 @@ if video_flag
     movie_images(:,:,:,:) = zeros(ceil(scale_factor*frame_height),ceil(scale_factor*frame_width),3,num_frames);
 end
 
+
+
 for frame = 1:num_frames
     if pattern.row_compression
         full_frame = repmat(pattern.Pats(:,:,x_index(frame),y_index(frame)), 8, 1);
@@ -209,7 +216,9 @@ for frame = 1:num_frames
     
     % Keep appending to bottom of image
     rows = (1+size(st_image,1)):(size(st_image,1)+size(full_frame,1));
-    st_image(rows,:) = full_frame; %#ok<*AGROW>
+    cols = (1+size(st_image,2)):(size(st_image,2)+size(full_frame,2));
+    
+    st_image(rows,cols) = full_frame(:,:); %#ok<*AGROW>
     
     if video_flag
         % Store movie images in this format (MxNxRGBxFrame)

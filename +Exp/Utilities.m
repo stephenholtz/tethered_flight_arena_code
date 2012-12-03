@@ -63,16 +63,18 @@ classdef Utilities
         % Also can use higher gain values.
             if isfield(cond_struct,'DisplayType') && sum(strcmpi(cond_struct.DisplayType,'panels'))
                 
-                Panel_com('load_pattern2_panels',cond_struct.PatternID);
+                Panel_com('load_pattern_2panels',cond_struct.PatternID);
                 pause(.005) % Takes a bit of time to load the pattern
                 Panel_com('set_position',cond_struct.InitialPosition);
                 pause(.005) % For some reason this also takes some time
                 Panel_com('set_mode',cond_struct.Mode);
                 Panel_com('send_gain_bias',cond_struct.Gains);
-                Panel_com('set_posfunc_id',cond_struct.PosFunctionY);
-                Panel_com('set_posfunc_id',cond_struct.PosFunctionX);
-                Panel_com('set_funcy_freq',cond_struct.FuncFreqY);
-                Panel_com('set_funcx_freq',cond_struct.FuncFreqX);
+                
+                % For now leave this out, need to reconvene with Jin - 12/12
+                %Panel_com('set_posfunc_id',cond_struct.PosFunctionY);
+                %Panel_com('set_posfunc_id',cond_struct.PosFunctionX);
+                %Panel_com('set_funcy_freq',cond_struct.FuncFreqY);
+                %Panel_com('set_funcx_freq',cond_struct.FuncFreqX);
                 
             else
                 

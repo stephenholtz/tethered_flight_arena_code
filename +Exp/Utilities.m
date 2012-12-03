@@ -64,12 +64,13 @@ classdef Utilities
             if isfield(cond_struct,'DisplayType') && sum(strcmpi(cond_struct.DisplayType,'panels'))
                 
                 Panel_com('load_pattern_2panels',cond_struct.PatternID);
-                pause(.005) % Takes a bit of time to load the pattern
+                pause(.05) % Takes a bit of time to load the pattern
                 Panel_com('set_position',cond_struct.InitialPosition);
-                pause(.005) % For some reason this also takes some time
+                pause(.05) % For some reason this also takes some time
                 Panel_com('set_mode',cond_struct.Mode);
+                pause(.05)
                 Panel_com('send_gain_bias',cond_struct.Gains);
-                
+                pause(.05)
                 % For now leave this out, need to reconvene with Jin - 12/12
                 %Panel_com('set_posfunc_id',cond_struct.PosFunctionY);
                 %Panel_com('set_posfunc_id',cond_struct.PosFunctionX);

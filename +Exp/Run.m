@@ -169,6 +169,18 @@ disp('STANDARD PROTOCOL STARTING')
                 start(AI_stim_sync)
                 stim_start_trigger = getdata(AI_stim_sync);
                 if toc(ticHandle) > 5
+                    % if some time past the first stimulus there is an
+                    % error, send an email!
+                    if numel(cond_nums) < (Nconds-2)
+                        
+                        email_subject = ['WARNING: tfExperiment on ' metadata.Arena ' Requires Attention.'];
+                        email_message = ['Stimulus failed.'];
+                        disp(email_message);                
+                        result = Exp.Utilities.send_email(email_subject,email_message);
+                        
+                        if ~result; disp('Error sending stim fail email');
+                        end
+                    end
                     error('Stimulus failed to display for 5 seconds')
                 end
             end

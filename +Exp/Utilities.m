@@ -80,7 +80,7 @@ classdef Utilities
             else
                 
                 Panel_com('set_pattern_id',cond_struct.PatternID);     
-                Panel_com('set_position',cond_struct.InitialPosition);            
+                Panel_com('set_position',cond_struct.InitialPosition);
                 Panel_com('set_mode',cond_struct.Mode);
                 % Deal with values over 127. By adding in a bias too -- this
                 % means for things to work properly and transparently ONLY the

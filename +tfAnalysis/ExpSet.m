@@ -227,8 +227,8 @@ classdef ExpSet < handle
             
             if ~exist('num_samples','var')
                 
-                for i = 1:size(cond_num_mat,1)
-                    [cond_data{i} sem{i}] = self.get_trial_data(cond_num_mat{i},daq_channel,computation,use_sym_conds,average_type);
+                for i = 1:numel(cond_num_mat)
+                    [cond_data{i}, sem{i}] = self.get_trial_data(cond_num_mat{i},daq_channel,computation,use_sym_conds,average_type);
                 end
                 
             else

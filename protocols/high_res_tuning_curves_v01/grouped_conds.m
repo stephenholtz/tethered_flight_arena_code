@@ -12,8 +12,8 @@
 sym_conditions = [];
 
 grouped_conditions{1}.name = '30 Degree Standard Phi Full Field'; % OKAY
-grouped_conditions{1}.tf = [ .25, .5, 2, 4, 8, 12, 25, 75, 100];
-grouped_conditions{1}.speed = [ .25, .5, 2, 4, 8, 12, 25, 75, 100]*8;
+grouped_conditions{1}.tf = [.25, .5, 2, 4, 8, 12, 25, 50, 75, 100];
+grouped_conditions{1}.speed = [.25, .5, 2, 4, 8, 12, 25, 50, 75, 100]*8;
 grouped_conditions{1}.list = {[1,2],...
                               [3,4],...
                               [5,6],...
@@ -26,8 +26,8 @@ grouped_conditions{1}.list = {[1,2],...
                               [19,20]};
 
 grouped_conditions{2}.name = '30 Degree Standard Phi Progressive Motion'; % OKAY
-grouped_conditions{2}.tf = [ .25, .5, 2, 4, 8, 12, 25, 75, 100];
-grouped_conditions{2}.speed = [ .25, .5, 2, 4, 8, 12, 25, 75, 100]*8;
+grouped_conditions{2}.tf = [.25, .5, 2, 4, 8, 12, 25, 50, 75, 100];
+grouped_conditions{2}.speed = [.25, .5, 2, 4, 8, 12, 25, 50, 75, 100]*8;
 grouped_conditions{2}.direction = 'Progressive';
 grouped_conditions{2}.list = {[22,41],...
                               [24,43],...
@@ -41,8 +41,8 @@ grouped_conditions{2}.list = {[22,41],...
                               [40,59]};
 
 grouped_conditions{3}.name = '30 Degree Standard Phi Regressive Motion'; % OKAY
-grouped_conditions{3}.tf = [ .25, .5, 2, 4, 8, 12, 25, 75, 100];
-grouped_conditions{3}.speed = [ .25, .5, 2, 4, 8, 12, 25, 75, 100]*8;
+grouped_conditions{3}.tf = [.25, .5, 2, 4, 8, 12, 25, 50, 75, 100];
+grouped_conditions{3}.speed = [.25, .5, 2, 4, 8, 12, 25, 50, 75, 100]*8;
 grouped_conditions{3}.direction = 'Regressive';
 grouped_conditions{3}.list = {[21,42],...
                               [23,44],...

@@ -1,8 +1,9 @@
 % Process the files for the VPN telethon
 % exp_dir = '/Users/holtzs/Desktop/telethon_experiment_2012';
 % exp_dir = '/Volumes/STEPHEN32SD/telethon_experiment_2012';
-exp_dir = '/Volumes/STEPHEN32SD/telethon_experiment_2012_testing';
-
+% exp_dir = '/Volumes/STEPHEN32SD/telethon_experiment_2012_testing';
+exp_dir = '/Volumes/lacie-temp-external/vpn_screen/set_2_telethon_experiment_2012';
+exp_dir = '/Volumes/lacie-temp-external/vpn_screen/set_1_telethon_experiment_2012';
 cd(exp_dir);
 genotypes = dir(exp_dir);
 

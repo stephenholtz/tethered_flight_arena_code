@@ -108,6 +108,8 @@ classdef Experiment < handle
 
                 if ~sum(cell2mat(temp_success_index))
                     failed = 1;
+                    disp(self.arena)
+                    disp(g)
                 end
 
                 temp_success_index = [];

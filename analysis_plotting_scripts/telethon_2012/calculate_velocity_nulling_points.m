@@ -4,33 +4,35 @@ a = 1;
 
 switch a
     case 1
-        geno_names{1} = 'gmr_OL00XX_gal80ts_kir21';
-        geno_names{2} = 'gmr_OL0001_gal80ts_kir21';
-        geno_names{3} = 'gmr_OL0004_gal80ts_kir21';
-        geno_names{4} = 'gmr_OL0008_gal80ts_kir21';
-        geno_names{5} = 'gmr_OL0011_gal80ts_kir21';
-        geno_names{6} = 'gmr_OL0013_gal80ts_kir21';
-        geno_names{7} = 'gmr_OL0016_gal80ts_kir21';
-        geno_names{8} = 'gmr_OL0017_gal80ts_kir21';
-        geno_names{9} = 'gmr_OL0018_gal80ts_kir21';
-        geno_names{10} = 'gmr_OL0020_gal80ts_kir21';
-        geno_names{11} = 'gmr_OL0021_gal80ts_kir21';
-        geno_names{12} = 'gmr_OL0023_gal80ts_kir21';
-        geno_names{13} = 'gmr_OL0025_gal80ts_kir21';
-        geno_names{14} = 'gmr_OL0028_gal80ts_kir21';
-        geno_names{15} = 'gmr_OL0030_gal80ts_kir21';
-        geno_names{16} = 'gmr_OL0031_gal80ts_kir21';
-        geno_names{17} = 'gmr_OL0033_gal80ts_kir21';
-        geno_names{18} = 'gmr_OL0035_gal80ts_kir21';
-        geno_names{19} = 'gmr_OL0038_gal80ts_kir21';
-        
-        data_location = '/Volumes/STEPHEN32SD/telethon_experiment_2012';
+
+        geno_names{1} = 'gmr_OL0001_gal80ts_kir21';
+        geno_names{2} = 'gmr_OL0004_gal80ts_kir21';
+        geno_names{3} = 'gmr_OL0008_gal80ts_kir21';
+        geno_names{4} = 'gmr_OL0011_gal80ts_kir21';
+        geno_names{5} = 'gmr_OL0013_gal80ts_kir21';
+        geno_names{6} = 'gmr_OL0016_gal80ts_kir21';
+        geno_names{7} = 'gmr_OL0017_gal80ts_kir21';
+        geno_names{8} = 'gmr_OL0018_gal80ts_kir21';
+        geno_names{9} = 'gmr_OL0020_gal80ts_kir21';
+        geno_names{10} = 'gmr_OL0021_gal80ts_kir21';
+        geno_names{11} = 'gmr_OL0023_gal80ts_kir21';
+        geno_names{12} = 'gmr_OL0025_gal80ts_kir21';
+        geno_names{13} = 'gmr_OL0028_gal80ts_kir21';
+        geno_names{14} = 'gmr_OL0030_gal80ts_kir21';
+        geno_names{15} = 'gmr_OL0031_gal80ts_kir21';
+        geno_names{16} = 'gmr_OL0033_gal80ts_kir21';
+        geno_names{17} = 'gmr_OL0035_gal80ts_kir21';
+        geno_names{18} = 'gmr_OL0038_gal80ts_kir21';
+
+        %data_location = '/Volumes/STEPHEN32SD/telethon_experiment_2012';
+        data_location = '/Volumes/lacie-temp-external/vpn_screen/set_2_telethon_experiment_2012';
+
         
         graph_sets =   {[17 1],...
                         [17 2],...
                         [17 3],...
                         [17 4],...
-                        [17 5],...   
+                        [17 5],...
                         [17 6],...   
                         [17 7],...   
                         [17 8],...  
@@ -43,8 +45,7 @@ switch a
                         [17 15],...
                         [17 16],...
                         [17 17],...
-                        [17 18],...
-                        [17 19]};   
+                        [17 18]};   
     case 2
 
         geno_names{1} = 'gmr_OL0017_gal80ts_kir21_1';
@@ -266,7 +267,7 @@ if 1
             title({'',vel_null_summ(graph_sets{i}(2)).name(5:10)},'interpreter','none','FontSize',10)            
 
             export_fig(handle(i+1),fullfile(data_location,filesep,'..','vpn_ii_analysis_figures',[vel_null_summ(graph_sets{i}(2)).name(5:10) '_vel_null']),'-pdf')
-
+            
         end
     end % if 0/1
 end

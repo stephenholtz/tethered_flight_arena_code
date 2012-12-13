@@ -8,6 +8,10 @@ classdef ExpSet < handle
         grouped_conditions        
         sym_conditions
         
+        % scaling factors for each experiment
+        exp_scaling_factors
+        mean_turning_resp
+        
         % cell array of experiments
         experiment
     end
@@ -28,6 +32,7 @@ classdef ExpSet < handle
             self.protocol = tf_analysis_object.experiment{1}.protocol;
             self.experiment = tf_analysis_object.experiment;
             self = populate_condition_properties(self);
+            [self.exp_scaling_factors, self.mean_turning_resp] = self.get_scaling_factors();
         end
         
         function self = populate_condition_properties(self)
@@ -89,8 +94,30 @@ classdef ExpSet < handle
             end
         end
         
-        function [cond_data sem] = get_trial_data(self,...
-                cond_num_mat,daq_channel,computation,use_sym_conds,average_type,num_samples)
+        function [exp_scaling_factors, mean_turning_resp] = get_scaling_factors(self)
+            % Scaling factor is a per experiment scaling factor determined
+            % by the whole genotype's mean turning
+            
+            daq_channel = 'lmr';
+            
+            % get all of the condition numbers, except for the closed loop
+            % portion (the last condition number)
+            for i = 1:(numel(self.experiment{1}.cond_rep_index)-1)
+                condition_matrix{i} = i;
+            end
+            
+            overall_turning = mean(abs(cell2mat(get_trial_data_set(self,condition_matrix,daq_channel,'mean','no','exp',0))),2);
+            
+            mean_turning_resp = mean(overall_turning);
+            
+            for exp_num = 1:numel(self.experiment)
+                exp_scaling_factors(exp_num) = overall_turning(exp_num)/mean_turning_resp;
+            end
+            
+        end
+        
+        function [cond_data, sem] = get_trial_data(self,...
+                cond_num_mat,daq_channel,computation,use_sym_conds,average_type,normalization_flag,num_samples)
             % [cond_data sem] = get_trial_data(self,cond_num_mat,daq_channel,computation,use_sym_conds,average_type)
             
             if ~exist('num_samples','var')
@@ -100,7 +127,46 @@ classdef ExpSet < handle
             end
             
             % Get all of the data in one giant cell array to work on
-            temp_cond_data = return_multi_experiment_cond_data(self,cond_num_mat,daq_channel,get_samples);
+            % if the daq field is something that cannot simply be flipped
+            % and averaged (i.e. wbf, left wba, right wba) to get symmetry,
+            % need to pull out the correct fields for comparison
+            switch use_sym_conds
+                % If looking at left_amp, then the proper average is
+                % right_amp in the symmetric condition
+                case {1,'yes','true'}
+                    switch daq_channel
+                        case {'left_amp'}
+                            temp_cond_data(:,1) = return_multi_experiment_cond_data(self,cond_num_mat(:,1),'left_amp',normalization_flag,get_samples);
+                            temp_cond_data(:,2) = return_multi_experiment_cond_data(self,cond_num_mat(:,2),'right_amp',normalization_flag,get_samples);
+                        case {'right_amp'}
+                            temp_cond_data(:,1) = return_multi_experiment_cond_data(self,cond_num_mat(:,1),'right_amp',normalization_flag,get_samples);
+                            temp_cond_data(:,2) = return_multi_experiment_cond_data(self,cond_num_mat(:,2),'left_amp',normalization_flag,get_samples);
+                        otherwise
+                            temp_cond_data = return_multi_experiment_cond_data(self,cond_num_mat,daq_channel,normalization_flag,get_samples);
+                    end
+                    
+                otherwise
+                    temp_cond_data = return_multi_experiment_cond_data(self,cond_num_mat,daq_channel,normalization_flag,get_samples);
+            end
+
+            % Proper symmetric conditions depends on what field is being
+            % used
+            switch use_sym_conds
+                case {1,'yes','true'}
+                    switch daq_channel
+                        case {'lmr','x_pos','y_pos'}
+                            if size(temp_cond_data,2) == 2
+                                for j = 1:size(temp_cond_data,1)
+                                    temp_cond_data{j,2} = -temp_cond_data{j,2};
+                                end
+                            end
+                        case {'left_amp','right_amp','wbf'}
+                            % Nothing needs to ge changed, averaging etc.,
+                            % happens below.
+                        otherwise
+                            error('Symmetric conditions not defined for specified daq_channel')
+                    end
+            end
             
             % Function performed before averaging i.e. nothing, trapz, etc.
             switch computation
@@ -117,16 +183,6 @@ classdef ExpSet < handle
                 otherwise
                     resp_func = @(x)x;
                     disp(resp_func)
-            end
-            
-            % If specified, 'flip' the second condition of cond_num_mat
-            switch use_sym_conds
-                case {1,'yes','true'}
-                    if size(temp_cond_data,2) == 2
-                        for j = 1:size(temp_cond_data,1)
-                            temp_cond_data{j,2} = -temp_cond_data{j,2};
-                        end
-                    end
             end
             
             switch average_type
@@ -174,7 +230,7 @@ classdef ExpSet < handle
                                 cond_data(exp_iter,:) = resp_func(temp_cond_data{g});
                             end
                         end
-                    end                  
+                    end
                     
                 case {'all',2}
                     % Return averaged experiments (over sym conds if present)                       
@@ -219,7 +275,7 @@ classdef ExpSet < handle
         end
         
         function [cond_data sem] = get_trial_data_set(self,...
-                cond_num_mat,daq_channel,computation,use_sym_conds,average_type,num_samples)
+                cond_num_mat,daq_channel,computation,use_sym_conds,average_type,normalization_flag,num_samples)
         % Return a set of points from the get_trial_data method.
         % gets rid of my innermost for loop of several figure making
         % functions... output works directly with tfPlot.timeseries and
@@ -228,13 +284,13 @@ classdef ExpSet < handle
             if ~exist('num_samples','var')
                 
                 for i = 1:numel(cond_num_mat)
-                    [cond_data{i}, sem{i}] = self.get_trial_data(cond_num_mat{i},daq_channel,computation,use_sym_conds,average_type);
+                    [cond_data{i}, sem{i}] = self.get_trial_data(cond_num_mat{i},daq_channel,computation,use_sym_conds,average_type,normalization_flag);
                 end
                 
             else
                 
                 for i = 1:size(cond_num_mat,1)
-                    [cond_data{i} sem{i}] = self.get_trial_data(cond_num_mat{i},daq_channel,computation,use_sym_conds,average_type,num_samples);
+                    [cond_data{i}, sem{i}] = self.get_trial_data(cond_num_mat{i},daq_channel,computation,use_sym_conds,average_type,normalization_flag,num_samples);
                 end
                 
             end
@@ -273,9 +329,9 @@ classdef ExpSet < handle
             
             % Get all of the data in two arrays to do a corr of each
             % component on
-            temp_cond_data_1 = return_multi_experiment_cond_data(self,cond_num_mat,daq_channel_1,get_samples);
+            temp_cond_data_1 = return_multi_experiment_cond_data(self,cond_num_mat,daq_channel_1,0,get_samples);
             
-            temp_cond_data_2 = return_multi_experiment_cond_data(self,cond_num_mat,daq_channel_2,get_samples);
+            temp_cond_data_2 = return_multi_experiment_cond_data(self,cond_num_mat,daq_channel_2,0,get_samples);
             
             % Calculate the cross correlation on a trial by trial basis and
             % then use this value for the rest of the computations in the
@@ -387,7 +443,7 @@ classdef ExpSet < handle
         end
         
         function cond_data = return_multi_experiment_cond_data(self,...
-                cond_num_mat,daq_channel,get_samples)
+                cond_num_mat,daq_channel,normalization_flag,get_samples)
             cond_data = {};
             for g = 1:numel(cond_num_mat)
                 exp_iter = 0;
@@ -399,7 +455,11 @@ classdef ExpSet < handle
                         for j = 1:numel(rep_idx);
                             % Check for isvalid
                             if self.experiment{exp_iter}.trial{rep_idx(j)}.data{1}.isvalid
-                                cond_data{i,g}(j,:) = get_samples(getfield(self.experiment{exp_iter}.trial{rep_idx(j)}.data{1},daq_channel)); %#ok<*FNDSB,*GFLD>
+                                if ~normalization_flag
+                                    cond_data{i,g}(j,:) = get_samples(getfield(self.experiment{exp_iter}.trial{rep_idx(j)}.data{1},daq_channel)); %#ok<*FNDSB,*GFLD>
+                                else
+                                    cond_data{i,g}(j,:) = get_samples(getfield(self.experiment{exp_iter}.trial{rep_idx(j)}.data{1},daq_channel))/self.exp_scaling_factors(exp_iter);
+                                end
                             end
                         end
                     end

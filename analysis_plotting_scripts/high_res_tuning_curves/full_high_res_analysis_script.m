@@ -69,7 +69,13 @@ end
 %% Use summary files to save specific subsets of data in tuning_curves.mat
 
 if 0
-
+    % Calculate normalization value per genotype
+    for i = 1:numel(geno_names)
+       mean_turning_resps(i) = geno_data{i}.exp_set_turning_resp;
+    end
+    
+    geno_norm_values = mean_turning_resps/mean(mean_turning_resps);
+    
     for i = 1:numel(geno_names)
         
         for condition_set_number = 1:9
@@ -110,8 +116,8 @@ if 0
             condition_numbers = geno_data{i}.grouped_conditions{condition_set_number}.list;
             
             % L - R data normalized
-            [avg, variance]                 = geno_data{i}.get_trial_data_set(condition_numbers,'lmr','mean','yes','all',1);
-            [avg_ts, variance_ts]           = geno_data{i}.get_trial_data_set(condition_numbers,'lmr','none','yes','all',1);
+            [avg, variance]                 = geno_data{i}.get_trial_data_set(condition_numbers,'lmr','mean','yes','all',geno_norm_values(i));
+            [avg_ts, variance_ts]           = geno_data{i}.get_trial_data_set(condition_numbers,'lmr','none','yes','all',geno_norm_values(i));
             
             tuning_curves.(curve_name){i}.avg               = cell2mat(avg);
             tuning_curves.(curve_name){i}.sem               = cell2mat(variance);
@@ -119,8 +125,8 @@ if 0
             tuning_curves.(curve_name){i}.sem_ts            = variance_ts;
             
             % L - R data not normalized (*_nn)            
-            [avg_nn, variance_nn]                 = geno_data{i}.get_trial_data_set(condition_numbers,'lmr','mean','yes','all',0);
-            [avg_ts_nn, variance_ts_nn]           = geno_data{i}.get_trial_data_set(condition_numbers,'lmr','none','yes','all',0);
+            [avg_nn, variance_nn]                 = geno_data{i}.get_trial_data_set(condition_numbers,'lmr','mean','yes','all',1);
+            [avg_ts_nn, variance_ts_nn]           = geno_data{i}.get_trial_data_set(condition_numbers,'lmr','none','yes','all',1);
             
             tuning_curves.(curve_name){i}.avg_nn               = cell2mat(avg_nn);
             tuning_curves.(curve_name){i}.sem_nn               = cell2mat(variance_nn);
@@ -136,11 +142,11 @@ if 0
             
             % L and R Data, no normalization here...
             
-            [l_wba_avg, l_wba_sem]          = geno_data{i}.get_trial_data_set(condition_numbers,'left_amp','mean','yes','all',0);
-            [l_wba_avg_ts, l_wba_sem_ts]    = geno_data{i}.get_trial_data_set(condition_numbers,'left_amp','none','yes','all',0);
+            [l_wba_avg, l_wba_sem]          = geno_data{i}.get_trial_data_set(condition_numbers,'left_amp','mean','yes','all',1);
+            [l_wba_avg_ts, l_wba_sem_ts]    = geno_data{i}.get_trial_data_set(condition_numbers,'left_amp','none','yes','all',1);
             
-            [r_wba_avg, r_wba_sem]          = geno_data{i}.get_trial_data_set(condition_numbers,'right_amp','mean','yes','all',0);            
-            [r_wba_avg_ts, r_wba_sem_ts]    = geno_data{i}.get_trial_data_set(condition_numbers,'right_amp','none','yes','all',0);
+            [r_wba_avg, r_wba_sem]          = geno_data{i}.get_trial_data_set(condition_numbers,'right_amp','mean','yes','all',1);            
+            [r_wba_avg_ts, r_wba_sem_ts]    = geno_data{i}.get_trial_data_set(condition_numbers,'right_amp','none','yes','all',1);
             
             tuning_curves.(curve_name){i}.l_wba_avg               = cell2mat(l_wba_avg);
             tuning_curves.(curve_name){i}.l_wba_sem               = cell2mat(l_wba_sem);
@@ -169,7 +175,7 @@ if 1
     load(fullfile(data_location,'tuning_curves'));
     
     % Some meh colors
-    my_colormap     = {[30 144 255]/255,[255 165 0]/255};
+    my_colormap     = {[30 144 255]/255,[255 165 0]/255,[238 0 238]/255,[0 238 0]/255,[238 44 44]/255};
     my_lr_colormap  = {[238 0 238]/255,[0 238 0]/255}; %,[0 178 238]/255};
     
     % Iterate over graph_geno_sets (different combinations of genotypes)
@@ -179,7 +185,8 @@ if 1
     % Easily make a few quick comparisons
         FIG_SET = 1;
         %FIG_SET = 2;
-    
+        %FIG_SET = 3;
+        
     switch FIG_SET
         case 1
             graph_geno_sets =  {[1,1],...
@@ -189,6 +196,8 @@ if 1
                                 [5,1]};
         case 2
             graph_geno_sets = {[4, 1]};
+        case 3
+            graph_geno_sets = {[2,1,3,4,5]};
     end
     
     % Iterate over the plotted graph contents
@@ -216,6 +225,27 @@ if 1
                 legend_name{i} = tuning_curves.phi_30{geno_set{1}(i)}.name(5:end); %#ok<*SAGROW>
             end
         end
+            
+        % Correclty add cell types to each genotype
+        for name_iter = 1:numel(legend_name)
+            switch legend_name{name_iter}
+                case {'gmr_20c11ad_48d11dbd','20c11ad_48d11dbd'}
+                    cell_type = '(C2+C3)';
+                case {'gmr_25b02ad_48d11dbd','25b02ad_48d11dbd'}
+                    cell_type = '(C2)';
+                case {'gmr_31c06_34g07dbd','31c06_34g07dbd'}
+                    cell_type = '(L4)';
+                case {'gmr_35a03ad_29g11dbd','35a03ad_29g11dbd'}
+                    cell_type = '(C3)';
+                case {'gmr_29g11dbd','29g11dbd'}
+                    cell_type = '(ctrl)';
+                otherwise
+                    cell_type = '(?)';
+            end
+            
+            legend_name{name_iter} = [legend_name{name_iter} ' ' cell_type];
+        end
+        
         
         for plot_contents = plot_content_fields
             
@@ -333,20 +363,22 @@ if 1
                         
                         switch plot_contents
                             case 1
-                                try
-                                    l_hand = legend('0',legend_name{1},'sem',legend_name{2},'sem');
-                                    set(l_hand,'Location','EastOutside','interpreter','none')
-                                catch %#ok<*CTCH>
-                                    l_hand = legend('',legend_name{1},'sem');
-                                    set(l_hand,'Location','EastOutside','interpreter','none')
+                                legend_cell{1} = '0';
+                                name_ind = 1;
+                                for name_iter = 1:numel(legend_name)
+                                    name_ind = name_ind + 1;
+                                    legend_cell{name_ind} = legend_name{name_iter};
+                                    name_ind = name_ind + 1;
+                                    legend_cell{name_ind} = [' SEM, N = ' num2str(tuning_curves.(curve_name){geno_set{1}(name_iter)}.num)];
                                 end
-                                
+                                l_hand = legend(legend_cell);
+                                set(l_hand,'Location','EastOutside','interpreter','none','EdgeColor',[1 1 1])
                             case 2
                                 l_hand = legend('0',['Left_' legend_name{1}],'sem',['Right_' legend_name{1}],'sem');
-                                set(l_hand,'Location','EastOutside','interpreter','none')
+                                set(l_hand,'Location','EastOutside','interpreter','none','EdgeColor',[1 1 1])
                             case 3
                                 l_hand = legend('0',['Left_' legend_name{1}],'sem',['Right_' legend_name{1}],'sem',['L-R_ ' legend_name{1}],'sem');
-                                set(l_hand,'Location','EastOutside','interpreter','none')
+                                set(l_hand,'Location','EastOutside','interpreter','none','EdgeColor',[1 1 1])
                         end
                         
                         axis off;
@@ -362,40 +394,18 @@ if 1
                 end
             end
             
-            annotation('textbox','position',[.065  .968 .5 .1],'string','Hz:',...
-                            'interpreter','none','EdgeColor',[1 1 1],...
+            annotation('textbox','position',[.065  .9315 .05 .05],'string','Hz:',...
+                            'interpreter','none','EdgeColor','none',...
                             'fontsize',12);
             
-                % Correclty add cell types to each genotype
-                name{1} = tuning_curves.(curve_name){geno_set{1}(1)}.name;
-                name{2} = tuning_curves.(curve_name){geno_set{1}(2)}.name;
-                
-                for name_iter = 1:2
-                    switch name{name_iter}
-                        case {'gmr_20c11ad_48d11dbd'}
-                            cell_type = '(C2+C3)';
-                        case {'gmr_25b02ad_48d11dbd'}
-                            cell_type = '(C2)';
-                        case {'gmr_31c06_34g07dbd'}
-                            cell_type = '(L4)';
-                        case {'gmr_35a03ad_29g11dbd'}
-                            cell_type = '(C3)';
-                        case {'gmr_29g11dbd'}
-                            cell_type = '(ctrl)';
-                        otherwise
-                            cell_type = '(?)';
-                    end
-                    
-                    name{name_iter} = [name{name_iter} ' ' cell_type];
-                    
-                end
-                
+            if plot_contents ~= 1    
                 annotation('textbox','position',[.55  .1 .9 .1],'string',...
-                            {[name{1} ', N = ' num2str(tuning_curves.(curve_name){geno_set{1}(1)}.num)],...
-                             [name{2} ', N = ' num2str(tuning_curves.(curve_name){geno_set{1}(2)}.num)]},...
-                            'interpreter','none','EdgeColor',[1 1 1],...
+                            {[legend_name{1} ', N = ' num2str(tuning_curves.(curve_name){geno_set{1}(1)}.num)],...
+                             [legend_name{2} ', N = ' num2str(tuning_curves.(curve_name){geno_set{1}(2)}.num)]},...
+                            'interpreter','none','EdgeColor','none',...
                             'fontsize',12);
-            
+            end
+
             % Save the giant raw wing beat figure
             switch plot_contents
                 case 1
@@ -412,7 +422,7 @@ if 1
             switch plot_contents
                 case 1
                     tuningFigHandle(plot_contents) = figure(  'Name',['Summary Tuning Figure: ' fig_name],'NumberTitle','off',...
-                                            'Color',[1 1 1],'Position',[50 50 755 755],...
+                                            'Color',[1 1 1],'Position',[50 50 950 755],...
                                             'PaperOrientation','portrait');
                 case 2
                     tuningFigHandle(plot_contents) = figure(  'Name',['L vs R Tuning Figure: ' fig_name],'NumberTitle','off',...
@@ -459,7 +469,7 @@ if 1
                 
                 max_num_stimuli = 10;
                 
-                raw_graph_width     = .92/(3.5);
+                raw_graph_width     = (.92/(3.5))*.75;
                 raw_graph_height    = (1/3)-0.075;
                 
                 x_offset            = .07;
@@ -478,7 +488,7 @@ if 1
                             graph.variance{i}   = tuning_curves.(curve_name){geno_set{1}(i)}.sem;
                             graph.color{i}      = my_colormap{i};
                         end
-                
+                        
                     case 2
                         % only plot the first genotype's L and R turning
                         for i = 1
@@ -519,67 +529,48 @@ if 1
                     'xticklabel',{tuning_curves.(curve_name){geno_set{1}(1)}.tf})
                 
                 if row == 1  && col == 1
-                    ylabel({'Full Field','Mean LmR (V)'})
+                    ylabel({'Full Field','Mean \Delta WBA (V)'})
                 elseif row == 2 && col == 1
-                    ylabel({'Progressive Mot.','Mean LmR (V)'})
+                    ylabel({'Progressive Mot.','Mean \Delta WBA (V)'})
                 elseif row == 3  && col == 1
-                    xlabel('Temporal Frequency')
-                    ylabel({'Regressive Mot.','Mean LmR (V)'})
+                    xlabel('Temporal Frequency (Hz)')
+                    ylabel({'Regressive Mot.','Mean \Delta WBA (V)'})
                 elseif row == 3
                     xlabel('Temporal Frequency (Hz)')
                 end
                 
                 % Add a legend based on plot_contents
-                if row == 3 && col == 3
+                if row == 1 && col == 3
                     switch plot_contents
                         case 1
-                            try
-                                l_hand = legend(legend_name{1},'-',legend_name{2},'-');
-                                set(l_hand,'Location','SouthEast','interpreter','none')
-                            catch %#ok<*CTCH>
-                                l_hand = legend(legend_name{1},'-');
-                                set(l_hand,'Location','SouthEast','interpreter','none')
+                            legend_cell = [];
+                            name_ind = 0;
+                            for name_iter = 1:numel(legend_name)
+                                name_ind = name_ind + 1;
+                                legend_cell{name_ind} = legend_name{name_iter};
+                                name_ind = name_ind + 1;
+                                legend_cell{name_ind} = [' N = ' num2str(tuning_curves.(curve_name){geno_set{1}(name_iter)}.num)];
                             end
-
+                            l_hand = legend(legend_cell);
+                            set(l_hand,'Location','EastOutside','interpreter','none','EdgeColor',[1 1 1])
                         case 2
                             l_hand = legend(['Left_' legend_name{1}],'-',['Right_' legend_name{1}],'-');
-                            set(l_hand,'Location','SouthEast','interpreter','none')
+                            set(l_hand,'Location','Best','interpreter','none','EdgeColor',[1 1 1])
                         case 3
                             l_hand = legend(['Left_' legend_name{1}],'-',['Right_' legend_name{1}],'-',['L-R_ ' legend_name{1}]);
-                            set(l_hand,'Location','SouthEast','interpreter','none')
+                            set(l_hand,'Location','Best','interpreter','none','EdgeColor',[1 1 1])
                     end
                 end
                 
             end
             
-            % Correclty add cell types to each genotype
-            name{1} = tuning_curves.(curve_name){geno_set{1}(1)}.name;
-            name{2} = tuning_curves.(curve_name){geno_set{1}(2)}.name;
-            
-            for name_iter = 1:2
-                switch name{name_iter}
-                    case {'gmr_20c11ad_48d11dbd'}
-                        cell_type = '(C2+C3)';
-                    case {'gmr_25b02ad_48d11dbd'}
-                        cell_type = '(C2)';
-                    case {'gmr_31c06_34g07dbd'}
-                        cell_type = '(L4)';
-                    case {'gmr_35a03ad_29g11dbd'}
-                        cell_type = '(C3)';
-                    case {'gmr_29g11dbd'}
-                        cell_type = '(ctrl)';
-                    otherwise
-                        cell_type = '(?)';
-                end
-                
-                name{name_iter} = [name{name_iter} ' ' cell_type];
-            end
-
+            if plot_contents ~= 1
             annotation('textbox','position',[.3  .9 .9 .1],'string',...
-                        [name{1} ', N = ' num2str(tuning_curves.(curve_name){geno_set{1}(1)}.num), '  &   ',...
-                        name{2} ', N = ' num2str(tuning_curves.(curve_name){geno_set{1}(2)}.num),] ,...
-                        'interpreter','none','EdgeColor',[1 1 1],...
+                        [legend_name{1} ', N = ' num2str(tuning_curves.(curve_name){geno_set{1}(1)}.num), '  &   ',...
+                        legend_name{2} ', N = ' num2str(tuning_curves.(curve_name){geno_set{1}(2)}.num),] ,...
+                        'interpreter','none','EdgeColor','none',...
                         'fontsize',12);            
+            end
             
             % Save the tuning curve figure
             switch plot_contents

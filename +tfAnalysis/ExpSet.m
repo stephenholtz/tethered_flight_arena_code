@@ -9,8 +9,7 @@ classdef ExpSet < handle
         sym_conditions
         
         % scaling factors for each experiment
-        exp_scaling_factors
-        mean_turning_resp
+        exp_set_turning_resp
         
         % cell array of experiments
         experiment
@@ -29,10 +28,10 @@ classdef ExpSet < handle
                 error('ExpSet must take an object holding a cell array of tfAnalysis.Experiment objects of size > 0')
             end
             
-            self.protocol = tf_analysis_object.experiment{1}.protocol;
-            self.experiment = tf_analysis_object.experiment;
-            self = populate_condition_properties(self);
-            [self.exp_scaling_factors, self.mean_turning_resp] = self.get_scaling_factors();
+            self.protocol               = tf_analysis_object.experiment{1}.protocol;
+            self.experiment             = tf_analysis_object.experiment;
+            self                        = populate_condition_properties(self);
+            self.exp_set_turning_resp   = self.get_mean_exp_set_turning_resp();
         end
         
         function self = populate_condition_properties(self)
@@ -94,7 +93,7 @@ classdef ExpSet < handle
             end
         end
         
-        function [exp_scaling_factors, mean_turning_resp] = get_scaling_factors(self)
+        function exp_set_turning_resp = get_mean_exp_set_turning_resp(self)
             % Scaling factor is a per experiment scaling factor determined
             % by the whole genotype's mean turning
             
@@ -108,16 +107,12 @@ classdef ExpSet < handle
             
             overall_turning = mean(abs(cell2mat(get_trial_data_set(self,condition_matrix,daq_channel,'mean','no','exp',0))),2);
             
-            mean_turning_resp = mean(overall_turning);
-            
-            for exp_num = 1:numel(self.experiment)
-                exp_scaling_factors(exp_num) = overall_turning(exp_num)/mean_turning_resp;
-            end
+            exp_set_turning_resp = mean(overall_turning);
             
         end
         
         function [cond_data, sem] = get_trial_data(self,...
-                cond_num_mat,daq_channel,computation,use_sym_conds,average_type,normalization_flag,num_samples)
+                cond_num_mat,daq_channel,computation,use_sym_conds,average_type,normalization_value,num_samples)
             % [cond_data sem] = get_trial_data(self,cond_num_mat,daq_channel,computation,use_sym_conds,average_type)
             
             if ~exist('num_samples','var')
@@ -136,17 +131,17 @@ classdef ExpSet < handle
                 case {1,'yes','true'}
                     switch daq_channel
                         case {'left_amp'}
-                            temp_cond_data(:,1) = return_multi_experiment_cond_data(self,cond_num_mat(:,1),'left_amp',normalization_flag,get_samples);
-                            temp_cond_data(:,2) = return_multi_experiment_cond_data(self,cond_num_mat(:,2),'right_amp',normalization_flag,get_samples);
+                            temp_cond_data(:,1) = return_multi_experiment_cond_data(self,cond_num_mat(:,1),'left_amp',normalization_value,get_samples);
+                            temp_cond_data(:,2) = return_multi_experiment_cond_data(self,cond_num_mat(:,2),'right_amp',normalization_value,get_samples);
                         case {'right_amp'}
-                            temp_cond_data(:,1) = return_multi_experiment_cond_data(self,cond_num_mat(:,1),'right_amp',normalization_flag,get_samples);
-                            temp_cond_data(:,2) = return_multi_experiment_cond_data(self,cond_num_mat(:,2),'left_amp',normalization_flag,get_samples);
+                            temp_cond_data(:,1) = return_multi_experiment_cond_data(self,cond_num_mat(:,1),'right_amp',normalization_value,get_samples);
+                            temp_cond_data(:,2) = return_multi_experiment_cond_data(self,cond_num_mat(:,2),'left_amp',normalization_value,get_samples);
                         otherwise
-                            temp_cond_data = return_multi_experiment_cond_data(self,cond_num_mat,daq_channel,normalization_flag,get_samples);
+                            temp_cond_data = return_multi_experiment_cond_data(self,cond_num_mat,daq_channel,normalization_value,get_samples);
                     end
                     
                 otherwise
-                    temp_cond_data = return_multi_experiment_cond_data(self,cond_num_mat,daq_channel,normalization_flag,get_samples);
+                    temp_cond_data = return_multi_experiment_cond_data(self,cond_num_mat,daq_channel,normalization_value,get_samples);
             end
 
             % Proper symmetric conditions depends on what field is being
@@ -275,7 +270,7 @@ classdef ExpSet < handle
         end
         
         function [cond_data sem] = get_trial_data_set(self,...
-                cond_num_mat,daq_channel,computation,use_sym_conds,average_type,normalization_flag,num_samples)
+                cond_num_mat,daq_channel,computation,use_sym_conds,average_type,normalization_value,num_samples)
         % Return a set of points from the get_trial_data method.
         % gets rid of my innermost for loop of several figure making
         % functions... output works directly with tfPlot.timeseries and
@@ -284,13 +279,13 @@ classdef ExpSet < handle
             if ~exist('num_samples','var')
                 
                 for i = 1:numel(cond_num_mat)
-                    [cond_data{i}, sem{i}] = self.get_trial_data(cond_num_mat{i},daq_channel,computation,use_sym_conds,average_type,normalization_flag);
+                    [cond_data{i}, sem{i}] = self.get_trial_data(cond_num_mat{i},daq_channel,computation,use_sym_conds,average_type,normalization_value);
                 end
                 
             else
                 
                 for i = 1:size(cond_num_mat,1)
-                    [cond_data{i}, sem{i}] = self.get_trial_data(cond_num_mat{i},daq_channel,computation,use_sym_conds,average_type,normalization_flag,num_samples);
+                    [cond_data{i}, sem{i}] = self.get_trial_data(cond_num_mat{i},daq_channel,computation,use_sym_conds,average_type,normalization_value,num_samples);
                 end
                 
             end
@@ -428,13 +423,13 @@ classdef ExpSet < handle
             if ~exist('num_samples','var')
                 
                 for i = 1:size(cond_num_mat,1)
-                    [cond_data{i} sem{i}] = self.get_corr_trial_data(cond_num_mat{i},daq_channel_1,daq_channel_2,average_type);
+                    [cond_data{i}, sem{i}] = self.get_corr_trial_data(cond_num_mat{i},daq_channel_1,daq_channel_2,average_type);
                 end
                 
             else
                 
                 for i = 1:size(cond_num_mat,1)
-                    [cond_data{i} sem{i}] = self.get_corr_trial_data(cond_num_mat{i},daq_channel_1,daq_channel_2,average_type,num_samples);
+                    [cond_data{i}, sem{i}] = self.get_corr_trial_data(cond_num_mat{i},daq_channel_1,daq_channel_2,average_type,num_samples);
                 end
                 
             end        
@@ -443,7 +438,7 @@ classdef ExpSet < handle
         end
         
         function cond_data = return_multi_experiment_cond_data(self,...
-                cond_num_mat,daq_channel,normalization_flag,get_samples)
+                cond_num_mat,daq_channel,normalization_value,get_samples)
             cond_data = {};
             for g = 1:numel(cond_num_mat)
                 exp_iter = 0;
@@ -455,10 +450,10 @@ classdef ExpSet < handle
                         for j = 1:numel(rep_idx);
                             % Check for isvalid
                             if self.experiment{exp_iter}.trial{rep_idx(j)}.data{1}.isvalid
-                                if ~normalization_flag
+                                if ~normalization_value || normalization_value == 1
                                     cond_data{i,g}(j,:) = get_samples(getfield(self.experiment{exp_iter}.trial{rep_idx(j)}.data{1},daq_channel)); %#ok<*FNDSB,*GFLD>
                                 else
-                                    cond_data{i,g}(j,:) = get_samples(getfield(self.experiment{exp_iter}.trial{rep_idx(j)}.data{1},daq_channel))/self.exp_scaling_factors(exp_iter);
+                                    cond_data{i,g}(j,:) = get_samples(getfield(self.experiment{exp_iter}.trial{rep_idx(j)}.data{1},daq_channel))/normalization_value;
                                 end
                             end
                         end

@@ -128,7 +128,7 @@ for rev_phi = flicker
                 pattern_name = [name 'right_field' num2str(stripe_size) '_wide'];            
                 
             end
-
+            
             
             % Save the pattern, populate required fields.
             pattern.Pats        = Pats;

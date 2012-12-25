@@ -1,0 +1,1 @@
+% Make a spreadsheet with the screen's status

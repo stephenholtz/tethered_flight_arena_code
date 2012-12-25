@@ -3,7 +3,7 @@
 % Relies on tfAnalysis.ExpSet
 
 %% Initial variables which all scripts use
-data_location = '/Volumes/lacie-temp-external//high_res_tuning_curves_v01/';
+data_location = '/Volumes/lacie-temp-external/high_res_tuning_curves_v01/';
 
 exp_dir = data_location;
 

@@ -13,7 +13,7 @@ function fix_metadata_protocol_name(top_level_folder)
                 
             elseif sum(strcmpi({experiment_folder_contents(:).name},'metadata.mat'));
                 load(fullfile(EXPERIMENT_PATHS,'metadata.mat'))
-                disp(metadata.Protocol)
+                disp(metadata.Line)
                 metadata.Protocol = 'rev_phi_phase_delay_8_wide_high_res';
                 disp(metadata.Protocol)
                 

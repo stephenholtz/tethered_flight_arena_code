@@ -16,21 +16,23 @@
 %
 % Step 1 - Get the file names and metadata correct
 
-% DONE - update_fix_vpn_telethon_metadata
+update_fix_vpn_telethon_metadata % DONE
 
 % Step 2 - Delete all of the experiments that failed for some reason
 
-% DONE - rename_genotype_folders
+rename_genotype_folders % DONE
 
 % Mid step, add a flag to the metadata files that don't have the velocity
 %          nulling working correctly
-% DONE - update_fix_vpn_telethon_metadata_vel_null_flag
+
+update_fix_vpn_telethon_metadata_vel_null_flag % DONE
 
 % Step 3 - Populate an excel spreadsheet with the names, numbers and dates
 %          of experiments.
-get_screen_vpn_telethon_status
 
-% TODO - make_screen_status_spreadsheet
+get_screen_vpn_telethon_status % DONE
+
+make_screen_status_spreadsheet % TODO
 
 %% PART 2
 
@@ -40,20 +42,16 @@ get_screen_vpn_telethon_status
 %          - Calculate overall and genotype specific turning responses for
 %          potential normalization.
 
-generate_per_genotype_summary_mat_files % makes a file for each genotype
+generate_per_genotype_summary_mat_files % DONE
 
-get_screen_normalization_values
+get_screen_normalization_values % DONE
 
-generate_raw_and_tuning_curve_summary_mat_files % just a few numbers for the tuning curves and the figures
+generate_raw_and_tuning_curve_summary_mat_files % DONE
 
-% Step 6 - Make per genotype figures (compared to average across all,
-%          etc.,).
+% Step 6 - Make per genotype figures(compared to average across all, etc.,)
 
-make_per_genotype_vpn_telethon_screen_figures
+make_per_genotype_vpn_telethon_screen_figures  % DONE
 
 % Step 7 - Make overall comparison figures
 
-make_whole_vpn_telethon_screen_figures
-
-%
-% SLH - 12/2012
+make_whole_vpn_telethon_screen_figures  % TODO

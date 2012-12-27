@@ -43,13 +43,12 @@ if 1
     
 end
 
-% Make comparison across all genotypes for turning figure
+%% Make comparison across all genotypes for turning figure
 % Gather the tuning curve data points into a mat file for both the velocity
 % standard turning and the contrast stuff
 if 1
 
     for i = 1:numel(geno_names)
-    
     
     stable_dir_name = dir(fullfile(data_location,[geno_names{i},'*']));
     location = fullfile(data_location,stable_dir_name.name);
@@ -293,7 +292,7 @@ graph_sets = {[1 1],...
           
 mycolormap = {[.5 .5 0],[.5 0 0],[.5 0 .5],[0 .5 .5],[.9 .25 .25]};
 
-% Make all of the tuning curves
+%% Make all of the tuning curves
 for f = 1:6
     
     if f == 1
@@ -456,6 +455,7 @@ for f = 1:6
         
         
         if ~ONLY_CONTROLS
+            
             n_position = [plot_position(1) + .02, .1, .05, .15];
 
             annotation('Textbox','Position',n_position,'String',n_str,'Edgecolor','none');

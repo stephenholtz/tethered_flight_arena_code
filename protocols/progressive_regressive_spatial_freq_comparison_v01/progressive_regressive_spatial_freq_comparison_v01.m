@@ -4,6 +4,10 @@ function [Conditions] = progressive_regressive_spatial_freq_comparison_v01
 % frequencies of both sides (both moving progressively or regressively)
 % at a few values will persist during a large sweep through the spatial
 % frequency domain.
+% 
+% Note: this will be incredibly difficult to follow
+% 
+% SLH - 2012
 
 % get to the correct directory
 switch computer
@@ -31,81 +35,91 @@ cond_num = 1;
 total_ol_dur = 0;
 frequency = 50;
 duration = 2.25;
+%                     Right:  4  8 16 24    Left \/ 
+symmetric_pattern_matrix = [ 17,18,19,20;...     4
+                             21,22,23,24;...     8
+                             25,26,27,28;...     16
+                             29,30,31,32];%      24
+                         
+non_redundant_matrix_coords = (meshgrid(1:4,1:4)-meshgrid(1:4,1:4)' > -1);
+non_redundant_matrix_inds = find(non_redundant_matrix_coords);
+right_spatial_freq = [4 8 16 24];
+left_spatial_freq = [4 8 16 24];
 
-% Iterate through the different optomotor stimuli.
-%
-% repeats full field, left, right for a few different pattern types
-% 1 2 3 = 30 degrees, 4 5 6 = 60 degrees, 7 8 9 = 30 rp, 10 11 12 = 60 rp 
-for pattern = [1 2 3 4 5 6 10 11 12]
-    
-    if pattern < 4
-        % For the 30 degree patterns (spat wavelength) use 10 different speeds
-        for speed = [.25, .5, 2, 4, 8, 12, 25, 50, 75, 100]*8;
-            for direction = [1 2]
+for motion_type = [1 2] % progressive and regressive motion
+    for speed = [.5 4 8] % speeds of both arena halves will be temporal frequency matched, right?!?!
+        % spatial frequencies of 4, 8, 16, 24 pixels (15, 30, 60, 90 degrees)
+        %for right_spatial_freq = [4 8 16 24];
+            %for left_spatial_freq = [4 8 16 24];
+            
+            for ind = non_redundant_matrix_inds'
+                % Match the right_spatial_freq and eft_spatial_freq to a pattern number...
+                % symmetric_patterns = [R L];
                 
-                % This feeds into a switch statement in Run.Utilities.set_panel_com
-                Conditions(cond_num).DisplayType = 'panels';
+                [left_ind,right_ind] = find(symmetric_pattern_matrix(ind));
                 
-                Conditions(cond_num).PatternID = pattern; %#ok<*AGROW>
-                Conditions(cond_num).PatternName = patterns{pattern};
-                Conditions(cond_num).PatternLoc  = pattern_loc;
-                Conditions(cond_num).Mode           = [0 0];
-                Conditions(cond_num).InitialPosition= [1 1];
+                % left ind is the row of symmetric_pattern_matrix
+                % left_ind = (left_spatial_freq == [4 8 16 24]);
                 
-                if direction == 1
-                    Conditions(cond_num).Gains          = [speed 0 0 0];
-                elseif direction == 2
-                    Conditions(cond_num).Gains          = [-speed 0 0 0];
+                % right ind is the col of symmetric_pattern_matrix
+                % right_ind = (right_spatial_freq == [4 8 16 24]);
+                
+                % get the 'right' pattern, where the pattern is CW and on
+                % the right
+                right_pattern = symmetric_pattern_matrix(left_ind,right_ind);
+                % to get the opposite, flip the two indecies
+                left_pattern = symmetric_pattern_matrix(right_ind,left_ind);
+                
+                % now make vector to conditionally interate over
+                symmetric_patterns = [right_pattern left_pattern];
+                
+                % for getting the right temporal frequencies
+                right_speed = speed*right_spatial_freq(right_ind);
+                left_speed = speed*left_spatial_freq(left_ind);
+                
+                for pattern_iter = 1:2
+                    
+                    if motion_type == 1 % Progressive motion (CW Right first, CCW Left second) --> don't change the order from RL
+                        % prog
+                        pattern = symmetric_patterns(pattern_iter);
+                        Conditions(cond_num).PatternID      = pattern; %#ok<*AGROW>
+                        Conditions(cond_num).PatternName    = patterns{pattern};                        
+                    elseif motion_type == 2 % Regressive motion (CW Left first, CCW Right second) --> change the order from RL to LR
+                        % reg
+                        pattern = fliplr(symmetric_patterns);
+                        Conditions(cond_num).PatternID      = pattern; %#ok<*AGROW>
+                        Conditions(cond_num).PatternName    = patterns{pattern};
+                    end
+                    
+                    % The second pattern should go 'counterclockwise'
+                    if pattern_iter == 1
+                        Conditions(cond_num).Gains          = [right_speed 0 -left_speed 0];
+                    elseif pattern_iter == 2
+                        Conditions(cond_num).Gains          = [-right_speed 0 left_speed 0];
+                    end
+                    
+                    Conditions(cond_num).Mode           = [0 0];
+                    Conditions(cond_num).InitialPosition= [1 1];
+                    Conditions(cond_num).PosFunctionX   = [1 1];
+                    Conditions(cond_num).PosFunctionY 	= [2 1];
+                    Conditions(cond_num).FuncFreqY 		= frequency;
+                    Conditions(cond_num).FuncFreqX 		= frequency;
+                    Conditions(cond_num).PosFuncLoc     = pos_func_loc;            
+                    Conditions(cond_num).PosFuncNameX   = 'none';
+                    Conditions(cond_num).PosFuncNameY   = 'none';
+                    Conditions(cond_num).Duration = duration;
+
+                    total_ol_dur = total_ol_dur + Conditions(cond_num).Duration + .02;
+
+                    cond_num = cond_num + 1;
+                    
                 end
-                
-                Conditions(cond_num).PosFunctionX   = [1 0];
-                Conditions(cond_num).PosFunctionY 	= [2 0];
-                Conditions(cond_num).FuncFreqY 		= frequency;
-                Conditions(cond_num).FuncFreqX 		= frequency;
-                Conditions(cond_num).PosFuncLoc     = pos_func_loc;            
-                Conditions(cond_num).PosFuncNameX   = 'none';
-                Conditions(cond_num).PosFuncNameY   = 'none';
-                Conditions(cond_num).Duration = duration;
-                total_ol_dur = total_ol_dur + Conditions(cond_num).Duration;
-                cond_num = cond_num + 1;
             end
-        end
-    else
-        
-        % For the 60 degree normal and reverse phi patterns use only 5 speeds
-        for speed = [.5 4 8 25 75]*16
-            for direction = [1 2]
-                
-                % This feeds into a switch statement in Run.Utilities.set_panel_com                
-                Conditions(cond_num).DisplayType = 'panels';
-                
-                Conditions(cond_num).PatternID = pattern; %#ok<*AGROW>
-                Conditions(cond_num).PatternName = patterns{pattern};
-                Conditions(cond_num).PatternLoc  = pattern_loc;
-                Conditions(cond_num).Mode           = [0 0];
-                Conditions(cond_num).InitialPosition= [1 1];
-                
-                if direction == 1
-                    Conditions(cond_num).Gains          = [speed 0 0 0];
-                elseif direction == 2
-                    Conditions(cond_num).Gains          = [-speed 0 0 0];
-                end
-                
-                Conditions(cond_num).PosFunctionX   = [1 0];
-                Conditions(cond_num).PosFunctionY 	= [2 0];
-                Conditions(cond_num).FuncFreqY 		= frequency;
-                Conditions(cond_num).FuncFreqX 		= frequency;
-                Conditions(cond_num).PosFuncLoc     = pos_func_loc;            
-                Conditions(cond_num).PosFuncNameX   = 'none';
-                Conditions(cond_num).PosFuncNameY   = 'none';
-                Conditions(cond_num).Duration = duration;
-                total_ol_dur = total_ol_dur + Conditions(cond_num).Duration;
-                cond_num = cond_num + 1;
-            end
-        end
+            %end
+        %end
     end
 end
-
+    
 % closed loop inter-trial stimulus
 Conditions(cond_num).PatternID      = numel(patterns); % single stripe 8 wide, same contrast as rev phi stims
 Conditions(cond_num).PatternName    = patterns(numel(patterns));

@@ -1,6 +1,8 @@
 function [Conditions] = unilateral_flicker_contribution_phi_and_rev_phi_v01
 % Protocol to see how a few types of flicker contribute to unilateral
 % progressive and regressive motion and reverse phi motion. 
+%
+% SLH - 2012
 
 % get to the correct directory
 switch computer
@@ -23,83 +25,110 @@ end
     panel_cfgs = panel_cfgs.mat;
     cd(cf);
 
-% Start a few variables for below    
+% Start a few variables for below
 cond_num = 1;
 total_ol_dur = 0;
 frequency = 50;
 duration = 2.25;
 
-% Iterate through the different optomotor stimuli.
-%
-% repeats full field, left, right for a few different pattern types
-% 1 2 3 = 30 degrees, 4 5 6 = 60 degrees, 7 8 9 = 30 rp, 10 11 12 = 60 rp 
-for pattern = [1 2 3 4 5 6 10 11 12]
-    
-    if pattern < 4
-        % For the 30 degree patterns (spat wavelength) use 10 different speeds
-        for speed = [.25, .5, 2, 4, 8, 12, 25, 50, 75, 100]*8;
-            for direction = [1 2]
+% spatial frequencies of 8, 16 pixels (30, 60 degrees)
+for spatial_freq = [8 16];
+    for pattern_class_set = {'normal','full-flick','fick-bars'}
+        for phi_type = [1 2] % phi and reverse phi
+            for motion_type = [1 2] % progressive and regressive motion
+                switch pattern_class_set{1}
+                    % all of these are in format [R-motion L-flicker]
+                    case {'normal'} % patterns with both sides
+
+                        if spatial_freq == 8
+                            if phi_type == 1
+                                % i.e. [right_8_wide_phi_no_flicker, left_8_wide_phi_no_flicker]
+                                symmetric_patterns = [22 22];
+                            else
+                                symmetric_patterns = [94 94];
+                            end
+                        elseif spatial_freq == 16
+                            if phi_type == 1
+                                symmetric_patterns = [27 27];
+                            else
+                                symmetric_patterns = [99 99];
+                            end
+                        end
+                        
+                    case {'full-flick'} % patterns with the full flicker half
+                        
+                        if spatial_freq == 8
+                            if phi_type == 1
+                                symmetric_patterns = [34 38];
+                            else
+                                symmetric_patterns = [106 110];
+                            end
+                        elseif spatial_freq == 16
+                            if phi_type == 1
+                                symmetric_patterns = [35 39];
+                            else
+                                symmetric_patterns = [107 111];
+                            end
+                        end
+                        
+                    case {'flick-bars'} % patterns with the flickering bars
+
+                        if spatial_freq == 8
+                            if phi_type == 1
+                                symmetric_patterns = [42 46];
+                            else
+                                symmetric_patterns = [114 118];
+                            end
+                        elseif spatial_freq == 16
+                            if phi_type == 1
+                                symmetric_patterns = [43 47];
+                            else
+                                symmetric_patterns = [115 119];
+                            end
+                        end
+                end % switch
                 
-                % This feeds into a switch statement in Run.Utilities.set_panel_com
-                Conditions(cond_num).DisplayType = 'panels';
-                
-                Conditions(cond_num).PatternID = pattern; %#ok<*AGROW>
-                Conditions(cond_num).PatternName = patterns{pattern};
-                Conditions(cond_num).PatternLoc  = pattern_loc;
-                Conditions(cond_num).Mode           = [0 0];
-                Conditions(cond_num).InitialPosition= [1 1];
-                
-                if direction == 1
-                    Conditions(cond_num).Gains          = [speed 0 0 0];
-                elseif direction == 2
-                    Conditions(cond_num).Gains          = [-speed 0 0 0];
+                % Generate the actual Condition struct values
+                for speed = [.5 4 8]*spatial_freq
+                    for pattern_iter = 1:2
+
+                        if motion_type == 1 % Progressive motion (CW Right first, CCW Left second) --> don't change the order from RL
+                            % prog/rp-prog
+                            pattern = symmetric_patterns(pattern_iter);
+                            Conditions(cond_num).PatternID      = pattern; %#ok<*AGROW>
+                            Conditions(cond_num).PatternName    = patterns{pattern};                        
+                        elseif motion_type == 2 % Regressive motion (CW Left first, CCW Right second) --> change the order from RL to LR
+                            % reg/rp-reg
+                            pattern = fliplr(symmetric_patterns);
+                            Conditions(cond_num).PatternID      = pattern; %#ok<*AGROW>
+                            Conditions(cond_num).PatternName    = patterns{pattern};
+                        end
+                        
+                        % The second pattern should go counterclockwise
+                        if pattern_iter == 1
+                            Conditions(cond_num).Gains          = [speed 0 0 0];
+                        elseif pattern_iter == 2
+                            Conditions(cond_num).Gains          = [-speed 0 0 0];
+                        end
+                        
+                        Conditions(cond_num).Mode           = [0 0];
+                        Conditions(cond_num).InitialPosition= [1 1];
+                        Conditions(cond_num).PosFunctionX   = [1 1];
+                        Conditions(cond_num).PosFunctionY 	= [2 1];
+                        Conditions(cond_num).FuncFreqY 		= frequency;
+                        Conditions(cond_num).FuncFreqX 		= frequency;
+                        Conditions(cond_num).PosFuncLoc     = pos_func_loc;            
+                        Conditions(cond_num).PosFuncNameX   = 'none';
+                        Conditions(cond_num).PosFuncNameY   = 'none';
+                        Conditions(cond_num).Duration = duration;
+
+                        total_ol_dur = total_ol_dur + Conditions(cond_num).Duration + .02;
+
+                        cond_num = cond_num + 1;
+                    end
                 end
-                
-                Conditions(cond_num).PosFunctionX   = [1 0];
-                Conditions(cond_num).PosFunctionY 	= [2 0];
-                Conditions(cond_num).FuncFreqY 		= frequency;
-                Conditions(cond_num).FuncFreqX 		= frequency;
-                Conditions(cond_num).PosFuncLoc     = pos_func_loc;            
-                Conditions(cond_num).PosFuncNameX   = 'none';
-                Conditions(cond_num).PosFuncNameY   = 'none';
-                Conditions(cond_num).Duration = duration;
-                total_ol_dur = total_ol_dur + Conditions(cond_num).Duration;
-                cond_num = cond_num + 1;
             end
-        end
-    else
-        
-        % For the 60 degree normal and reverse phi patterns use only 5 speeds
-        for speed = [.5 4 8 25 75]*16
-            for direction = [1 2]
-                
-                % This feeds into a switch statement in Run.Utilities.set_panel_com                
-                Conditions(cond_num).DisplayType = 'panels';
-                
-                Conditions(cond_num).PatternID = pattern; %#ok<*AGROW>
-                Conditions(cond_num).PatternName = patterns{pattern};
-                Conditions(cond_num).PatternLoc  = pattern_loc;
-                Conditions(cond_num).Mode           = [0 0];
-                Conditions(cond_num).InitialPosition= [1 1];
-                
-                if direction == 1
-                    Conditions(cond_num).Gains          = [speed 0 0 0];
-                elseif direction == 2
-                    Conditions(cond_num).Gains          = [-speed 0 0 0];
-                end
-                
-                Conditions(cond_num).PosFunctionX   = [1 0];
-                Conditions(cond_num).PosFunctionY 	= [2 0];
-                Conditions(cond_num).FuncFreqY 		= frequency;
-                Conditions(cond_num).FuncFreqX 		= frequency;
-                Conditions(cond_num).PosFuncLoc     = pos_func_loc;            
-                Conditions(cond_num).PosFuncNameX   = 'none';
-                Conditions(cond_num).PosFuncNameY   = 'none';
-                Conditions(cond_num).Duration = duration;
-                total_ol_dur = total_ol_dur + Conditions(cond_num).Duration;
-                cond_num = cond_num + 1;
-            end
-        end
+        end % phi_type
     end
 end
 

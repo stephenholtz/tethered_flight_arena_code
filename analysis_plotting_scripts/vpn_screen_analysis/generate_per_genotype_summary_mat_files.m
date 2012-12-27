@@ -7,7 +7,9 @@ genotypes = dir(exp_dir);
 
 for i = 1:numel(genotypes);
     if genotypes(i).isdir && ~sum(strcmpi(genotypes(i).name,{'.','..','.DS_STORE','DS_Store','.thumbs'}))
-        %if ~sum(strcmpi([genotypes(i).name '_summary'],dir(fullfile(exp_dir,genotypes(i).name))));
+        exp_dir_contents = dir(fullfile(exp_dir,genotypes(i).name));
+        exp_dir_contents = {exp_dir_contents.name};
+        if ~sum(cell2mat(strfind(exp_dir_contents,'_summary')))
             try
                 geno = tfAnalysis.import(fullfile(exp_dir,genotypes(i).name),'all');
                 eval([genotypes(i).name '_summary = geno;'])
@@ -16,9 +18,9 @@ for i = 1:numel(genotypes);
                 disp(proc_err)
                 genotypes(i).name
             end
-        %else
-        %    disp([genotypes(i).name ' already processed'])
-        %end
+        else
+            disp([genotypes(i).name ' already processed'])
+        end
     end
 end
 

@@ -54,4 +54,4 @@ make_per_genotype_vpn_telethon_screen_figures  % DONE
 
 % Step 7 - Make overall comparison figures
 
-make_whole_vpn_telethon_screen_figures  % TODO
+make_whole_vpn_telethon_screen_figures  % DONE

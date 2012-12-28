@@ -182,7 +182,8 @@ grayscale_color_map(grayscale_color_map == -1) = linspace(0,1,pattern.gs_val^2-1
 % Preallocate the image
 if verbose; fprintf(1,'Preallocating Frames...'); end
 
-st_image = zeros(num_frames*size(pattern.Pats,1),num_frames*size(pattern.Pats,2));
+%st_image = zeros(num_frames*size(pattern.Pats,1),num_frames*size(pattern.Pats,2));
+st_image = []
 if verbose; fprintf(1,'\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b'); end
 
 
@@ -208,7 +209,7 @@ for frame = 1:num_frames
     if pattern.row_compression
         full_frame = repmat(pattern.Pats(:,:,x_index(frame),y_index(frame)), 8, 1);
     else
-        full_frame = pattern.Pats(:,:,x_index(frame),y_index(frame));
+        full_frame = pattern.Pats(1,:,x_index(frame),y_index(frame));
     end
     
     % imagesc(full_frame)
@@ -218,7 +219,7 @@ for frame = 1:num_frames
     rows = (1+size(st_image,1)):(size(st_image,1)+size(full_frame,1));
     cols = (1+size(st_image,2)):(size(st_image,2)+size(full_frame,2));
     
-    st_image(rows,cols) = full_frame(:,:); %#ok<*AGROW>
+    st_image(rows,:) = full_frame(:,:); %#ok<*AGROW>
     
     if video_flag
         % Store movie images in this format (MxNxRGBxFrame)
@@ -240,7 +241,7 @@ else
 end
 
 image(st_image); axis off;
-saveas(std_hand,save_file_path,'fig')
+%saveas(std_hand,save_file_path,'fig')
 export_fig(std_hand,save_file_path,'-pdf')
 
 % Write the video to file (the slowest part!)

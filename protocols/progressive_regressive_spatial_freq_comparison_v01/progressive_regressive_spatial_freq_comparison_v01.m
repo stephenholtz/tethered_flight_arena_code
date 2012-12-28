@@ -41,60 +41,55 @@ symmetric_pattern_matrix = [ 17,18,19,20;...     4
                              25,26,27,28;...     16
                              29,30,31,32];%      24
                          
-non_redundant_matrix_coords = (meshgrid(1:4,1:4)-meshgrid(1:4,1:4)' > -1);
-non_redundant_matrix_inds = find(non_redundant_matrix_coords);
-right_spatial_freq = [4 8 16 24];
-left_spatial_freq = [4 8 16 24];
+%non_redundant_matrix_coords = (meshgrid(1:4,1:4)-meshgrid(1:4,1:4)' > -1);
+%non_redundant_matrix_inds = find(non_redundant_matrix_coords);
+right_spatial_freq_list = [4 8 16 24];
+left_spatial_freq_list = [4 8 16 24];
 
 for motion_type = [1 2] % progressive and regressive motion
-    for speed = [.5 4 8] % speeds of both arena halves will be temporal frequency matched, right?!?!
+    for temp_freq = [.5 4 8] % speeds of both arena halves will be temporal frequency matched, right?!?!
         % spatial frequencies of 4, 8, 16, 24 pixels (15, 30, 60, 90 degrees)
-        %for right_spatial_freq = [4 8 16 24];
-            %for left_spatial_freq = [4 8 16 24];
+        for right_spatial_freq = right_spatial_freq_list;
+            for left_spatial_freq = left_spatial_freq_list;
             
-            for ind = non_redundant_matrix_inds'
+            %for ind = non_redundant_matrix_inds'
                 % Match the right_spatial_freq and eft_spatial_freq to a pattern number...
-                % symmetric_patterns = [R L];
                 
-                [left_ind,right_ind] = find(symmetric_pattern_matrix(ind));
+                
+                %[left_ind,right_ind] = find(symmetric_pattern_matrix(ind)==symmetric_pattern_matrix);
                 
                 % left ind is the row of symmetric_pattern_matrix
-                % left_ind = (left_spatial_freq == [4 8 16 24]);
+                left_ind = (left_spatial_freq == left_spatial_freq_list);
                 
                 % right ind is the col of symmetric_pattern_matrix
-                % right_ind = (right_spatial_freq == [4 8 16 24]);
+                right_ind = (right_spatial_freq == right_spatial_freq_list);
+%                 
+%                 % get the 'right' pattern, where the pattern is CW and on
+%                 % the right
+%                 right_pattern = symmetric_pattern_matrix(left_ind,right_ind);
+%                 % to get the opposite, flip the two indecies
+%                 left_pattern = symmetric_pattern_matrix(right_ind,left_ind);
+%                 
                 
-                % get the 'right' pattern, where the pattern is CW and on
-                % the right
-                right_pattern = symmetric_pattern_matrix(left_ind,right_ind);
-                % to get the opposite, flip the two indecies
-                left_pattern = symmetric_pattern_matrix(right_ind,left_ind);
-                
-                % now make vector to conditionally interate over
-                symmetric_patterns = [right_pattern left_pattern];
-                
+                pattern = symmetric_pattern_matrix(left_ind,right_ind);
+%                 % now make vector to conditionally interate over
+%                 symmetric_patterns = [right_pattern left_pattern];
+%                 
                 % for getting the right temporal frequencies
-                right_speed = speed*right_spatial_freq(right_ind);
-                left_speed = speed*left_spatial_freq(left_ind);
+                right_speed = temp_freq*right_spatial_freq_list(right_ind);
+                left_speed = temp_freq*left_spatial_freq_list(left_ind);
                 
-                for pattern_iter = 1:2
+%                 for pattern_iter = 1:2
                     
                     if motion_type == 1 % Progressive motion (CW Right first, CCW Left second) --> don't change the order from RL
                         % prog
-                        pattern = symmetric_patterns(pattern_iter);
                         Conditions(cond_num).PatternID      = pattern; %#ok<*AGROW>
-                        Conditions(cond_num).PatternName    = patterns{pattern};                        
+                        Conditions(cond_num).PatternName    = patterns{pattern};   
+                        Conditions(cond_num).Gains          = [right_speed 0 -left_speed 0];
                     elseif motion_type == 2 % Regressive motion (CW Left first, CCW Right second) --> change the order from RL to LR
                         % reg
-                        pattern = fliplr(symmetric_patterns);
                         Conditions(cond_num).PatternID      = pattern; %#ok<*AGROW>
                         Conditions(cond_num).PatternName    = patterns{pattern};
-                    end
-                    
-                    % The second pattern should go 'counterclockwise'
-                    if pattern_iter == 1
-                        Conditions(cond_num).Gains          = [right_speed 0 -left_speed 0];
-                    elseif pattern_iter == 2
                         Conditions(cond_num).Gains          = [-right_speed 0 left_speed 0];
                     end
                     
@@ -107,16 +102,17 @@ for motion_type = [1 2] % progressive and regressive motion
                     Conditions(cond_num).PosFuncLoc     = pos_func_loc;            
                     Conditions(cond_num).PosFuncNameX   = 'none';
                     Conditions(cond_num).PosFuncNameY   = 'none';
-                    Conditions(cond_num).Duration = duration;
-
+                    Conditions(cond_num).Duration       = duration;
+                    Conditions(cond_num).note           = ['Both_tf_' num2str(temp_freq) ' L_sf_' num2str(3.75*left_spatial_freq_list(left_ind)) ' R_sf_' num2str(3.75*right_spatial_freq_list(right_ind)) ];
+                    
                     total_ol_dur = total_ol_dur + Conditions(cond_num).Duration + .02;
 
                     cond_num = cond_num + 1;
                     
-                end
-            end
+%                 end
             %end
-        %end
+            end
+        end
     end
 end
     

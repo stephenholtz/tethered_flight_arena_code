@@ -19,7 +19,7 @@ load(normalization_file);
 %% Make fig_data_summ.mat files
 
 % iteratively load in GENOTYPENAME_summary.mat files to populate tuning_curves.mat files.
-if 1
+if 0
     for i = 1:numel(geno_names)
 
         % Load in *_summary.mat files
@@ -312,7 +312,7 @@ if 1
 
             clear avg variance
 
-            % Save tuning_curves.mat with quick data, should be < 50 Mb
+            % Save tuning_curves.mat with quick data, should be < 300 Mb
             tuning_curves.(struct_branch_name).expansion = expansion;
             tuning_curves.(struct_branch_name).contrast = contrast;
             tuning_curves.(struct_branch_name).optomotor = optomotor;
@@ -351,7 +351,7 @@ if 1
     count = 0;
     
     % load the figure data summary
-    load(fullfile(data_location,'..','fig_data_summ.mat'))
+    %load(fullfile(data_location,'..','fig_data_summ.mat'))
     for i = 1%:numel(geno_names)
         % Determine averages for each point in all of the tuning_curves and
         % vel_null_sum substructures for later plotting comparison. 
@@ -367,7 +367,8 @@ if 1
                 [avg,sem] = doAverageOnStruct(fig_data_summ,{['tuning_curves'],[struct_branch_name{1}],[tune_curve_fieldname{1}]});
                 fig_data_summ(i).avg_tuning_curves.(struct_branch_name{1}).(tune_curve_fieldname{1}) = avg.tuning_curves.(struct_branch_name{1}).(tune_curve_fieldname{1});
                 fig_data_summ(i).sem_tuning_curves.(struct_branch_name{1}).(tune_curve_fieldname{1}) = sem.tuning_curves.(struct_branch_name{1}).(tune_curve_fieldname{1});
-                count = count + 7
+                count = count + 7;
+                disp(count)
             end
             
             tune_curve_fieldnames = fieldnames(fig_data_summ(i).vel_null_summ.(struct_branch_name{1}));
@@ -375,10 +376,11 @@ if 1
 %             [fig_data_summ(i).avg_vel_null_summ.(struct_branch_name{1}).(tune_curve_fieldname{1}),fig_data_summ(i).sem_vel_null_summ.(struct_branch_name{1}).(tune_curve_fieldname{1})] = ...
 %                 doAverageOnStruct(fig_data_summ,{['vel_null_summ'],[struct_branch_name{1}]});
 %                 count = count + 7
-                [avg,sem] = doAverageOnStruct(fig_data_summ,{['tuning_curves'],[struct_branch_name{1}],[tune_curve_fieldname{1}]});
-                fig_data_summ(i).avg_vel_null_summ.(struct_branch_name{1}) = avg.(struct_branch_name{1});
-                fig_data_summ(i).sem_vel_null_summ.(struct_branch_name{1}) = sem.(struct_branch_name{1});
-                count = count + 7
+                [avg,sem] = doAverageOnStruct(fig_data_summ,{['vel_null_summ'],[struct_branch_name{1}]});
+                fig_data_summ(i).avg_vel_null_summ.(struct_branch_name{1}) = avg.vel_null_summ.(struct_branch_name{1});
+                fig_data_summ(i).sem_vel_null_summ.(struct_branch_name{1}) = sem.vel_null_summ.(struct_branch_name{1});
+                count = count + 7;
+                disp(count)
         end
     end
     
@@ -413,7 +415,7 @@ if 1
                 end
             end
 
-            if sum(strfind(img_names{kk},'C1')) && sum(strfind(img_names{kk},'fA02b')) && sum(strfind(img_names{kk},vpn_screen_names.AD{vpn_screen_name_ind}(1:5))) && sum(strfind(img_names{kk},vpn_screen_names.DBD{vpn_screen_name_ind}(1:5)))
+            if sum(strfind(img_names{kk},'C1-MAX')) && sum(strfind(img_names{kk},'fA02b')) && sum(strfind(img_names{kk},vpn_screen_names.AD{vpn_screen_name_ind}(1:5))) && sum(strfind(img_names{kk},vpn_screen_names.DBD{vpn_screen_name_ind}(1:5)))
                 
                 fig_data_summ(i).img_name = img_names{kk};
                 fig_data_summ(i).img = imread(img_filepaths{kk},'jpg');
@@ -428,3 +430,33 @@ if 1
 end
 
 
+if 1
+    
+    % load the figure data summary
+    load(fullfile(data_location,'..','fig_data_summ.mat'))
+
+    pl_name_file = '/Volumes/lacie-temp-external/curated_vpn_telethon_2012_screen/place_learning_scores';
+    load(pl_name_file);
+    
+    for i = 1:numel(geno_names)
+
+        line_name = fig_data_summ(i).geno_name(1:7);
+        vpn_screen_name_ind = 0;
+        
+        for kk = 1:numel(place_learning_scores.Stablelinename)
+            if ~isempty(strfind(lower(line_name),lower(place_learning_scores.Stablelinename{kk})))
+                vpn_screen_name_ind = kk;
+            end
+        end
+        if ~vpn_screen_name_ind
+            fig_data_summ(i).PLI = NaN;
+            fig_data_summ(i).mean_turn_vel = NaN;
+        else
+            fig_data_summ(i).PLI = place_learning_scores.meanPLI(vpn_screen_name_ind);
+            fig_data_summ(i).mean_turn_vel = place_learning_scores.meanturnvelocity(vpn_screen_name_ind);
+        end
+
+    end
+    
+    save(fullfile(data_location,'..','fig_data_summ'),'fig_data_summ');    
+end

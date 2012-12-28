@@ -33,7 +33,7 @@ duration = 2.25;
 
 % spatial frequencies of 8, 16 pixels (30, 60 degrees)
 for spatial_freq = [8 16];
-    for pattern_class_set = {'normal','full-flick','fick-bars'}
+    for pattern_class_set = {'normal','full-flick','flick-bars'}
         for phi_type = [1 2] % phi and reverse phi
             for motion_type = [1 2] % progressive and regressive motion
                 switch pattern_class_set{1}
@@ -106,9 +106,9 @@ for spatial_freq = [8 16];
                         
                         % The second pattern should go counterclockwise
                         if pattern_iter == 1
-                            Conditions(cond_num).Gains          = [speed 0 0 0];
+                            Conditions(cond_num).Gains          = [speed 0 speed 0];
                         elseif pattern_iter == 2
-                            Conditions(cond_num).Gains          = [-speed 0 0 0];
+                            Conditions(cond_num).Gains          = [-speed 0 speed 0];
                         end
                         
                         Conditions(cond_num).Mode           = [0 0];

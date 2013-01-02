@@ -33,7 +33,7 @@ duration = 2.25;
 
 % spatial frequencies of 8, 16 pixels (30, 60 degrees)
 for spatial_freq = [8 16];
-    for pattern_class_set = {'normal','full-flick','flick-bars'}
+    for pattern_class_set = {'normal','full-flick','flick-alt'}
         for phi_type = [1 2] % phi and reverse phi
             for motion_type = [1 2] % progressive and regressive motion
                 switch pattern_class_set{1}
@@ -71,19 +71,19 @@ for spatial_freq = [8 16];
                             end
                         end
                         
-                    case {'flick-bars'} % patterns with the flickering bars
+                    case {'flick-alt'} % patterns with the flickering bars
 
                         if spatial_freq == 8
                             if phi_type == 1
-                                symmetric_patterns = [42 46];
+                                symmetric_patterns = [50 54];
                             else
-                                symmetric_patterns = [114 118];
+                                symmetric_patterns = [122 126];
                             end
                         elseif spatial_freq == 16
                             if phi_type == 1
-                                symmetric_patterns = [43 47];
+                                symmetric_patterns = [54 55];
                             else
-                                symmetric_patterns = [115 119];
+                                symmetric_patterns = [123 127];
                             end
                         end
                 end % switch

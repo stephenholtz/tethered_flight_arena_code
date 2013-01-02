@@ -1,4 +1,4 @@
-% make some condition space time diagrams for progressive_regressive_spatial_freq_comparison_v01
+%% make some condition space time diagrams for progressive_regressive_spatial_freq_comparison_v01
 
 if 1
     conditions = progressive_regressive_spatial_freq_comparison_v01

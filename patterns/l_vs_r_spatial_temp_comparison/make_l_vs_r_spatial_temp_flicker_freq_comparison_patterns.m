@@ -19,7 +19,7 @@ function make_l_vs_r_spatial_temp_flicker_freq_comparison_patterns()
 % 
 % Note: 
 % Standard pattern making scripts were getting too crazy to make this
-% easily, so this strategy was adopted.
+% easily... 
 %
 % SLH - 12/2012
 
@@ -57,7 +57,7 @@ for bar_width = grating_widths
 
     % make a full version of what will be on the left or right side
     lam_reps = 96/(bar_width*2);
-    lam = [dark*ones(32,bar_width), bright*ones(32,bar_width)];
+    lam = [dark*ones(4,bar_width), bright*ones(4,bar_width)];
     pat = repmat(lam,1,lam_reps);
 
     pat_steps = bar_width*2;
@@ -77,8 +77,8 @@ for bar_width = grating_widths
     
     lam_reps = 96/(bar_width*2);
 
-    lam_on = [mid*ones(32,bar_width), bright*ones(32,bar_width)];
-    lam_off = [mid*ones(32,bar_width), dark*ones(32,bar_width)];
+    lam_on = [mid*ones(4,bar_width), bright*ones(4,bar_width)];
+    lam_off = [mid*ones(4,bar_width), dark*ones(4,bar_width)];
 
     pat_on = repmat(lam_on,1,lam_reps);
     pat_off = repmat(lam_off,1,lam_reps);
@@ -102,7 +102,7 @@ end
 %--Make the full field flicker--
 
 for i = [1 0]
-   temp_Pats(:,:,i+1) = bright*i*ones(32,96); %#ok<*AGROW>
+   temp_Pats(:,:,i+1) = bright*i*ones(4,96); %#ok<*AGROW>
 end
 
 full_field_flicker.('lam') = temp_Pats;
@@ -111,7 +111,7 @@ clear temp_Pats
 
 %--Make a plain pattern--
 
-temp_Pats(:,:,1) = mid*ones(32,96); %#ok<*AGROW>
+temp_Pats(:,:,1) = mid*ones(4,96); %#ok<*AGROW>
 
 solid.('lam') = temp_Pats;
 
@@ -122,8 +122,8 @@ for bar_width = grating_widths
     
     lam_reps = 96/(bar_width*2);
 
-    flick_on = [dark*ones(32,bar_width), bright*ones(32,bar_width)];
-    flick_off = [dark*ones(32,bar_width), dark*ones(32,bar_width)];
+    flick_on = [dark*ones(4,bar_width), bright*ones(4,bar_width)];
+    flick_off = [dark*ones(4,bar_width), dark*ones(4,bar_width)];
     
     temp_Pats(:,:,1) = repmat(flick_on,1,lam_reps);
     temp_Pats(:,:,2) = repmat(flick_off,1,lam_reps);
@@ -138,7 +138,7 @@ for bar_width = grating_widths
     
     lam_reps = 96/(bar_width*2);
 
-    flick_on = [dark*ones(32,bar_width), bright*ones(32,bar_width)];
+    flick_on = [dark*ones(4,bar_width), bright*ones(4,bar_width)];
     flick_shift = circshift(flick_on',bar_width)';
 
     temp_Pats(:,:,1) = repmat(flick_on,1,lam_reps);
@@ -155,7 +155,7 @@ phi_field_types = fieldnames(phi);
 % solid on the left
 for right_lam_iter = 1:numel(phi_field_types)
     
-    Pats = zeros(32,96,1,1);
+    Pats = zeros(4,96,1,1);
     Pats = add_unilat_pattern_to_left_right(Pats,...
                     solid.('lam'),...
                     phi.(phi_field_types{right_lam_iter}),mid);
@@ -168,7 +168,7 @@ end
 % solid on the right
 for left_lam_iter = 1:numel(phi_field_types)
     
-    Pats = zeros(32,96,1,1);
+    Pats = zeros(4,96,1,1);
     Pats = add_unilat_pattern_to_left_right(Pats,...
                     phi.(phi_field_types{left_lam_iter}),...
                     solid.('lam'),mid);
@@ -185,7 +185,7 @@ rp_field_types = fieldnames(reverse_phi);
 % solid on the left
 for right_lam_iter = 1:numel(rp_field_types)
     
-    Pats = zeros(32,96,1,1);
+    Pats = zeros(4,96,1,1);
     Pats = add_unilat_pattern_to_left_right(Pats,...
                     solid.('lam'),...
                     reverse_phi.(rp_field_types{right_lam_iter}),mid);
@@ -198,7 +198,7 @@ end
 % solid on the right
 for left_lam_iter = 1:numel(rp_field_types)
     
-    Pats = zeros(32,96,1,1);
+    Pats = zeros(4,96,1,1);
     Pats = add_unilat_pattern_to_left_right(Pats,...
                     reverse_phi.(rp_field_types{left_lam_iter}),...
                     solid.('lam'),mid);
@@ -215,7 +215,7 @@ phi_field_types = fieldnames(phi);
 for left_lam_iter = 1:numel(phi_field_types)
     for right_lam_iter = 1:numel(phi_field_types)
 
-        Pats = zeros(32,96,1,1);
+        Pats = zeros(4,96,1,1);
         Pats = add_unilat_pattern_to_left_right(Pats,...
                         phi.(phi_field_types{left_lam_iter}),...
                         phi.(phi_field_types{right_lam_iter}),mid);
@@ -232,7 +232,7 @@ phi_field_types = fieldnames(phi);
 % Flicker on the left
 for right_lam_iter = 1:numel(phi_field_types)
 
-    Pats = zeros(32,96,1,1);
+    Pats = zeros(4,96,1,1);
     Pats = add_unilat_pattern_to_left_right(Pats,...
                     full_field_flicker.('lam'),...
                     phi.(phi_field_types{right_lam_iter}),mid);
@@ -245,7 +245,7 @@ end
 % Flicker on the right
 for left_lam_iter = 1:numel(phi_field_types)
 
-    Pats = zeros(32,96,1,1);
+    Pats = zeros(4,96,1,1);
     Pats = add_unilat_pattern_to_left_right(Pats,...
                     phi.(phi_field_types{left_lam_iter}),...
                     full_field_flicker.('lam'),mid);
@@ -261,7 +261,7 @@ phi_field_types = fieldnames(phi);
 % bar flicker on the left
 for right_lam_iter = 1:numel(phi_field_types)
     
-    Pats = zeros(32,96,1,1);
+    Pats = zeros(4,96,1,1);
     Pats = add_unilat_pattern_to_left_right(Pats,...
                     bar_flicker.(phi_field_types{right_lam_iter}),...
                     phi.(phi_field_types{right_lam_iter}),mid);
@@ -274,7 +274,7 @@ end
 % bar flicker on the right
 for left_lam_iter = 1:numel(phi_field_types)
     
-    Pats = zeros(32,96,1,1);
+    Pats = zeros(4,96,1,1);
     Pats = add_unilat_pattern_to_left_right(Pats,...
                     phi.(phi_field_types{left_lam_iter}),...
                     bar_flicker.(phi_field_types{left_lam_iter}),mid);
@@ -290,7 +290,7 @@ phi_field_types = fieldnames(phi);
 % bar flicker on the left
 for right_lam_iter = 1:numel(phi_field_types)
     
-    Pats = zeros(32,96,1,1);
+    Pats = zeros(4,96,1,1);
     Pats = add_unilat_pattern_to_left_right(Pats,...
                     alternating_bar_flicker.(phi_field_types{right_lam_iter}),...
                     phi.(phi_field_types{right_lam_iter}),mid);
@@ -303,7 +303,7 @@ end
 % bar flicker on the right
 for left_lam_iter = 1:numel(phi_field_types)
     
-    Pats = zeros(32,96,1,1);
+    Pats = zeros(4,96,1,1);
     Pats = add_unilat_pattern_to_left_right(Pats,...
                     phi.(phi_field_types{left_lam_iter}),...
                     alternating_bar_flicker.(phi_field_types{left_lam_iter}),mid);
@@ -321,7 +321,7 @@ phi_field_types = fieldnames(phi);
 for left_lam_iter = 1:numel(rp_field_types)
     for right_lam_iter = 1:numel(phi_field_types)
         
-        Pats = zeros(32,96,1,1);
+        Pats = zeros(4,96,1,1);
         Pats = add_unilat_pattern_to_left_right(Pats,...
                         reverse_phi.(rp_field_types{left_lam_iter}),...
                         phi.(phi_field_types{right_lam_iter}),mid);
@@ -336,7 +336,7 @@ end
 for left_lam_iter = 1:numel(phi_field_types)
     for right_lam_iter = 1:numel(rp_field_types)
         
-        Pats = zeros(32,96,1,1);
+        Pats = zeros(4,96,1,1);
         Pats = add_unilat_pattern_to_left_right(Pats,...
                         phi.(phi_field_types{left_lam_iter}),...
                         reverse_phi.(rp_field_types{right_lam_iter}),mid);
@@ -354,7 +354,7 @@ rp_field_types = fieldnames(reverse_phi);
 for left_lam_iter = 1:numel(rp_field_types)
     for right_lam_iter = 1:numel(rp_field_types)
 
-        Pats = zeros(32,96,1,1);
+        Pats = zeros(4,96,1,1);
         Pats = add_unilat_pattern_to_left_right(Pats,...
                         reverse_phi.(rp_field_types{left_lam_iter}),...
                         reverse_phi.(rp_field_types{right_lam_iter}),mid);
@@ -371,7 +371,7 @@ rp_field_types = fieldnames(reverse_phi);
 % Flicker on the left
 for right_lam_iter = 1:numel(rp_field_types)
 
-    Pats = zeros(32,96,1,1);
+    Pats = zeros(4,96,1,1);
     Pats = add_unilat_pattern_to_left_right(Pats,...
                     full_field_flicker.('lam'),...
                     reverse_phi.(rp_field_types{right_lam_iter}),mid);
@@ -384,7 +384,7 @@ end
 % Flicker on the right
 for left_lam_iter = 1:numel(rp_field_types)
     
-    Pats = zeros(32,96,1,1);
+    Pats = zeros(4,96,1,1);
     Pats = add_unilat_pattern_to_left_right(Pats,...
                     reverse_phi.(rp_field_types{left_lam_iter}),...
                     full_field_flicker.('lam'),mid);
@@ -400,7 +400,7 @@ rp_field_types = fieldnames(reverse_phi);
 % Flicker on the left
 for right_lam_iter = 1:numel(rp_field_types)
     
-    Pats = zeros(32,96,1,1);
+    Pats = zeros(4,96,1,1);
     Pats = add_unilat_pattern_to_left_right(Pats,...
                     bar_flicker.(rp_field_types{right_lam_iter}),...
                     reverse_phi.(rp_field_types{right_lam_iter}),mid);
@@ -413,7 +413,7 @@ end
 % Flicker on the right
 for left_lam_iter = 1:numel(rp_field_types)
     
-    Pats = zeros(32,96,1,1);
+    Pats = zeros(4,96,1,1);
     Pats = add_unilat_pattern_to_left_right(Pats,...
                     reverse_phi.(rp_field_types{left_lam_iter}),...
                     bar_flicker.(rp_field_types{left_lam_iter}),mid);
@@ -429,7 +429,7 @@ rp_field_types = fieldnames(reverse_phi);
 % Flicker on the left
 for right_lam_iter = 1:numel(rp_field_types)
     
-    Pats = zeros(32,96,1,1);
+    Pats = zeros(4,96,1,1);
     Pats = add_unilat_pattern_to_left_right(Pats,...
                     alternating_bar_flicker.(rp_field_types{right_lam_iter}),...
                     reverse_phi.(rp_field_types{right_lam_iter}),mid);
@@ -442,7 +442,7 @@ end
 % Flicker on the right
 for left_lam_iter = 1:numel(rp_field_types)
     
-    Pats = zeros(32,96,1,1);
+    Pats = zeros(4,96,1,1);
     Pats = add_unilat_pattern_to_left_right(Pats,...
                     reverse_phi.(rp_field_types{left_lam_iter}),...
                     alternating_bar_flicker.(rp_field_types{left_lam_iter}),mid);
@@ -463,7 +463,7 @@ end
             for right_iter = 1:size(right_pattern,3)
                 Pats(:,right_cols,left_iter,right_iter) = right_pattern(:,right_cols,right_iter);
                 Pats(:,left_cols,left_iter,right_iter) = left_pattern(:,left_cols,left_iter);
-                Pats(:,[1:4 37:52 85:96],left_iter,right_iter) = background_intensity*ones(32,32);            
+                Pats(:,[1:4 37:52 85:96],left_iter,right_iter) = background_intensity*ones(4,32);            
             end
         end
 
@@ -477,7 +477,7 @@ end
         pattern.y_num       = size(Pats,4);
         pattern.num_panels  = 48;
         pattern.gs_val      = 3;     % 8 levels of intensity (0-7)
-        pattern.row_compression = 0; % so only make [ L M N O ] with L = 4 (one per panel)
+        pattern.row_compression = 1; % so only make [ L M N O ] with L = 4 (one per panel)
         panel_id_map =                  [12  8  4 11  7  3 10  6  2  9  5  1;
                                          24 20 16 23 19 15 22 18 14 21 17 13;
                                          36 32 28 35 31 27 34 30 26 33 29 25;

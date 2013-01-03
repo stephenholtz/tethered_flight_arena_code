@@ -33,7 +33,7 @@ duration = 2.25;
 
 % spatial frequencies of 8, 16 pixels (30, 60 degrees)
 for spatial_freq = [8 16];
-    for pattern_class_set = {'normal','full-flick','flick-alt'}
+    for pattern_class_set = {'normal','full-flick','flick-alt','flick-edge'}
         for phi_type = [1 2] % phi and reverse phi
             for motion_type = [1 2] % progressive and regressive motion
                 switch pattern_class_set{1}
@@ -86,6 +86,22 @@ for spatial_freq = [8 16];
                                 symmetric_patterns = [123 127];
                             end
                         end
+                        
+                    case {'flick-edge'} % patterns with the flickering edges
+
+                        if spatial_freq == 8
+                            if phi_type == 1
+                                symmetric_patterns = [42 46];
+                            else
+                                symmetric_patterns = [114 118];
+                            end
+                        elseif spatial_freq == 16
+                            if phi_type == 1
+                                symmetric_patterns = [43 47];
+                            else
+                                symmetric_patterns = [115 119];
+                            end
+                        end                        
                 end % switch
                 
                 % Generate the actual Condition struct values
@@ -114,8 +130,8 @@ for spatial_freq = [8 16];
                         
                         Conditions(cond_num).Mode           = [0 0];
                         Conditions(cond_num).InitialPosition= [1 1];
-                        Conditions(cond_num).PosFunctionX   = [1 1];
-                        Conditions(cond_num).PosFunctionY 	= [2 1];
+                        Conditions(cond_num).PosFunctionX   = [1 0];
+                        Conditions(cond_num).PosFunctionY 	= [2 0];
                         Conditions(cond_num).FuncFreqY 		= frequency;
                         Conditions(cond_num).FuncFreqX 		= frequency;
                         Conditions(cond_num).PosFuncLoc     = pos_func_loc;            
@@ -139,7 +155,7 @@ Conditions(cond_num).PatternName    = patterns(numel(patterns));
 Conditions(cond_num).PatternLoc     = pattern_loc;
 Conditions(cond_num).Mode           = [1 0];
 Conditions(cond_num).InitialPosition= [49 1];
-Conditions(cond_num).Gains          = [-12 0 0 0]; % seems to work pretty well, 42-48 is another regime that looks nice
+Conditions(cond_num).Gains          = [-12 0 0 0]; % 12-14 seems to work pretty well, 42-48 is another regime that looks nice
 Conditions(cond_num).PosFunctionX   = [1 0];
 Conditions(cond_num).PosFunctionY 	= [2 0];
 Conditions(cond_num).FuncFreqY 		= frequency; % all the pos funcs need to be made to work with this

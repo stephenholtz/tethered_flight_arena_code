@@ -85,10 +85,10 @@ classdef Utilities
                 
                 % Deal with values over 127.
                 if abs(cond_struct.Gains(1))>127
-                    [cond_struct.Gains(1),cond_struct.Gains(2)] = get_valid_gain_bias_vals(cond_struct.Gains(1));
+                    [cond_struct.Gains(1),cond_struct.Gains(2)] = Exp.Utilities.get_valid_gain_bias_vals(cond_struct.Gains(1));
                 end
                 if abs(cond_struct.Gains(3))>127
-                    [cond_struct.Gains(3),cond_struct.Gains(4)] = get_valid_gain_bias_vals(cond_struct.Gains(3));
+                    [cond_struct.Gains(3),cond_struct.Gains(4)] = Exp.Utilities.get_valid_gain_bias_vals(cond_struct.Gains(3));
                 end
                 
                 Panel_com('send_gain_bias',cond_struct.Gains);

@@ -29,7 +29,7 @@ function make_l_vs_r_spatial_temp_flicker_freq_comparison_patterns()
 phi = [];
 reverse_phi = [];
 full_field_flicker = [];
-bar_flicker = [];
+edge_flicker = [];
 alternating_bar_flicker = [];
 solid = [];
 
@@ -117,18 +117,18 @@ solid.('lam') = temp_Pats;
 
 clear temp_Pats
 
-%--Make the bar flicker fields--
-for bar_width = grating_widths
+%--Make the edge flicker
+for bar_width = 2%grating_widths
     
     lam_reps = 96/(bar_width*2);
-
-    flick_on = [dark*ones(4,bar_width), bright*ones(4,bar_width)];
-    flick_off = [dark*ones(4,bar_width), dark*ones(4,bar_width)];
+    
+    flick_on = [mid*ones(4,bar_width),dark*ones(4,bar_width),mid*ones(4,bar_width), bright*ones(4,bar_width)];
+    flick_off = [mid*ones(4,bar_width),bright*ones(4,bar_width),mid*ones(4,bar_width), dark*ones(4,bar_width)];
     
     temp_Pats(:,:,1) = repmat(flick_on,1,lam_reps);
     temp_Pats(:,:,2) = repmat(flick_off,1,lam_reps);
     
-    bar_flicker.(['lam_' num2str(bar_width*2)]) = temp_Pats;
+    edge_flicker.('lam') = temp_Pats;
     
     clear temp_Pats flick_on flick_on lam_reps
 end
@@ -263,10 +263,10 @@ for right_lam_iter = 1:numel(phi_field_types)
     
     Pats = zeros(4,96,1,1);
     Pats = add_unilat_pattern_to_left_right(Pats,...
-                    bar_flicker.(phi_field_types{right_lam_iter}),...
+                    edge_flicker.('lam'),...
                     phi.(phi_field_types{right_lam_iter}),mid);
 
-    pattern_name = ['left_grating_flicker_right_' phi_field_types{right_lam_iter}];
+    pattern_name = ['left_edge_flicker_right_' phi_field_types{right_lam_iter}];
     counter = save_make_pattern(Pats,pattern_name,project,counter);
     
 end
@@ -277,9 +277,9 @@ for left_lam_iter = 1:numel(phi_field_types)
     Pats = zeros(4,96,1,1);
     Pats = add_unilat_pattern_to_left_right(Pats,...
                     phi.(phi_field_types{left_lam_iter}),...
-                    bar_flicker.(phi_field_types{left_lam_iter}),mid);
+                    edge_flicker.('lam'),mid);
     
-    pattern_name = ['left_' phi_field_types{left_lam_iter} '_right_grating_flicker'];
+    pattern_name = ['left_' phi_field_types{left_lam_iter} '_right_edge_flicker'];
     counter = save_make_pattern(Pats,pattern_name,project,counter);
     
 end
@@ -402,10 +402,10 @@ for right_lam_iter = 1:numel(rp_field_types)
     
     Pats = zeros(4,96,1,1);
     Pats = add_unilat_pattern_to_left_right(Pats,...
-                    bar_flicker.(rp_field_types{right_lam_iter}),...
+                    edge_flicker.('lam'),...
                     reverse_phi.(rp_field_types{right_lam_iter}),mid);
 
-    pattern_name = ['left_grating_flicker_rev_phi_right_' rp_field_types{right_lam_iter}];
+    pattern_name = ['left_edge_flicker_rev_phi_right_' rp_field_types{right_lam_iter}];
     counter = save_make_pattern(Pats,pattern_name,project,counter);
     
 end
@@ -416,9 +416,9 @@ for left_lam_iter = 1:numel(rp_field_types)
     Pats = zeros(4,96,1,1);
     Pats = add_unilat_pattern_to_left_right(Pats,...
                     reverse_phi.(rp_field_types{left_lam_iter}),...
-                    bar_flicker.(rp_field_types{left_lam_iter}),mid);
+                    edge_flicker.('lam'),mid);
 
-    pattern_name = ['rev_phi_left_' rp_field_types{left_lam_iter} '_right_grating_flicker'];
+    pattern_name = ['rev_phi_left_' rp_field_types{left_lam_iter} '_right_edge_flicker'];
     counter = save_make_pattern(Pats,pattern_name,project,counter);
     
 end

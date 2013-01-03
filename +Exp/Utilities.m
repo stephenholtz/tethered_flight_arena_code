@@ -82,25 +82,36 @@ classdef Utilities
                 Panel_com('set_pattern_id',cond_struct.PatternID);     
                 Panel_com('set_position',cond_struct.InitialPosition);
                 Panel_com('set_mode',cond_struct.Mode);
-                % Deal with values over 127. By adding in a bias too -- this
-                % means for things to work properly and transparently ONLY the
-                % gains should be changed in the condition function that makes
-                % the cond_struct.
+                
+                % Deal with values over 127.
                 if abs(cond_struct.Gains(1))>127
-                    cond_struct.Gains(2) = cond_struct.Gains(1)/2.5;
-                    cond_struct.Gains(1) = 0;                
-                elseif abs(cond_struct.Gains(3))>127
-                    cond_struct.Gains(4) = cond_struct.Gains(2)/2.5;
-                    cond_struct.Gains(3) = 0;  
+                    [cond_struct.Gains(1),cond_struct.Gains(2)] = get_valid_gain_bias_vals(cond_struct.Gains(1));
                 end
+                if abs(cond_struct.Gains(3))>127
+                    [cond_struct.Gains(3),cond_struct.Gains(4)] = get_valid_gain_bias_vals(cond_struct.Gains(3));
+                end
+                
                 Panel_com('send_gain_bias',cond_struct.Gains);
-                Panel_com('set_posfunc_id',cond_struct.PosFunctionY);
-                Panel_com('set_posfunc_id',cond_struct.PosFunctionX);
-                Panel_com('set_funcy_freq',cond_struct.FuncFreqY);
-                Panel_com('set_funcx_freq',cond_struct.FuncFreqX);
+                
+                % Some new issues 12/12, need to meet with Jin
+                if cond_struct.PosFunctionY(2)
+                    Panel_com('set_posfunc_id',cond_struct.PosFunctionY);
+                end
+                
+                if cond_struct.PosFunctionX(2)
+                    Panel_com('set_posfunc_id',cond_struct.PosFunctionX);
+                end
+                
+                if cond_struct.PosFunctionY(2)
+                    Panel_com('set_funcy_freq',cond_struct.FuncFreqY);
+                end
+                
+                if cond_struct.PosFunctionX(2)
+                    Panel_com('set_funcx_freq',cond_struct.FuncFreqX);
+                end
                 
             end
-        
+            
             time = cond_struct.Duration;
             voltage = cond_struct.Voltage;
         end
@@ -194,6 +205,32 @@ classdef Utilities
 %             addchannel(AI_stim_sync, 1);
 %             set(AI_stim_sync,'TriggerType','Immediate','SamplesPerTrigger',1,'ManualTriggerHwOn','Start')
 %             pause(.2);            
+            
+        end
+        
+        function [gain,bias] = get_valid_gain_bias_vals(fps)
+            % ugly function to fix the gain and bias values...
+            ideal_fps = abs(fps);
+            
+            range_gain = 0:127;
+            range_bias = 0:127;
+            
+            found = false;
+            while true
+                for gain = range_gain
+                    for bias = range_bias
+                        if(gain + 2.5*bias) == ideal_fps
+                            found = true;
+                            gain = gain*sign(fps);
+                            return
+                        end
+                    end
+                end
+            end
+            
+            if ~found
+                error('Specified gain cannot be acheived!') 
+            end
             
         end
         

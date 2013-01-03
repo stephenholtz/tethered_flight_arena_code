@@ -99,7 +99,8 @@ for spatial_freq = [8 16];
                             Conditions(cond_num).PatternName    = patterns{pattern};                        
                         elseif motion_type == 2 % Regressive motion (CW Left first, CCW Right second) --> change the order from RL to LR
                             % reg/rp-reg
-                            pattern = fliplr(symmetric_patterns);
+                            flipped_pattern = fliplr(symmetric_patterns);
+                            pattern = flipped_pattern(pattern_iter);
                             Conditions(cond_num).PatternID      = pattern; %#ok<*AGROW>
                             Conditions(cond_num).PatternName    = patterns{pattern};
                         end
@@ -108,7 +109,7 @@ for spatial_freq = [8 16];
                         if pattern_iter == 1
                             Conditions(cond_num).Gains          = [speed 0 speed 0];
                         elseif pattern_iter == 2
-                            Conditions(cond_num).Gains          = [-speed 0 speed 0];
+                            Conditions(cond_num).Gains          = [-speed 0 -speed 0];
                         end
                         
                         Conditions(cond_num).Mode           = [0 0];

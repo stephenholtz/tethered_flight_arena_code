@@ -1,4 +1,4 @@
-function [parsed_exp_data voltage_encoding_values data_segments] = parse_tf_data(varargin) 
+function [parsed_exp_data, voltage_encoding_values, data_segments] = parse_tf_data(varargin) 
 % [parsed_exp_data voltage_encoding_values inter_encoding_segment_data]= parse_raw_data() 
 % Function will parse all .daq files in the current or specified directory,
 % or a single or set of specified files in a cell array based on changes in

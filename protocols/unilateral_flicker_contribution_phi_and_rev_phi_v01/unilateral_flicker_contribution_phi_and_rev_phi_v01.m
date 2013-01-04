@@ -31,27 +31,28 @@ total_ol_dur = 0;
 frequency = 50;
 duration = 2.25;
 
+
+
 % spatial frequencies of 8, 16 pixels (30, 60 degrees)
 for spatial_freq = [8 16];
-    for pattern_class_set = {'normal','full-flick','flick-alt','flick-edge'}
+    for pattern_class_set = {'normal-reg-prog','full-flick','flick-alt','flick-edge'}
         for phi_type = [1 2] % phi and reverse phi
             for motion_type = [1 2] % progressive and regressive motion
                 switch pattern_class_set{1}
                     % all of these are in format [R-motion L-flicker]
-                    case {'normal'} % patterns with both sides
+                    case {'normal-reg-prog'} % patterns with motion on only one side
 
                         if spatial_freq == 8
                             if phi_type == 1
-                                % i.e. [right_8_wide_phi_no_flicker, left_8_wide_phi_no_flicker]
-                                symmetric_patterns = [22 22];
+                                symmetric_patterns = [2 6];
                             else
-                                symmetric_patterns = [94 94];
+                                symmetric_patterns = [10 14];
                             end
                         elseif spatial_freq == 16
                             if phi_type == 1
-                                symmetric_patterns = [27 27];
+                                symmetric_patterns = [3 7];
                             else
-                                symmetric_patterns = [99 99];
+                                symmetric_patterns = [11 15];
                             end
                         end
                         
@@ -146,6 +147,58 @@ for spatial_freq = [8 16];
                 end
             end
         end % phi_type
+    end
+end
+
+for spatial_freq = [8 16];
+    for phi_type = [1 2]
+        % add in coherent motion at the end
+        if spatial_freq == 8
+            if phi_type == 1
+                % i.e. [right_8_wide_phi_no_flicker, left_8_wide_phi_no_flicker]
+                symmetric_patterns = [22 22];
+            else
+                symmetric_patterns = [94 94];
+            end
+        elseif spatial_freq == 16
+            if phi_type == 1
+                symmetric_patterns = [27 27];
+            else
+                symmetric_patterns = [99 99];
+            end
+        end
+
+        % Generate the actual Condition struct values
+        for speed = [.5 4 8]*spatial_freq
+            for pattern_iter = 1:2
+                
+                pattern = symmetric_patterns(pattern_iter);
+                Conditions(cond_num).PatternID      = pattern; %#ok<*AGROW>
+                Conditions(cond_num).PatternName    = patterns{pattern};                        
+
+                % The second pattern should go counterclockwise
+                if pattern_iter == 1
+                    Conditions(cond_num).Gains          = [speed 0 speed 0];
+                elseif pattern_iter == 2
+                    Conditions(cond_num).Gains          = [-speed 0 -speed 0];
+                end
+
+                Conditions(cond_num).Mode           = [0 0];
+                Conditions(cond_num).InitialPosition= [1 1];
+                Conditions(cond_num).PosFunctionX   = [1 0];
+                Conditions(cond_num).PosFunctionY 	= [2 0];
+                Conditions(cond_num).FuncFreqY 		= frequency;
+                Conditions(cond_num).FuncFreqX 		= frequency;
+                Conditions(cond_num).PosFuncLoc     = pos_func_loc;            
+                Conditions(cond_num).PosFuncNameX   = 'none';
+                Conditions(cond_num).PosFuncNameY   = 'none';
+                Conditions(cond_num).Duration = duration;
+
+                total_ol_dur = total_ol_dur + Conditions(cond_num).Duration + .02;
+                
+                cond_num = cond_num + 1;
+            end
+        end
     end
 end
 

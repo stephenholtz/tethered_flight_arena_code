@@ -33,11 +33,9 @@ end
 % Start a few variables for below    
 cond_num = 1;
 total_ol_dur = 0;
-default_frequency = 50;
+frequency = 50;
 duration = 2.25;
-%'PROGRESSIVE L: ccw and R: cw'
-%'REGRESSIVE L: cw and R: ccw'
-true_func = @(x)~~(~isempty(x));
+
 % %                     Right:  4  8 16 24    Left \/ 
 % symmetric_pattern_matrix = [ 17,18,19,20;...     4
 %                              21,22,23,24;...     8
@@ -75,88 +73,23 @@ for motion_type = [1 2] % progressive and regressive motion
                         % prog
                         Conditions(cond_num).PatternID      = pattern; %#ok<*AGROW>
                         Conditions(cond_num).PatternName    = patterns{pattern};   
-                        %Conditions(cond_num).Gains          = [left_speed 0 -right_speed 0];
+                        Conditions(cond_num).Gains          = [left_speed 0 -right_speed 0];
                     elseif motion_type == 2 % Regressive motion (CW Left first, CCW Right second) --> change the order from RL to LR
                         % reg
                         Conditions(cond_num).PatternID      = pattern; %#ok<*AGROW>
                         Conditions(cond_num).PatternName    = patterns{pattern};
-                        %Conditions(cond_num).Gains          = [-left_speed 0 right_speed 0];
+                        Conditions(cond_num).Gains          = [-left_speed 0 right_speed 0];
                     end
-                    Conditions(cond_num).Gains          = [0 0 0 0];
-                    Conditions(cond_num).Mode           = [4 4];
+                    
+                    Conditions(cond_num).Mode           = [0 0];
                     Conditions(cond_num).InitialPosition= [1 1];
-                    
-                    Conditions(cond_num).PosFuncLoc     = pos_func_loc;
-                    
-                    % determine the left side position function and
-                    % frequency
-                    
-                    %found_temp_freq = cellfun(true_func,(strfind(position_functions,'temp_freq_0pt5')));
-                    if temp_freq < 1
-                        temp_freq_name = regexprep(num2str(temp_freq),'\.','pt');
-                    else
-                        temp_freq_name = num2str(temp_freq);
-                    end
-                    
-                    if left_spatial_freq < 1
-                        spat_freq_name = regexprep(num2str(left_spatial_freq),'\.','pt');
-                    else
-                        spat_freq_name = num2str(left_spatial_freq);
-                    end
-                    
-                    if motion_type == 1
-                        dir = 'cw';
-                    else
-                        dir = 'ccw';
-                    end
-                    
-                    function_ind = find(cellfun(true_func,(strfind(position_functions,['temp_freq_' temp_freq_name]))) & cellfun(true_func,(strfind(position_functions,['spat_freq_' spat_freq_name]))) & cellfun(true_func,(strfind(position_functions,['_dir_' dir]))));
-                    pos_func_name = position_functions{function_ind};
-                    freq_inds = (strfind(pos_func_name,'at_SAMP_RATE_'));
-                    
-                    frequency = str2double(pos_func_name((freq_inds+13):(freq_inds+15)));
-                    
-                    Conditions(cond_num).PosFunctionX   = [1 function_ind];
-                    Conditions(cond_num).FuncFreqX 		= frequency;
-                    Conditions(cond_num).PosFuncNameX   = pos_func_name;
-                    
-                    clear pos_func_ind frequency
-                    
-                    % determine the right side position function and
-                    % frequency
-                    
-                    %found_temp_freq = cellfun(true_func,(strfind(position_functions,'temp_freq_0pt5')));
-                    if temp_freq < 1
-                        temp_freq_name = regexprep(num2str(temp_freq),'\.','pt');
-                    else
-                        temp_freq_name = num2str(temp_freq);
-                    end
-                    
-                    if right_spatial_freq < 1
-                        spat_freq_name = regexprep(num2str(right_spatial_freq),'\.','pt');
-                    else
-                        spat_freq_name = num2str(right_spatial_freq);
-                    end
-                    
-                    if motion_type == 1
-                        dir = 'ccw';
-                    else
-                        dir = 'cw';
-                    end
-                    
-                    function_ind = find(cellfun(true_func,(strfind(position_functions,['temp_freq_' temp_freq_name]))) & cellfun(true_func,(strfind(position_functions,['spat_freq_' spat_freq_name]))) & cellfun(true_func,(strfind(position_functions,['_dir_' dir]))));
-                    pos_func_name = position_functions{function_ind};
-                    freq_inds = (strfind(pos_func_name,'at_SAMP_RATE_'));
-                    
-                    frequency = str2double(pos_func_name((freq_inds+13):(freq_inds+15)));
-                    
-                    
-                    Conditions(cond_num).PosFunctionY 	= [2 function_ind];
+                    Conditions(cond_num).PosFunctionX   = [1 0];
+                    Conditions(cond_num).PosFunctionY 	= [2 0];
                     Conditions(cond_num).FuncFreqY 		= frequency;
-                    Conditions(cond_num).PosFuncNameY   = pos_func_name;
-                    
-                    clear pos_func_ind frequency
-                    
+                    Conditions(cond_num).FuncFreqX 		= frequency;
+                    Conditions(cond_num).PosFuncLoc     = pos_func_loc;            
+                    Conditions(cond_num).PosFuncNameX   = 'none';
+                    Conditions(cond_num).PosFuncNameY   = 'none';
                     Conditions(cond_num).Duration       = duration;
                     Conditions(cond_num).note           = ['Both_tf_' num2str(temp_freq) ' L_sf_' num2str(3.75*left_spatial_freq_list(left_ind)) ' R_sf_' num2str(3.75*right_spatial_freq_list(right_ind)) ];
                     
@@ -165,6 +98,7 @@ for motion_type = [1 2] % progressive and regressive motion
                     %disp(Conditions(cond_num).PatternName)
                     
                     cond_num = cond_num + 1;
+
             end
         end
     end
@@ -179,8 +113,8 @@ Conditions(cond_num).InitialPosition= [49 1];
 Conditions(cond_num).Gains          = [-12 0 0 0]; % 12-14 seems to work pretty well, 42-48 is another regime that looks nice
 Conditions(cond_num).PosFunctionX   = [1 0];
 Conditions(cond_num).PosFunctionY 	= [2 0];
-Conditions(cond_num).FuncFreqY 		= default_frequency;
-Conditions(cond_num).FuncFreqX 		= default_frequency;
+Conditions(cond_num).FuncFreqY 		= frequency; % all the pos funcs need to be made to work with this
+Conditions(cond_num).FuncFreqX 		= frequency;
 Conditions(cond_num).PosFuncLoc     = 'none';            
 Conditions(cond_num).PosFuncNameX   = 'none';
 Conditions(cond_num).PosFuncNameY   = 'none';
@@ -192,7 +126,7 @@ Conditions(cond_num).Voltage        = 0;
 encoded_vals = linspace(.1,9.9,numel(Conditions));
 for cond_num = 1:numel(Conditions)
     Conditions(cond_num).PanelCfgNum    = 1; % should be only the two center panels!
-    Conditions(cond_num).PanelCfgName   = panel_cfgs{1};
+    Conditions(cond_num).PanelCfgName   = panel_cfgs(1);
     Conditions(cond_num).VelFunction 	= [1 0];
 	Conditions(cond_num).VelFuncName 	= 'none';
     Conditions(cond_num).SpatialFreq    = 'none';    

@@ -70,7 +70,7 @@ switch condition_struct.Mode(1)
         fps(1) = condition_struct.Gains(1) + condition_struct.Gains(2)*2.5;
         num_frames(1) = ceil(fps(1) * condition_struct.Duration);
     case 4
-        num_frames(1) = ceil(ondition_struct.FuncFreqX * condition_struct.Duration);
+        num_frames(1) = ceil(condition_struct.FuncFreqX * condition_struct.Duration);
 end
 
 % For finding LCM later

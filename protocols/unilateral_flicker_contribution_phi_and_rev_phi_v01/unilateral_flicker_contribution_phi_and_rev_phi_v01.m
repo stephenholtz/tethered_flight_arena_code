@@ -31,8 +31,6 @@ total_ol_dur = 0;
 frequency = 50;
 duration = 2.25;
 
-
-
 % spatial frequencies of 8, 16 pixels (30, 60 degrees)
 for spatial_freq = [8 16];
     for pattern_class_set = {'normal-reg-prog','full-flick','flick-alt','flick-edge'}
@@ -82,7 +80,7 @@ for spatial_freq = [8 16];
                             end
                         elseif spatial_freq == 16
                             if phi_type == 1
-                                symmetric_patterns = [54 55];
+                                symmetric_patterns = [51 55];
                             else
                                 symmetric_patterns = [123 127];
                             end
@@ -224,7 +222,7 @@ Conditions(cond_num).Voltage        = 0;
 encoded_vals = linspace(.1,9.9,numel(Conditions));
 for cond_num = 1:numel(Conditions)
     Conditions(cond_num).PanelCfgNum    = 1; % should be only the two center panels!
-    Conditions(cond_num).PanelCfgName   = panel_cfgs(1);
+    Conditions(cond_num).PanelCfgName   = panel_cfgs{1};
     Conditions(cond_num).VelFunction 	= [1 0];
 	Conditions(cond_num).VelFuncName 	= 'none';
     Conditions(cond_num).SpatialFreq    = 'none';    

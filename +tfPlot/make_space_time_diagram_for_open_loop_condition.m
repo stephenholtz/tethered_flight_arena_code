@@ -32,7 +32,7 @@ figure_color = [1 1 1];
 verbose = 1;
 
 %% Get the correct save path and names
-if ~isvarname('save_file_path')
+if ~exist('save_file_path','var')
     save_folder = cd;
     std_name = 'std';
     save_file_path = fullfile(save_folder,std_name);
@@ -46,24 +46,6 @@ pattern_location = fullfile(condition_struct.PatternLoc,condition_struct.Pattern
 load(pattern_location);
 
 %% Build a list of frame indicies for the buffer (from the Duration in the struct)
-
-% Convert from gains/biases to just gains for easy fps calculation
-% if abs(condition_struct.Gains(1))<127
-% elseif abs(condition_struct.Gains(1))>127 && condition_struct.Gains(2) == 0
-%     condition_struct.Gains(2) = condition_struct.Gains(1)/2.5;
-%     condition_struct.Gains(1) = 0;
-% else
-%     error('Need more complicated gain -> bias conversion!')
-% end
-% 
-% if abs(condition_struct.Gains(3))<127
-% elseif abs(condition_struct.Gains(3))>127 && condition_struct.Gains(4) == 0
-%     condition_struct.Gains(4) = condition_struct.Gains(2)/2.5;
-%     condition_struct.Gains(3) = 0;
-% else
-%     error('Need more complicated gain -> bias conversion!')
-% end
-
 % X Chan frames
 switch condition_struct.Mode(1)
     case 0
@@ -75,6 +57,7 @@ end
 
 % For finding LCM later
 if num_frames(1) == 0; num_frames(1) = 1; end
+
 % Y Chan frames
 switch condition_struct.Mode(2)
     case 0

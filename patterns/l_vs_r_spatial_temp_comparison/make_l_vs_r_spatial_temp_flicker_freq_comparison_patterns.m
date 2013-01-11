@@ -455,10 +455,10 @@ end
 
 %% Helper functions
     function Pats = add_unilat_pattern_to_left_right(Pats,left_pattern,right_pattern,background_intensity)
-
+        
         left_cols = 5:36;
         right_cols = 53:84;
-
+        
         for left_iter = 1:size(left_pattern,3)
             for right_iter = 1:size(right_pattern,3)
                 Pats(:,right_cols,left_iter,right_iter) = right_pattern(:,right_cols,right_iter);
@@ -466,9 +466,8 @@ end
                 Pats(:,[1:4 37:52 85:96],left_iter,right_iter) = background_intensity*ones(4,32);            
             end
         end
-
+        
     end
-
 
     function new_count = save_make_pattern(Pats,pattern_name,project,counter)
     % Save the pattern, populate required fields.

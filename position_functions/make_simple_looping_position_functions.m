@@ -1,4 +1,4 @@
-function function_vector = make_simple_looping_position_functions(spatial_freq,temporal_freq,pos_func_samp_freq)
+function function_vector = make_simple_looping_position_functions(spatial_freq,temporal_freq,pos_func_samp_freq,dummy_frame_flag)
 % make a position function to move a pattern with a very simple vector
 
 % get the speed the pattern must move at in frames per second
@@ -16,7 +16,14 @@ end
 function_vector = [];
 
 for step = 1:spatial_freq
-    function_vector = [function_vector repmat(step-1,1,step_size)];
+    function_vector = [function_vector repmat(step,1,step_size)]; %#ok<*AGROW>
+end
+
+% If there is a dummy frame, then the zeroth index should not be indexed
+% into, otherwise, this is a frame that is needed, and the steps are all
+% one index position too large.
+if ~exist('dummy_frame_flag','var') && ~dummy_frame_flag
+    function_vector = function_vector - 1;
 end
 
 end

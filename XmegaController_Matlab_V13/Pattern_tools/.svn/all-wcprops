@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/Pattern_tools
+END
+Pattern_Repeater.m
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/Pattern_tools/Pattern_Repeater.m
+END
+make_panel_bit_map.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/Pattern_tools/make_panel_bit_map.m
+END
+makeBitMap.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/Pattern_tools/makeBitMap.m
+END
+simple_expansion.m
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/Pattern_tools/simple_expansion.m
+END
+BinPats.m
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/Pattern_tools/BinPats.m
+END
+MakePat.m
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/Pattern_tools/MakePat.m
+END
+ShiftMatrix.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/Pattern_tools/ShiftMatrix.m
+END

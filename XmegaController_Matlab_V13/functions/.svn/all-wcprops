@@ -1,0 +1,239 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/reiserlab/MatlabPanel/!svn/ver/88/trunk/Xmega_controller/functions
+END
+make_square_wave_function.m
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/make_square_wave_function.m
+END
+function_DC_1V.mat
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_DC_1V.mat
+END
+function_square_0.2hz_50per.mat
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_square_0.2hz_50per.mat
+END
+function_square_0.05hz_symmetric.mat
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_square_0.05hz_symmetric.mat
+END
+function_sine_0.05hz.mat
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_sine_0.05hz.mat
+END
+position_function_sine_01Hz_100_pp.mat
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/position_function_sine_01Hz_100_pp.mat
+END
+make_position_func_script.m
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/make_position_func_script.m
+END
+position_function_sine_02Hz_50_pp_moded_16.mat
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/position_function_sine_02Hz_50_pp_moded_16.mat
+END
+function_square_0.05hz_10per.mat
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_square_0.05hz_10per.mat
+END
+function_sine_1hz.mat
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_sine_1hz.mat
+END
+setFunction.fig
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/reiserlab/MatlabPanel/!svn/ver/88/trunk/Xmega_controller/functions/setFunction.fig
+END
+position_function_sine_025Hz_20_pp_var.mat
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/position_function_sine_025Hz_20_pp_var.mat
+END
+function_DC_zero.mat
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_DC_zero.mat
+END
+position_function_sine_02Hz_50_pp_moded_8.mat
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/position_function_sine_02Hz_50_pp_moded_8.mat
+END
+position_function_sine_01Hz_50_pp.mat
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/position_function_sine_01Hz_50_pp.mat
+END
+function_1p5_square_amp1_0.1hz_symmetric_var.mat
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_1p5_square_amp1_0.1hz_symmetric_var.mat
+END
+function_square_amp1_0.1hz_symmetric.mat
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_square_amp1_0.1hz_symmetric.mat
+END
+function_square_amp2_0.1hz_symmetric.mat
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_square_amp2_0.1hz_symmetric.mat
+END
+function_square_amp3_0.1hz_symmetric.mat
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_square_amp3_0.1hz_symmetric.mat
+END
+function_DC_0p1V.mat
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_DC_0p1V.mat
+END
+function_square_amp5_0.1hz_symmetric.mat
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_square_amp5_0.1hz_symmetric.mat
+END
+function_square_2hz_50per.mat
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_square_2hz_50per.mat
+END
+setPosFunction.fig
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/setPosFunction.fig
+END
+sign_mod.m
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/sign_mod.m
+END
+setFunction.m
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/reiserlab/MatlabPanel/!svn/ver/84/trunk/Xmega_controller/functions/setFunction.m
+END
+position_function_sine_025Hz_20_pp.mat
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/position_function_sine_025Hz_20_pp.mat
+END
+position_function_sine_01Hz_100_pp_var.mat
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/position_function_sine_01Hz_100_pp_var.mat
+END
+function_square_0.05hz_01per.mat
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_square_0.05hz_01per.mat
+END
+function_1p5_square_amp1_0.1hz_symmetric.mat
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_1p5_square_amp1_0.1hz_symmetric.mat
+END
+function_sine_0.2hz.mat
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_sine_0.2hz.mat
+END
+function_square_0.05hz_05per.mat
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_square_0.05hz_05per.mat
+END
+function_square_amp3_0.05hz_symmetric.mat
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_square_amp3_0.05hz_symmetric.mat
+END
+function_square_0.05hz_15per.mat
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_square_0.05hz_15per.mat
+END
+make_func_script.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/make_func_script.m
+END
+function_square_amp5_0.05hz_symmetric.mat
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_square_amp5_0.05hz_symmetric.mat
+END
+make_sine_wave_function.m
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/make_sine_wave_function.m
+END
+function_square_0.1hz_02per.mat
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_square_0.1hz_02per.mat
+END
+function_sine_0.5hz_varlen.mat
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/function_sine_0.5hz_varlen.mat
+END
+setPosFunction.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/reiserlab/MatlabPanel/!svn/ver/47/trunk/Xmega_controller/functions/setPosFunction.m
+END

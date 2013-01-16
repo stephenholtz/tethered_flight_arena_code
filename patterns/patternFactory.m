@@ -4,7 +4,8 @@ classdef patternFactory < handle
 % 
 % Call constructor, populate required properties (i.e. lambda,
 % row_compression, etc.) and call methods to make desired patterns. Handle
-% class so multiple 
+% class with most methods returning the obj. So can use eihter as a mutable
+% handle, or use intermediate objects for loops.
 % 
 % All patterns are by default clockwise.
 % 
@@ -120,7 +121,9 @@ classdef patternFactory < handle
         
 %-------MAKE SIMPLE PATTERNS IN JUST ONE CHANNEL--------------------------%
 
-        function SquareWave(obj,bar_width)
+        function obj = SquareWave(obj,bar_width,varargin)
+            
+            obj.pattern = [];
             
             lambda_reps = obj.num_arena_cols/(bar_width*2);
             lambda_col = [obj.low_val*ones(obj.num_arena_rows,bar_width), obj.high_val*ones(obj.num_arena_rows,bar_width)];
@@ -134,8 +137,10 @@ classdef patternFactory < handle
             
         end
         
-        function RevPhiSquareWave(obj,bar_width)
+        function obj = RevPhiSquareWave(obj,bar_width,varargin)
 
+            obj.pattern = [];
+            
             lambda_reps = obj.num_arena_cols/(bar_width*2);
             lambda_on   = [obj.mid_val*ones(obj.num_arena_rows,bar_width),...
                           obj.high_val*ones(obj.num_arena_rows,bar_width)];
@@ -158,7 +163,9 @@ classdef patternFactory < handle
             
         end
         
-        function EdgeFlicker(obj,bar_width)
+        function obj = EdgeFlicker(obj,bar_width,varargin)
+            
+            obj.pattern = [];
             
             lambda_reps = obj.num_arena_cols/(bar_width*4);
             
@@ -176,7 +183,9 @@ classdef patternFactory < handle
             
         end
         
-        function AltBarFlicker(obj,bar_width)
+        function obj = AltBarFlicker(obj,bar_width,varargin)
+            
+            obj.pattern = [];
             
             lambda_reps = obj.num_arena_cols/(bar_width*2);
 
@@ -188,51 +197,96 @@ classdef patternFactory < handle
             
         end
         
-        function FullFieldFlicker(obj)
+        function obj = FullFieldFlicker(obj,varargin)
             
-           obj.pattern(:,:,1) = obj.high_val*ones(obj.num_arena_rows,obj.num_arena_cols);
-           obj.pattern(:,:,2) = obj.low_val*ones(obj.num_arena_rows,obj.num_arena_cols);
+            obj.pattern = [];
+            
+            obj.pattern(:,:,1) = obj.high_val*ones(obj.num_arena_rows,obj.num_arena_cols);
+            obj.pattern(:,:,2) = obj.low_val*ones(obj.num_arena_rows,obj.num_arena_cols);
            
         end
-        
-        function empty_frame = MakeEmptyMidValFrame(obj,num_frames)
-            empty_frame = obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols);
+                
+        function obj = SingleBarForEdgeLoop(obj,bar_width,side,motion_type)
+            % A very specific stimulus...
             
-            if exist('num_frames','var')
-               for i = 1:num_frames
-                   empty_frame(:,:,i) = empty_frame(:,:,1);
-               end
+            obj.pattern = [];
+            
+            pattern_offset = 4;
+            half_mask_size = 8;
+            half_arena = 48;
+            
+            unshifted_bar = [obj.low_val*ones(obj.num_arena_rows,bar_width),...
+                            obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols-bar_width)];
+            
+            switch side
+                case 'left'
+                    switch motion_type
+                        case 'progressive'
+                            bar = circshift(unshifted_bar',half_arena-pattern_offset-half_mask_size)';
+                            dir = -1;
+                        case 'regressive'
+                            bar = circshift(unshifted_bar',half_mask_size-bar_width-pattern_offset)';
+                            dir = 1;
+                    end
+                
+                case 'right'
+                    switch motion_type
+                        case 'progressive'
+                            bar = circshift(unshifted_bar',half_arena-pattern_offset+(half_mask_size-bar_width))';
+                            dir = 1;
+                        case 'regressive'
+                            bar = circshift(unshifted_bar',-half_mask_size-pattern_offset)';
+                            dir = -1;
+                    end
             end
+            
+            for i = 1:(half_arena-(half_mask_size-bar_width)-(2*pattern_offset));
+                if dir == 1
+                    obj.pattern(:,:,i) = circshift(bar',i-1)';
+                else
+                    obj.pattern(:,:,i) = circshift(bar',1-i)';
+                end
+            end
+            
         end
         
-        function SingleBar(obj,bar_width,arena_col_start_pos,background_type)
+        function obj = SingleBar(obj,bar_width,bar_type,offset_start_pos,relative_loop_vec)
             
-            num_before = arena_col_start_pos - bar_width*3/2;
-            num_after = obj.num_arena_cols - (num_before +  bar_width);
+            obj.pattern = [];
+            pattern_offset = 4;
             
-            switch background_type
+            if ~exist('relative_loop_vec','var')
+                relative_loop_vec = 1:obj.num_arena_cols;
+            end
+            
+            switch bar_type
                 case {'low'}
-                    bar = [obj.low_val*ones(obj.num_arena_rows,num_before),...
-                        obj.high_val*ones(obj.num_arena_rows,bar_width),...
-                        obj.low_val*ones(obj.num_arena_rows,num_after)];
+                    bar = [obj.low_val*ones(obj.num_arena_rows,bar_width),...
+                        obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols-bar_width)];
 
-                case {'mid'}
-                    bar = [obj.mid_val*ones(obj.num_arena_rows,num_before),...
-                        obj.high_val*ones(obj.num_arena_rows,bar_width),...
-                        obj.mid_val*ones(obj.num_arena_rows,num_after)];
+                case {'high'}
+                    bar = [obj.high_val*ones(obj.num_arena_rows,bar_width),...
+                        obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols-bar_width)];
 
                 otherwise
                     error('background_type must be low or mid')
-                    
+
             end
             
-            for i = 1:obj.num_arena_cols
-                obj.pattern(:,:,i) = circshift(bar',i-1)';
+            % note the -arena_offset to make the standard pattern start behind the fly
+            bar = circshift(bar',offset_start_pos-pattern_offset*2)'; 
+            
+            iter = 1;
+            for shift = relative_loop_vec
+                obj.pattern(:,:,iter) = circshift(bar',shift)';
+                iter = iter + 1;
             end
             
         end
         
-        function SingleEdge(obj,start_col,direction,edge_type)
+        function obj = SingleEdge(obj,start_col,direction,edge_type)
+            
+            obj.pattern = [];
             
             iter = 0;
             
@@ -276,9 +330,20 @@ classdef patternFactory < handle
             
         end
         
+        function empty_frame = MakeEmptyMidValFrame(obj,num_frames)
+                        
+            empty_frame = obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols);
+            
+            if exist('num_frames','var')
+               for i = 1:num_frames
+                   empty_frame(:,:,i) = empty_frame(:,:,1);
+               end
+            end
+        end
+        
 %-------MISC USEFUL PATTERN MANIPULATIONS---------------------------------%
         
-        function AddPatternLoops(obj,num_loops)
+        function obj = AddPatternLoops(obj,num_loops)
             
             orig_loop_len = size(obj.pattern,3);
             loop_iter = 1;
@@ -298,7 +363,7 @@ classdef patternFactory < handle
             end
         end
 
-        function AddDummyFrames(obj,channel_dim,num_frames)
+        function obj = AddDummyFrames(obj,channel_dim,num_frames)
             
             switch channel_dim
                 case {3,'x'}
@@ -315,9 +380,40 @@ classdef patternFactory < handle
             
         end
         
+        function obj = SwitchXYChannels(obj)
+            
+            temp_pat = obj.pattern;
+            obj.pattern = [];
+            
+            for old_y_iter = 1:size(temp_pat,4)
+                for old_x_iter = 1:size(temp_pat,3)
+                    obj.pattern(:,:,old_y_iter,old_x_iter) = temp_pat(:,:,old_x_iter,old_y_iter);
+                end
+            end
+            
+        end
+        
+        function obj = ShiftToEdgeStart(obj,edge_type)
+            edge = obj.([edge_type '_val']);
+            row_with_edge = obj.num_arena_rows/2;
+            
+            full_pat_row = obj.pattern(row_with_edge,:,1,1);
+            
+            shift_amount = 0;
+            
+            shifted_pattern = [];
+            
+            for i = 1:size(obj.pattern)
+                shifted_pattern(:,:,i,1) = circshift(obj.pattern',shift_amount)';
+            end
+            
+            obj.pattern = shifted_pattern;
+            
+        end
+        
 %-------MASK PATTERNS, ETC------------------------------------------------%
         
-        function SimpleMask(obj,mask_location,window_size)
+        function obj = SimpleMask(obj,mask_location,window_size)
             full_cols = 1:obj.num_arena_cols;
             
             if window_size ~= 60 && window_size ~= 120
@@ -331,26 +427,61 @@ classdef patternFactory < handle
                     full_cols(obj.(['right_' num2str(window_size) '_deg_window_cols_small_arena'])) = 0;
                 case {'center'}
                     full_cols(obj.(['center_' num2str(window_size) '_deg_window_cols_small_arena'])) = 0;
+                case {'left+right'}
+                    full_cols(obj.(['left_' num2str(window_size) '_deg_window_cols_small_arena'])) = 0;
+                    full_cols(obj.(['right_' num2str(window_size) '_deg_window_cols_small_arena'])) = 0;
                 otherwise
                     eror('maske_location must be left right or center')
             end
             
-            num_mask_cols = sum(~full_cols);
+            num_mask_cols = sum(~~full_cols);
             
             for j = 1:size(obj.pattern,4)
                 for i = 1:size(obj.pattern,3)
-                    obj.pattern(:,(~full_cols),i,j) = obj.mid_val*ones(obj.num_arena_rows,num_mask_cols);
+                    obj.pattern(:,(~~full_cols),i,j) = obj.mid_val*ones(obj.num_arena_rows,num_mask_cols);
                 end
             end
         end
         
+        function obj = VerticalTopBottomMaskUncompressedPattern(obj,mask_height)
+            % A centered window of mask_height
+            
+            num_mask_rows = obj.num_arena_rows - mask_height;
+            
+            full_rows = 1:obj.num_arena_rows;
+            non_mask_inds = ((obj.num_arena_rows/2)+1-ceil(mask_height/2)):(obj.num_arena_rows/2)+floor(mask_height/2);
+            full_rows(non_mask_inds) = 0;
+            
+            for j = 1:size(obj.pattern,4)
+                for i = 1:size(obj.pattern,3)
+                    obj.pattern((~~full_rows),:,i,j) = obj.mid_val*ones(num_mask_rows,obj.num_arena_cols);
+                end
+            end
+            
+        end
+        
+        function obj = MaskTopBottomPanelsInRowCompressedPattern(obj)
+            if ~obj.row_compression
+                error('pattern must be row compressed to mask with this function')
+            end
+            
+            for j = 1:size(obj.pattern,4)
+                for i = 1:size(obj.pattern,3)
+                    obj.pattern([1, end],:,i,j) = obj.mid_val*ones(2,obj.num_arena_cols);
+                end
+            end
+            
+        end %%%%% NEEDS A DIFFERENT IMPLEMENTATION????
+        
     end
-
+    
     methods (Static)
         
 %-------COMBINE PREVIOUSLY MADE PATTERNS IN X AND Y CHANNELS--------------%
 
         function combined_pattern = AddPatternsBilatLeftRight(left_pat_obj,right_pat_obj,window_size)
+            % Right pat obj must be in Y and left must be in X for this to
+            % work properly
             
             if window_size ~= 60 && window_size ~= 120
                 error('window_size must be 60 or 120')
@@ -365,13 +496,13 @@ classdef patternFactory < handle
             right_cols(left_pat_obj.(['right_' num2str(window_size) '_deg_window_cols_small_arena'])) = 0;
             
             for left_iter = 1:size(left_pat_obj.pattern,3)
-                for right_iter = 1:size(right_pat_obj.pattern,3)
+                for right_iter = 1:size(right_pat_obj.pattern,4)
                     combined_pattern(:,:,left_iter,right_iter) = left_pat_obj.MakeEmptyMidValFrame;
                     combined_pattern(:,~right_cols,left_iter,right_iter) = right_pat_obj.pattern(:,~right_cols,right_iter); %#ok<*AGROW>
                     combined_pattern(:,~left_cols,left_iter,right_iter) = left_pat_obj.pattern(:,~left_cols,left_iter);
                 end
             end
-            
+           
         end
         
         function combined_pattern = AddPatternsOverlayedForNulling(x_pat_obj,y_pat_obj,gs_val)

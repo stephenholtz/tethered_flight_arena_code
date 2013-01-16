@@ -166,7 +166,7 @@ grayscale_color_map(grayscale_color_map == -1) = linspace(0,1,pattern.gs_val^2-1
 if verbose; fprintf(1,'Preallocating Frames...'); end
 
 %st_image = zeros(num_frames*size(pattern.Pats,1),num_frames*size(pattern.Pats,2));
-st_image = []
+st_image = [];
 if verbose; fprintf(1,'\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b'); end
 
 

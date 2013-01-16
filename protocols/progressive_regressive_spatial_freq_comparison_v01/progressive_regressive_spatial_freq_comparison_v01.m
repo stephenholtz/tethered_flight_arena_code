@@ -197,6 +197,7 @@ for cond_num = 1:numel(Conditions)
 	Conditions(cond_num).VelFuncName 	= 'none';
     Conditions(cond_num).SpatialFreq    = 'none';    
     Conditions(cond_num).Voltage        =  encoded_vals(cond_num);
+    Conditions(cond_num).PatternLoc     = pattern_loc;
 end
 
 % Even though it is set in the experiment, be explicit about the voltage

@@ -40,10 +40,36 @@ Pats(:,:,:,5) = bar_factory.ReturnPatternAndParams;
 bar_factory.VerticalTopBottomMaskUncompressedPattern(4)
 Pats(:,:,:,6) = bar_factory.ReturnPatternAndParams;
 
-pattern_name = 'bar_flicker_orientation_pattern_with_dummy_x_frame';
+pattern_name = 'dark_bar_flicker_orientation_pattern_with_dummy_x_frame';
 counter = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_name,project,counter,testing_flag);
 
-% counter = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_name,project,counter,testing_flag);
+clear Pats
+
+% Use the patternFactory class to make all of the patterns.
+bar_factory = patternFactory('small',row_compression,gs_val);
+
+bar_factory.SingleBar(8,'high',0,loop_vec);
+bar_factory.AddDummyFrames('x',1)
+Pats(:,:,:,1) = bar_factory.ReturnPatternAndParams;
+
+bar_factory.VerticalTopBottomMaskUncompressedPattern(12)
+Pats(:,:,:,2) = bar_factory.ReturnPatternAndParams;
+
+bar_factory.VerticalTopBottomMaskUncompressedPattern(4)
+Pats(:,:,:,3) = bar_factory.ReturnPatternAndParams;
+
+bar_factory.SingleBar(4,'high',2,loop_vec);
+bar_factory.AddDummyFrames('x',1)
+Pats(:,:,:,4) = bar_factory.ReturnPatternAndParams;
+
+bar_factory.VerticalTopBottomMaskUncompressedPattern(12)
+Pats(:,:,:,5) = bar_factory.ReturnPatternAndParams;
+
+bar_factory.VerticalTopBottomMaskUncompressedPattern(4)
+Pats(:,:,:,6) = bar_factory.ReturnPatternAndParams;
+
+pattern_name = 'bright_bar_flicker_orientation_pattern_with_dummy_x_frame';
+counter = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_name,project,counter,testing_flag);
 
 % 8 positions, 3 durations, 6 bar styles, 3 reps, time is(3.5 CL + 1.5 OL)
 % (8*3)*6*3*5/60

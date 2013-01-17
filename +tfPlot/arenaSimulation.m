@@ -142,8 +142,12 @@ classdef arenaSimulation < handle
             % X Chan
             switch obj.mode(1)
                 case 0
-                    x_fps = obj.gains(1) + 2.5*obj.gains(3);
-                    x_loop = 1:size(obj.pattern,3);
+                    x_fps = abs(obj.gains(1)) + abs(2.5*obj.gains(2));
+                    if obj.gains(1) > 0
+                        x_loop = 1:size(obj.pattern,3);
+                    else
+                        x_loop = size(obj.pattern,3):-1:1;
+                    end
                 case 4
                     x_fps = obj.x_func_freq;
                     x_loop = obj.x_function+1;
@@ -154,8 +158,13 @@ classdef arenaSimulation < handle
             % Y Chan
             switch obj.mode(2)
                 case 0
-                    y_fps = obj.gains(2) + 2.5*obj.gains(4);
-                    y_loop = 1:size(obj.pattern,3);
+                    y_fps = abs(obj.gains(3)) + abs(2.5*obj.gains(4));
+                    if obj.gains(3) > 0
+                        y_loop = 1:size(obj.pattern,4);
+                    else
+                        y_loop = size(obj.pattern,4):-1:1;
+                    end
+                    
                 case 4
                     y_fps = obj.y_func_freq;
                     y_loop = obj.y_function+1;
@@ -168,13 +177,13 @@ classdef arenaSimulation < handle
             obj.y_pos_vector = zeros(1,obj.arena_display_clock*obj.duration);
             
             % x chan
-
+            
             if x_fps ~= 0 
                 
                 loop_loc = obj.initial_pos(1);
                 
                 for i = 1:numel(obj.x_pos_vector)
-
+                    
                     if ~mod(i,obj.arena_display_clock/x_fps)
                         loop_loc = loop_loc + 1;
                     end
@@ -200,7 +209,7 @@ classdef arenaSimulation < handle
                 loop_loc = obj.initial_pos(2);
                 
                 for i = 1:numel(obj.y_pos_vector)
-
+                    
                     if ~mod(i,obj.arena_display_clock/y_fps)
                         loop_loc = loop_loc + 1;
                     end
@@ -223,7 +232,6 @@ classdef arenaSimulation < handle
         end
 
         function MakeStimulusFrames(obj)
-            
 
             obj.stim_frames = zeros(obj.num_arena_rows,obj.num_arena_cols,numel(obj.x_pos_vector));
             
@@ -232,8 +240,12 @@ classdef arenaSimulation < handle
                 y_ind = obj.y_pos_vector(curr_pos);                
                 x_ind = obj.x_pos_vector(curr_pos);
                 
+                % Effectively hard coded...
                 if obj.row_compression
-                    obj.stim_frames(:,:,curr_pos) = repmat(obj.pattern(:,:,x_ind,y_ind),8,1);
+                    obj.stim_frames(:,:,curr_pos) = [   repmat(obj.pattern(1,:,x_ind,y_ind),8,1);...
+                                                        repmat(obj.pattern(2,:,x_ind,y_ind),8,1);...
+                                                        repmat(obj.pattern(3,:,x_ind,y_ind),8,1);...
+                                                        repmat(obj.pattern(4,:,x_ind,y_ind),8,1)];
                 else
                     obj.stim_frames(:,:,curr_pos) = obj.pattern(:,:,x_ind,y_ind);
                 end

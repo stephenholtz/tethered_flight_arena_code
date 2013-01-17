@@ -4,7 +4,7 @@ clear func
 
 output_location = '/Users/stephenholtz/tethered_flight_arena_code/position_functions/bar_flicker_orientation_test_v01';
 func_iter = 1;
-time_before = 50;
+time_before = 150;
 durations = [50 200 500];
 total_time = max(durations) + 1000;
 freq = 'SAMP_RATE_500Hz';

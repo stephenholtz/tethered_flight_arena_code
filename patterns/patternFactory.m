@@ -120,7 +120,7 @@ classdef patternFactory < handle
         end
         
 %-------MAKE SIMPLE PATTERNS IN JUST ONE CHANNEL--------------------------%
-
+        
         function obj = SquareWave(obj,bar_width,varargin)
             
             obj.pattern = [];
@@ -205,7 +205,7 @@ classdef patternFactory < handle
             obj.pattern(:,:,2) = obj.low_val*ones(obj.num_arena_rows,obj.num_arena_cols);
            
         end
-                
+        
         function obj = SingleBarForEdgeLoop(obj,bar_width,side,motion_type)
             % A very specific stimulus...
             
@@ -362,7 +362,7 @@ classdef patternFactory < handle
                 
             end
         end
-
+        
         function obj = AddDummyFrames(obj,channel_dim,num_frames)
             
             switch channel_dim
@@ -371,7 +371,9 @@ classdef patternFactory < handle
                     obj.pattern = obj.MakeEmptyMidValFrame(num_frames);
                     obj.pattern(:,:,(1+num_frames):size(obj.temp_pattern,3)+num_frames,:) = obj.temp_pattern;
                 case {4,'y'}
-                    % add...
+                    obj.temp_pattern = obj.pattern;
+                    obj.pattern = obj.MakeEmptyMidValFrame(num_frames);
+                    obj.pattern(:,:,:,(1+num_frames):size(obj.temp_pattern,4)+num_frames) = obj.temp_pattern;
                 otherwise
                     error('channel_dim must be 3,''x'',4, or ''y''')
             end
@@ -390,24 +392,6 @@ classdef patternFactory < handle
                     obj.pattern(:,:,old_y_iter,old_x_iter) = temp_pat(:,:,old_x_iter,old_y_iter);
                 end
             end
-            
-        end
-        
-        function obj = ShiftToEdgeStart(obj,edge_type)
-            edge = obj.([edge_type '_val']);
-            row_with_edge = obj.num_arena_rows/2;
-            
-            full_pat_row = obj.pattern(row_with_edge,:,1,1);
-            
-            shift_amount = 0;
-            
-            shifted_pattern = [];
-            
-            for i = 1:size(obj.pattern)
-                shifted_pattern(:,:,i,1) = circshift(obj.pattern',shift_amount)';
-            end
-            
-            obj.pattern = shifted_pattern;
             
         end
         
@@ -471,7 +455,7 @@ classdef patternFactory < handle
                 end
             end
             
-        end %%%%% NEEDS A DIFFERENT IMPLEMENTATION????
+        end
         
     end
     
@@ -503,6 +487,92 @@ classdef patternFactory < handle
                 end
             end
            
+        end
+        
+        function shifted_pattern = ShiftWindowedToEdgeStart(pattern,channel,edge_type,has_dummy_frame)
+                        
+            % the row with the edge is by default in the middle
+            row_with_edge = ceil(size(pattern,1)/2);
+            
+            if has_dummy_frame
+                if channel == 'x'
+                    full_pat_rows = pattern(row_with_edge,:,2:end,1);
+                elseif channel == 'y'
+                    full_pat_rows = pattern(row_with_edge,:,1,2:end);
+                end
+            else
+                if channel == 'x'
+                    full_pat_rows = pattern(row_with_edge,:,1:end,1);
+                elseif channel == 'y'
+                    full_pat_rows = pattern(row_with_edge,:,1,1:end);
+                end
+            end
+            
+            sq_pat_rows = squeeze(full_pat_rows)';
+            
+            periodic_rows = sq_pat_rows(:,((min(sq_pat_rows)-max(sq_pat_rows)) ~= 0));
+            
+            single_row = periodic_rows(1,:);
+            
+            for i = 2:(size(periodic_rows,1))
+                
+                prev_val = single_row(i-1);
+                curr_val = single_row(i);
+                
+                shift_amount = 0;
+                
+                if strcmpi(edge_type,'low')
+                    
+                    if prev_val == min(single_row) && curr_val == max(single_row) 
+                        shift_amount = i-1;
+                        break
+                    end
+                    
+                elseif strcmpi(edge_type,'high')
+                    
+                    if prev_val == min(single_row) && curr_val == max(single_row) 
+                        shift_amount = i-1;
+                        break
+                    end
+                end
+                
+            end            
+            
+            if has_dummy_frame
+            
+                if channel == 'x'
+                    for i = 2:size(pattern,3)
+                        shifted_ind = shift_amount + i;
+                        
+                        if shifted_ind == size(pattern,3)
+                           shifted_ind = shifted_ind - (size(pattern,3) - 1);
+                        end
+                        
+                        shifted_pattern(:,:,shifted_ind,:) = pattern(:,:,i,:);
+                        
+                    end
+                    
+                    shifted_pattern(:,:,1,:) = pattern(:,:,1,:);
+                    
+                elseif channel == 'y'
+                    
+                    for i = 2:size(pattern,4)
+                        shifted_ind = shift_amount + i;
+                        
+                        if shifted_ind > size(pattern,4)
+                           shifted_ind = shifted_ind - (size(pattern,4) - 1);
+                        end
+
+                        shifted_pattern(:,:,:,shifted_ind) = pattern(:,:,:,i);
+                        
+                    end
+                    
+                    shifted_pattern(:,:,:,1) = pattern(:,:,:,1);
+                    
+                end                
+                
+            end
+            
         end
         
         function combined_pattern = AddPatternsOverlayedForNulling(x_pat_obj,y_pat_obj,gs_val)

@@ -7,7 +7,7 @@ project = 'l_vs_r_edge_and_grating_combinations_v01';
 % Pattern properties needed later
 row_compression = 1;
 gs_val = 3;
-testing_flag = 0;
+testing_flag = 1;
 
 % Counter for iterating the pattern names, set nonzero if appending to 
 % another experiment.
@@ -57,8 +57,7 @@ for left = {'grating','edge'}
         
         % Passing extra args to SquareWave is allowed
         left_pattern.(left_func)(left_val,'left',left_motion_type);
-        left_pattern.ShiftToEdgeStart;
-        left_pattern.AddDummyFrames('x',1)
+        left_pattern.AddDummyFrames('x',1);
         
         for right = {'grating','edge'}
             
@@ -74,7 +73,9 @@ for left = {'grating','edge'}
             right_use_regressive = -1;
             
             for right_val = right_iters
-                
+                if counter == 50
+                    'barf'
+                end                             
                 switch right{1}
                     case 'edge'
 
@@ -94,15 +95,39 @@ for left = {'grating','edge'}
 
                 % Passing extra args to SquareWave is allowed
                 right_pattern.(right_func)(right_val,'right',right_motion_type);
-                right_pattern.ShiftToEdgeStart('low');
-                right_pattern.AddDummyFrames('x',1)
+                right_pattern.SwitchXYChannels;
+                right_pattern.AddDummyFrames('y',1);
                 
-                Pats = patternFactory.AddPatternsBilatLeftRight(left_pattern,right_pattern,120);
+                unshifted_pattern = patternFactory.AddPatternsBilatLeftRight(left_pattern,right_pattern,120);
                 
-                pattern_name = cell2mat(['left_' left '_barsize_' num2str(left_val) '_dir_' left_motion_type '_right_' right '_barsize_' num2str(right_val) '_dir_' right_motion_type '_frame_1_empty']);
+                switch left{1}
+                    case 'edge'
+                        
+                        switch right{1}
+                            case 'edge'
+                                Pats = unshifted_pattern;
+                            case 'grating'
+                                Pats = patternFactory.ShiftWindowedToEdgeStart(unshifted_pattern,'y','low',1);
+                        end
+                        
+                    case 'grating'
+                        
+                        switch right{1}
+                            case 'grating'
+                                right_shifted_pattern = patternFactory.ShiftWindowedToEdgeStart(unshifted_pattern,'x','low',1);
+                                Pats = patternFactory.ShiftWindowedToEdgeStart(right_shifted_pattern,'y','low',1);
+                                
+                                clear right_shifted_pattern
+                            case 'edge'
+                                Pats = patternFactory.ShiftWindowedToEdgeStart(unshifted_pattern,'x','low',1);
+                        end
+                        
+                end
+                
+                pattern_name = cell2mat(['left_' left '_Lbarsize_' num2str(left_val) '_dir_' left_motion_type '_right_' right '_Rbarsize_' num2str(right_val) '_dir_' right_motion_type '_frame_1_empty']);
                 
                 counter = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_name,project,counter,testing_flag);
-                
+  
                 clear pattern_name Pats
             end 
         end 

@@ -30,7 +30,7 @@ function Pattern_Player_OpeningFcn(hObject, eventdata, handles, varargin)
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to Pattern_Player (see VARARGIN)
 
-[I, map] = imread('Please_Load.bmp', 'BMP');
+[I, map] = imread('/Users/stephenholtz/tethered_flight_arena_code/XmegaController_Matlab_V13/controller/Please_Load.bmp', 'BMP');
 axes(handles.axes1); 
 colormap(map);
 image(I);
@@ -169,7 +169,7 @@ cd(pattern_path)
 if (all(FileName ~= 0))
     load([PathName FileName]);
     handles.pattern = pattern;
-
+    
     handles.pattern_x_size = pattern.x_num;
     handles.pattern_y_size = pattern.y_num;
     handles.x_pos = 1;

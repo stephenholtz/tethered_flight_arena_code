@@ -44,7 +44,7 @@ flicker_speeds = [[2 6]*8 [2 6]*16];
 stim_types = {'flick_v_none','motion_v_none','flick_v_motion','motion_v_motion'};
 
 for stim_type = stim_types
-
+    
     % string parsing got confusing:
     % f = full field flicker, #e = lam w/ edge flicker, w = window degs
     % nmf = no motion flicker
@@ -58,17 +58,17 @@ for stim_type = stim_types
             pattern_pairs   = {[1,3]     ,[2,4]       ,[11,13] ,[12,14]};
             pattern_info    = {'mnf_8w120','mnf_16w120','mnf_8w60','mnf_16w60'};
             speeds = motion_tfs;
-            dirs = -1:1;
+            dirs = [-1 1];
         case 'flick_v_motion'
             pattern_pairs = {[21,22] ,[24,25]   ,[27,28]  ,[36,37]   ,[39,40] ,[42,43]  ,[45,46] ,[54,55]};
             pattern_info = {'mf_8w120','mf_16w120','me_8w120','me_16w120','mf_8w60','mf_16w60','me_8w60','me_16w60'};
             speeds = motion_tfs;
-            dirs = -1:1;
+            dirs = [-1 1];
         case 'motion_v_motion'
             pattern_pairs = {23,26,41,44};
             pattern_info = {'m_8w120','m_16w120','m_8w60','m_16w60'};
             speeds = motion_tfs;
-            dirs = -1:1;
+            dirs = [-1 1];
     end
     
     for speed = speeds

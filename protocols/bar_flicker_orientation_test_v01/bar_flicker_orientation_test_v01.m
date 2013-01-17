@@ -30,14 +30,16 @@ total_ol_dur = 0;
 default_frequency = 500;
 duration = 1.55;
 
+for bar_lum = 1:2
+
 for flicker_type = 1:3
     
     for arena_loc = [1 2 3 4 5 5 6 7];
         
-        for bar_type = 1:6
+        for bar_type = [1 3 4 6]
             
-            Conditions(cond_num).PatternID      = 1; %#ok<*AGROW>
-            Conditions(cond_num).PatternName    = patterns{1};
+            Conditions(cond_num).PatternID      = bar_lum; %#ok<*AGROW>
+            Conditions(cond_num).PatternName    = patterns{bar_lum};
             Conditions(cond_num).Gains          = [0 0 0 0];
             Conditions(cond_num).Mode           = [4 0];
             Conditions(cond_num).InitialPosition= [1 bar_type];

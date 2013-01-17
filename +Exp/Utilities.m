@@ -79,9 +79,12 @@ classdef Utilities
                 
             else
                 
-                Panel_com('set_pattern_id',cond_struct.PatternID);     
+                Panel_com('set_pattern_id',cond_struct.PatternID);
+                pause(.03)
                 Panel_com('set_position',cond_struct.InitialPosition);
+                pause(.03)
                 Panel_com('set_mode',cond_struct.Mode);
+                pause(.03)
                 
                 % Deal with values over 127.
                 if abs(cond_struct.Gains(1))>127
@@ -96,18 +99,22 @@ classdef Utilities
                 % Some new issues 12/12, need to meet with Jin
                 if cond_struct.PosFunctionY(2)
                     Panel_com('set_posfunc_id',cond_struct.PosFunctionY);
+                    pause(.05)
                 end
                 
                 if cond_struct.PosFunctionX(2)
                     Panel_com('set_posfunc_id',cond_struct.PosFunctionX);
+                    pause(.05)
                 end
                 
                 if cond_struct.PosFunctionY(2)
                     Panel_com('set_funcy_freq',cond_struct.FuncFreqY);
+                    pause(.05)
                 end
                 
                 if cond_struct.PosFunctionX(2)
                     Panel_com('set_funcx_freq',cond_struct.FuncFreqX);
+                    pause(.05)
                 end
                 
             end

@@ -28,47 +28,49 @@ end
 cond_num = 1;
 total_ol_dur = 0;
 default_frequency = 500;
-duration = 1.51;
+duration = 1.5;
 
 for bar_lum = 1:2
 
-for flicker_type = 1:3
-    
-    for arena_loc = [1 2 3 4 5 5 6 7];
-        
-        for bar_type = [1 3 4 6]
-            
-            Conditions(cond_num).PatternID      = bar_lum; %#ok<*AGROW>
-            Conditions(cond_num).PatternName    = patterns{bar_lum};
-            Conditions(cond_num).Gains          = [0 0 0 0];
-            Conditions(cond_num).Mode           = [4 0];
-            Conditions(cond_num).InitialPosition= [1 bar_type];
-            Conditions(cond_num).PosFuncLoc     = pos_func_loc;
-            
-            switch flicker_type
-                case 1
-                    x_pos_func = arena_loc + 0;
-                case 2
-                    x_pos_func = arena_loc + 7;
-                case 3
-                    x_pos_func = arena_loc + 14;
+    for flicker_type = 1:2
+
+        for arena_loc = [1 2 3 4 4 5 6 7];
+
+            for bar_type = [1 3 4 6]
+
+                Conditions(cond_num).PatternID      = bar_lum; %#ok<*AGROW>
+                Conditions(cond_num).PatternName    = patterns{bar_lum};
+                Conditions(cond_num).Gains          = [0 0 0 0];
+                Conditions(cond_num).Mode           = [4 0];
+                Conditions(cond_num).InitialPosition= [1 bar_type];
+                Conditions(cond_num).PosFuncLoc     = pos_func_loc;
+
+                switch flicker_type
+                    case 1
+                        x_pos_func = arena_loc + 0;
+                    case 2
+                        x_pos_func = arena_loc + 7;
+                    case 3
+                        error('I TOOK THIS OUT!')
+                        x_pos_func = arena_loc + 14;
+                end
+
+                Conditions(cond_num).PosFunctionX   = [1 x_pos_func];
+                Conditions(cond_num).FuncFreqX 		= default_frequency;
+                Conditions(cond_num).PosFuncNameX   = position_functions{x_pos_func};
+
+                Conditions(cond_num).PosFunctionY 	= [2 0];
+                Conditions(cond_num).FuncFreqY 		= default_frequency;
+                Conditions(cond_num).PosFuncNameY   = 'null';
+
+                Conditions(cond_num).Duration       = duration;
+                Conditions(cond_num).note           = '';
+
+                total_ol_dur = total_ol_dur + Conditions(cond_num).Duration + .02;
+
+                cond_num = cond_num + 1;
+
             end
-            
-            Conditions(cond_num).PosFunctionX   = [1 x_pos_func];
-            Conditions(cond_num).FuncFreqX 		= default_frequency;
-            Conditions(cond_num).PosFuncNameX   = position_functions{x_pos_func};
-
-            Conditions(cond_num).PosFunctionY 	= [2 0];
-            Conditions(cond_num).FuncFreqY 		= default_frequency;
-            Conditions(cond_num).PosFuncNameY   = 'null';
-
-            Conditions(cond_num).Duration       = duration;
-            Conditions(cond_num).note           = '';
-            
-            total_ol_dur = total_ol_dur + Conditions(cond_num).Duration + .02;
-            
-            cond_num = cond_num + 1;
-            
         end
     end
 end

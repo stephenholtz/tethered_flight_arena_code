@@ -27,7 +27,7 @@ end
 % Start a few variables for below    
 cond_num = 1;
 total_ol_dur = 0;
-default_frequency = 500;
+default_frequency = 200;
 duration = 1.5;
 
 for bar_lum = 1:2
@@ -50,9 +50,6 @@ for bar_lum = 1:2
                         x_pos_func = arena_loc + 0;
                     case 2
                         x_pos_func = arena_loc + 7;
-                    case 3
-                        error('I TOOK THIS OUT!')
-                        x_pos_func = arena_loc + 14;
                 end
 
                 Conditions(cond_num).PosFunctionX   = [1 x_pos_func];

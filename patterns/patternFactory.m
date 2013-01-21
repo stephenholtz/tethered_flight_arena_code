@@ -137,6 +137,22 @@ classdef patternFactory < handle
             
         end
         
+        function obj = SquareWaveContrasts(obj,bar_width,contrasts)
+            
+            obj.pattern = [];
+            
+            lambda_reps = obj.num_arena_cols/(bar_width*2);
+            lambda_col = [contrasts(1)*ones(obj.num_arena_rows,bar_width), contrasts(2)*ones(obj.num_arena_rows,bar_width)];
+            pat = repmat(lambda_col,1,lambda_reps);
+            
+            pat_steps = bar_width*2;
+            
+            for i = 1:pat_steps
+                obj.pattern(:,:,i) = circshift(pat',i-1)'; %#ok<*SAGROW>
+            end
+            
+        end        
+        
         function obj = RevPhiSquareWave(obj,bar_width,varargin)
 
             obj.pattern = [];

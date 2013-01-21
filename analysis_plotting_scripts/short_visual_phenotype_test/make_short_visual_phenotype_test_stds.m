@@ -8,8 +8,8 @@ if ~exist(save_path,'dir')
     mkdir(save_path)
 end
 
-make_all_vids = 1;
-make_vids_randn = 1;
+make_all_vids = 0;
+make_vids_randn = 0;
 
 for i = 1:(numel(conditions)-1)
     

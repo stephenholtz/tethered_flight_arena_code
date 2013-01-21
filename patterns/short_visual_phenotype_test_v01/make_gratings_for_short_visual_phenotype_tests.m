@@ -34,6 +34,18 @@ bar_factory.SquareWaveContrasts(4,[4 3]);
 Pats(:,:,:,4) = bar_factory.ReturnPatternAndParams;
 
 pattern_name = 'optomotor_4_wide_contrasts_1_71_43_14';
+save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_name,project,counter,testing_flag);
+
+clear Pats
+
+counter = 6;
+
+bar_factory.SingleBar(2,'low',0,0:95);
+Pats(:,:,:,1) = bar_factory.ReturnPatternAndParams;
+bar_factory.SingleBar(2,'high',0,0:95);
+Pats(:,:,:,2) = bar_factory.ReturnPatternAndParams;
+
+pattern_name = 'small_stripe_2_wide_gs3_mid_bck';
 counter = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_name,project,counter,testing_flag);
 
 clear Pats

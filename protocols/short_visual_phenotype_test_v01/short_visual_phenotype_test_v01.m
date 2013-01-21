@@ -17,9 +17,9 @@ cf = pwd;
 patterns = what(fullfile(dir,'patterns','short_visual_phenotype_test_v01'));
 pattern_loc = patterns.path;
 patterns = patterns.mat;
-%pos_func_loc = fullfile(dir,'position_functions','short_visual_phenotype_test_v01');
-%position_functions = what(pos_func_loc);
-%position_functions = position_functions.mat;
+pos_func_loc = fullfile(dir,'position_functions','short_visual_phenotype_test_v01');
+position_functions = what(pos_func_loc);
+position_functions = position_functions.mat;
 panel_cfgs_loc = fullfile(dir,'panel_configs');
 panel_cfgs = what(panel_cfgs_loc);
 panel_cfgs = panel_cfgs.mat;
@@ -80,336 +80,390 @@ for contrast = 1:4
     end
 end
 
-if vel_null
+% Add in a few speeds of an oscillating stripe
+for sampling_rate = [.5 1 2]*50
+    for dir = [1 2]
+        
+        Conditions(cond_num).PatternID      = 6;
+        Conditions(cond_num).PatternName    = patterns{Conditions(cond_num).PatternID};
+        Conditions(cond_num).Gains          = [0 0 0 0];
+        Conditions(cond_num).Mode           = [0 0];
+        Conditions(cond_num).InitialPosition= [1 dir];
+        Conditions(cond_num).PosFuncLoc     = '';
+        Conditions(cond_num).PosFunctionX   = [1 1];
+        Conditions(cond_num).FuncFreqX 		= sampling_rate;
+        Conditions(cond_num).PosFuncNameX   = position_functions{dir};
+        Conditions(cond_num).PosFunctionY 	= [2 0];
+        Conditions(cond_num).FuncFreqY 		= default_frequency;
+        Conditions(cond_num).PosFuncNameY   = 'null';
+        Conditions(cond_num).Duration       = duration;
+        Conditions(cond_num).note           = '';
+        
+        cond_num = cond_num + 1;
+        
+    end
+end
 
+if vel_null
+    
     % from telethon_vel_nulling_conditions_9_14
     % These are all of the velocity nulling conditions (30 of them)
     % 1
-    Conditions(cond_num).PatternID = 6;
+    Conditions(cond_num).PatternID = 3;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [4 0 -48 0 ];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];        
     Conditions(cond_num).PatternName = 'Pattern_003_nulling_6wide_rotation_74_65.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 2
-    Conditions(cond_num).PatternID = 6;
+    Conditions(cond_num).PatternID = 3;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [-4 0 48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_003_nulling_6wide_rotation_74_65.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 3
-    Conditions(cond_num).PatternID = 7;
+    Conditions(cond_num).PatternID = 4;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [4 0 -48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_004_nulling_6wide_rotation_74_74.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 4
-    Conditions(cond_num).PatternID = 7;
+    Conditions(cond_num).PatternID = 4;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [-4 0 48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_004_nulling_6wide_rotation_74_74.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1;
     % 5
-    Conditions(cond_num).PatternID = 8;
+    Conditions(cond_num).PatternID = 5;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [4 0 -48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_005_nulling_6wide_rotation_74_83.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 6
-    Conditions(cond_num).PatternID = 8;
+    Conditions(cond_num).PatternID = 5;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [-4 0 48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_005_nulling_6wide_rotation_74_83.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 7
-    Conditions(cond_num).PatternID = 6;
+    Conditions(cond_num).PatternID = 3;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [16 0 -48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_003_nulling_6wide_rotation_74_65.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 8
-    Conditions(cond_num).PatternID = 6;
+    Conditions(cond_num).PatternID = 3;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [-16 0 48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_003_nulling_6wide_rotation_74_65.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 9
-    Conditions(cond_num).PatternID = 7;
+    Conditions(cond_num).PatternID = 4;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [16 0 -48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_004_nulling_6wide_rotation_74_74.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 10
-    Conditions(cond_num).PatternID = 7;
+    Conditions(cond_num).PatternID = 4;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [-16 0 48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_004_nulling_6wide_rotation_74_74.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 11
-    Conditions(cond_num).PatternID = 8;
+    Conditions(cond_num).PatternID = 5;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [16 0 -48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_005_nulling_6wide_rotation_74_83.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 12
-    Conditions(cond_num).PatternID = 8;
+    Conditions(cond_num).PatternID = 5;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [-16 0 48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_005_nulling_6wide_rotation_74_83.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 13
-    Conditions(cond_num).PatternID = 6;
+    Conditions(cond_num).PatternID = 3;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [64 0 -48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_003_nulling_6wide_rotation_74_65.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 14
-    Conditions(cond_num).PatternID = 6;
+    Conditions(cond_num).PatternID = 3;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [-64 0 48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_003_nulling_6wide_rotation_74_65.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 15
-    Conditions(cond_num).PatternID = 7;
+    Conditions(cond_num).PatternID = 4;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [64 0 -48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_004_nulling_6wide_rotation_74_74.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 16
-    Conditions(cond_num).PatternID = 7;
+    Conditions(cond_num).PatternID = 4;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [-64 0 48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_004_nulling_6wide_rotation_74_74.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 17
-    Conditions(cond_num).PatternID = 8;
+    Conditions(cond_num).PatternID = 5;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [64 0 -48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_005_nulling_6wide_rotation_74_83.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 18
-    Conditions(cond_num).PatternID = 8;
+    Conditions(cond_num).PatternID = 5;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [-64 0 48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_005_nulling_6wide_rotation_74_83.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 19
-    Conditions(cond_num).PatternID = 6;
+    Conditions(cond_num).PatternID = 3;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [128 0 -48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_003_nulling_6wide_rotation_74_65.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 20
-    Conditions(cond_num).PatternID = 6;
+    Conditions(cond_num).PatternID = 3;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [-128 0 48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_003_nulling_6wide_rotation_74_65.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 21
-    Conditions(cond_num).PatternID = 7;
+    Conditions(cond_num).PatternID = 4;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [128 0 -48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_004_nulling_6wide_rotation_74_74.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 22
-    Conditions(cond_num).PatternID = 7;
+    Conditions(cond_num).PatternID = 4;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [-128 0 48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_004_nulling_6wide_rotation_74_74.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 23
-    Conditions(cond_num).PatternID = 8;
+    Conditions(cond_num).PatternID = 5;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [128 0 -48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_005_nulling_6wide_rotation_74_83.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 24
-    Conditions(cond_num).PatternID = 8;
+    Conditions(cond_num).PatternID = 5;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [-128 0 48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_005_nulling_6wide_rotation_74_83.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 25
-    Conditions(cond_num).PatternID = 6;
+    Conditions(cond_num).PatternID = 3;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [192 0 -48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_003_nulling_6wide_rotation_74_65.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 26
-    Conditions(cond_num).PatternID = 6;
+    Conditions(cond_num).PatternID = 3;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [-192 0 48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_003_nulling_6wide_rotation_74_65.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 27
-    Conditions(cond_num).PatternID = 7;
+    Conditions(cond_num).PatternID = 4;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [192 0 -48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_004_nulling_6wide_rotation_74_74.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 28
-    Conditions(cond_num).PatternID = 7;
+    Conditions(cond_num).PatternID = 4;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [-192 0 48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];
     Conditions(cond_num).PatternName = 'Pattern_004_nulling_6wide_rotation_74_74.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 29
-    Conditions(cond_num).PatternID = 8;
+    Conditions(cond_num).PatternID = 5;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [192 0 -48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_005_nulling_6wide_rotation_74_83.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;
     cond_num = cond_num + 1; 
     % 30
-    Conditions(cond_num).PatternID = 8;
+    Conditions(cond_num).PatternID = 5;
     Conditions(cond_num).Duration = 2.5;
     Conditions(cond_num).InitialPosition = [1 1];
     Conditions(cond_num).Gains = [-192 0 48 0];
     Conditions(cond_num).Mode = [0 0];
     Conditions(cond_num).PosFunctionX = [1 0];
+    Conditions(cond_num).PosFunctionY = [2 0];    
     Conditions(cond_num).PatternName = 'Pattern_005_nulling_6wide_rotation_74_83.mat';
     Conditions(cond_num).PosFuncNameX = 'none';
     Conditions(cond_num).Duration = duration;

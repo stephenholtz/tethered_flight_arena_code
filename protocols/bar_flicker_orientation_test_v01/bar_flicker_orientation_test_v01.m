@@ -28,7 +28,7 @@ end
 cond_num = 1;
 total_ol_dur = 0;
 default_frequency = 200;
-duration = 1.5;
+duration = 1.2;
 
 for bar_lum = 1:2
 

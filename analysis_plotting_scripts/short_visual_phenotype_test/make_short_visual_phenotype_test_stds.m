@@ -8,10 +8,10 @@ if ~exist(save_path,'dir')
     mkdir(save_path)
 end
 
-make_all_vids = 0;
+make_all_vids = 1;
 make_vids_randn = 0;
 
-for i = 17:24%1:(numel(conditions)-1)
+for i = 17:22%1:(numel(conditions)-1)
     
     stim_name = ['cond_' num2str(i) '_pat_' conditions(i).PatternName(1:(end-4))];
     

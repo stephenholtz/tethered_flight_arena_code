@@ -40,9 +40,9 @@ clear Pats
 
 counter = 6;
 
-bar_factory.SingleBar(2,'low',0,0:95);
+bar_factory.SingleBar(3,'low',0,0:95);
 Pats(:,:,:,1) = bar_factory.ReturnPatternAndParams;
-bar_factory.SingleBar(2,'high',0,0:95);
+bar_factory.SingleBar(3,'high',0,0:95);
 Pats(:,:,:,2) = bar_factory.ReturnPatternAndParams;
 
 pattern_name = 'small_stripe_2_wide_gs3_mid_bck';

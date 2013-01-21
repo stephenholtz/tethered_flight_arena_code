@@ -11,7 +11,7 @@ end
 make_all_vids = 0;
 make_vids_randn = 0;
 
-for i = 1:(numel(conditions)-1)
+for i = 17:24%1:(numel(conditions)-1)
     
     stim_name = ['cond_' num2str(i) '_pat_' conditions(i).PatternName(1:(end-4))];
     

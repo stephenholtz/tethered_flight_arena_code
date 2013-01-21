@@ -41,7 +41,7 @@ for frame_fps = [.5 2 4 8]*8
         Conditions(cond_num).Gains          = [dir*frame_fps 0 0 0];
         Conditions(cond_num).Mode           = [0 0];
         Conditions(cond_num).InitialPosition= [1 1];
-        Conditions(cond_num).PosFuncLoc     = '';
+        Conditions(cond_num).PosFuncLoc     = pos_func_loc;
         Conditions(cond_num).PosFunctionX   = [1 0];
         Conditions(cond_num).FuncFreqX 		= default_frequency;
         Conditions(cond_num).PosFuncNameX   = 'null';
@@ -65,7 +65,7 @@ for contrast = 1:4
         Conditions(cond_num).Gains          = [dir*4*8 0 0 0];
         Conditions(cond_num).Mode           = [0 0];
         Conditions(cond_num).InitialPosition= [1 contrast];
-        Conditions(cond_num).PosFuncLoc     = '';
+        Conditions(cond_num).PosFuncLoc     = pos_func_loc;
         Conditions(cond_num).PosFunctionX   = [1 0];
         Conditions(cond_num).FuncFreqX 		= default_frequency;
         Conditions(cond_num).PosFuncNameX   = 'null';
@@ -81,16 +81,16 @@ for contrast = 1:4
 end
 
 % Add in a few speeds of an oscillating stripe
-for sampling_rate = [.5 1 2]*50
+for sampling_rate = [.5 1 2]*50 % .5 1 and 2 hz sine wave
     for dir = [1 2]
         
         Conditions(cond_num).PatternID      = 6;
         Conditions(cond_num).PatternName    = patterns{Conditions(cond_num).PatternID};
         Conditions(cond_num).Gains          = [0 0 0 0];
-        Conditions(cond_num).Mode           = [0 0];
-        Conditions(cond_num).InitialPosition= [1 dir];
-        Conditions(cond_num).PosFuncLoc     = '';
-        Conditions(cond_num).PosFunctionX   = [1 1];
+        Conditions(cond_num).Mode           = [4 0];
+        Conditions(cond_num).InitialPosition= [1 1];
+        Conditions(cond_num).PosFuncLoc     = pos_func_loc;
+        Conditions(cond_num).PosFunctionX   = [1 dir];
         Conditions(cond_num).FuncFreqX 		= sampling_rate;
         Conditions(cond_num).PosFuncNameX   = position_functions{dir};
         Conditions(cond_num).PosFunctionY 	= [2 0];
@@ -499,6 +499,7 @@ for cond_num = 1:numel(Conditions)
     Conditions(cond_num).SpatialFreq    = 'none';    
     Conditions(cond_num).Voltage        =  encoded_vals(cond_num);
     Conditions(cond_num).PatternLoc     = pattern_loc;
+    Conditions(cond_num).PosFuncLoc     = pos_func_loc;
     total_ol_dur = total_ol_dur + Conditions(cond_num).Duration + .02;
 end
 

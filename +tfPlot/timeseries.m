@@ -185,12 +185,14 @@ for i = 1:numel(graph.avg)
     end
     
     % Also need to reapply the X and Y axis for some reason after a patch
+    try
     if y_max_value(1) < 3.15
         set(gca,'YLim',[-3.1 3.1],'XLim',x_max_vec)
     elseif y_max_value(1) < 10
         set(gca,'YLim',[-5.5 5.5],'Xlim',x_max_vec)
     else
         set(gca,'YLim',[-y_max_value y_max_value])
+    end
     end
     
     hold('on')

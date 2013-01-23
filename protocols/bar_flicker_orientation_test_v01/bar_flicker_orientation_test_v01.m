@@ -12,17 +12,17 @@ switch computer
 end
 
 % gather some information
-    cf = pwd;
-    patterns = what(fullfile(dir,'patterns','bar_flicker_orientation_test_v01'));
-    pattern_loc = patterns.path;
-    patterns = patterns.mat;
-    pos_func_loc = fullfile(dir,'position_functions','bar_flicker_orientation_test_v01');
-    position_functions = what(pos_func_loc);
-    position_functions = position_functions.mat;
-    panel_cfgs_loc = fullfile(dir,'panel_configs');
-    panel_cfgs = what(panel_cfgs_loc);
-    panel_cfgs = panel_cfgs.mat;
-    cd(cf);
+cf = pwd;
+patterns = what(fullfile(dir,'patterns','bar_flicker_orientation_test_v01'));
+pattern_loc = patterns.path;
+patterns = patterns.mat;
+pos_func_loc = fullfile(dir,'position_functions','bar_flicker_orientation_test_v01');
+position_functions = what(pos_func_loc);
+position_functions = position_functions.mat;
+panel_cfgs_loc = fullfile(dir,'panel_configs');
+panel_cfgs = what(panel_cfgs_loc);
+panel_cfgs = panel_cfgs.mat;
+cd(cf);
 
 % Start a few variables for below    
 cond_num = 1;
@@ -98,7 +98,7 @@ for cond_num = 1:numel(Conditions)
     Conditions(cond_num).VelFunction 	= [1 0];
 	Conditions(cond_num).VelFuncName 	= 'none';
     Conditions(cond_num).SpatialFreq    = 'none';    
-    Conditions(cond_num).Voltage        =  encoded_vals(cond_num);
+    Conditions(cond_num).Voltage        = encoded_vals(cond_num);
     Conditions(cond_num).PatternLoc     = pattern_loc;
 end
 

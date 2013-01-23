@@ -18,7 +18,7 @@ classdef arenaSimulation < handle
 % (condition_struct.PosFuncNameY)
 
     properties (Constant, Access = private)
-        arena_display_clock = 2000; % hz
+        arena_display_clock = 4000; % hz
         space_time_diagram_samp_rate = 100; % fps
         movie_samp_rate = 30; % fps
         
@@ -180,11 +180,15 @@ classdef arenaSimulation < handle
             
             if x_fps ~= 0 
                 
+                if mod(obj.arena_display_clock/x_fps,1)
+                    disp('Uneven frame division in X chan')
+                end
+                
                 loop_loc = obj.initial_pos(1);
                 
                 for i = 1:numel(obj.x_pos_vector)
                     
-                    if ~mod(i,obj.arena_display_clock/x_fps)
+                    if ~mod(i,round(obj.arena_display_clock/x_fps))
                         loop_loc = loop_loc + 1;
                     end
 
@@ -206,11 +210,15 @@ classdef arenaSimulation < handle
             
             if y_fps ~= 0
                 
+                if mod(obj.arena_display_clock/y_fps,1)
+                    disp('Uneven frame division in Y chan')
+                end
+                
                 loop_loc = obj.initial_pos(2);
                 
                 for i = 1:numel(obj.y_pos_vector)
                     
-                    if ~mod(i,obj.arena_display_clock/y_fps)
+                    if ~mod(i,round(obj.arena_display_clock/y_fps))
                         loop_loc = loop_loc + 1;
                     end
 

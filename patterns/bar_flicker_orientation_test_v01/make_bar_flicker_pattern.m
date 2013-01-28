@@ -7,7 +7,7 @@ project = 'bar_flicker_orientation_test_v01';
 
 % Pattern properties needed later
 row_compression = 0;
-gs_val = 3;
+gs_val = 2;
 testing_flag = 0;
 
 % Counter for iterating the pattern names, set nonzero if appending to 

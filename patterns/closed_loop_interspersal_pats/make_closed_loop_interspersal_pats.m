@@ -7,7 +7,7 @@ project = 'closed_loop_interspersal_pats';
 
 % Pattern properties needed later
 row_compression = 0;
-gs_val = 3;
+gs_val = 2;
 testing_flag = 0;
 
 % Counter for iterating the pattern names, set nonzero if appending to 

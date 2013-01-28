@@ -25,7 +25,7 @@ if 0
         % Load in *_summary.mat files
         [~,summary_filepath] = returnDirFileList(geno_dirs{i},'_summary.mat');
         load(summary_filepath{1});
-
+        
         % Use an eval...
         geno_data = eval(['tfAnalysis.ExpSet([' geno_names{i} '_summary''])']);
 
@@ -309,9 +309,146 @@ if 0
             osc_stim_ts.stim_subset = stim_subset;
             osc_stim_ts.name = geno_data.experiment{1}.line_name;
             osc_stim_ts.num = numel(geno_data.experiment);
+            
+            clear avg variance
+            
+            
+            % Flow Oscillations
+            
+            stim_subset = [2 3 4 6];
+
+            condition_numbers = geno_data.grouped_conditions{11}.list(stim_subset);
+
+            [avg{i}, variance{i}] = geno_data.get_trial_data_set(condition_numbers,'lmr','mean','yes','all',curr_norm_val);
+
+            flow.avg = cell2mat(avg{i});
+
+            flow.sem = cell2mat(variance{i});
+
+            flow.condition_numbers = condition_numbers;
+            flow.stim_subset = stim_subset;
+            flow.name = geno_data.experiment{1}.line_name;
+            flow.num = numel(geno_data.experiment);
 
             clear avg variance
 
+            % ts flow data
+
+            [avg{i}, variance{i}] = geno_data.get_trial_data_set(condition_numbers,'lmr','none','yes','all',curr_norm_val);
+
+            flow_ts.avg = (avg{i});
+
+            flow_ts.sem = (variance{i});
+
+            flow_ts.condition_numbers = condition_numbers;
+            flow_ts.stim_subset = stim_subset;
+            flow_ts.name = geno_data.experiment{1}.line_name;
+            flow_ts.num = numel(geno_data.experiment);
+            
+            clear avg variance
+            
+            % Reverse-Phi
+            
+            stim_subset = 1:6;
+
+            condition_numbers = geno_data.grouped_conditions{5}.list(stim_subset);
+
+            [avg{i}, variance{i}] = geno_data.get_trial_data_set(condition_numbers,'lmr','mean','yes','all',curr_norm_val);
+
+            rp.avg = cell2mat(avg{i});
+
+            rp.sem = cell2mat(variance{i});
+
+            rp.condition_numbers = condition_numbers;
+            rp.stim_subset = stim_subset;
+            rp.name = geno_data.experiment{1}.line_name;
+            rp.num = numel(geno_data.experiment);
+
+            clear avg variance
+
+            % ts rp data
+
+            [avg{i}, variance{i}] = geno_data.get_trial_data_set(condition_numbers,'lmr','none','yes','all',curr_norm_val);
+
+            rp_ts.avg = (avg{i});
+
+            rp_ts.sem = (variance{i});
+
+            rp_ts.condition_numbers = condition_numbers;
+            rp_ts.stim_subset = stim_subset;
+            rp_ts.name = geno_data.experiment{1}.line_name;
+            rp_ts.num = numel(geno_data.experiment);
+            
+            clear avg variance            
+            
+            % Progressive
+            
+            stim_subset = 1:3;
+
+            condition_numbers = geno_data.grouped_conditions{8}.list(stim_subset);
+
+            [avg{i}, variance{i}] = geno_data.get_trial_data_set(condition_numbers,'lmr','mean','yes','all',curr_norm_val);
+
+            prog.avg = cell2mat(avg{i});
+
+            prog.sem = cell2mat(variance{i});
+
+            prog.condition_numbers = condition_numbers;
+            prog.stim_subset = stim_subset;
+            prog.name = geno_data.experiment{1}.line_name;
+            prog.num = numel(geno_data.experiment);
+
+            clear avg variance
+
+            % ts prog data
+
+            [avg{i}, variance{i}] = geno_data.get_trial_data_set(condition_numbers,'lmr','none','yes','all',curr_norm_val);
+
+            prog_ts.avg = (avg{i});
+
+            prog_ts.sem = (variance{i});
+
+            prog_ts.condition_numbers = condition_numbers;
+            prog_ts.stim_subset = stim_subset;
+            prog_ts.name = geno_data.experiment{1}.line_name;
+            prog_ts.num = numel(geno_data.experiment);
+            
+            clear avg variance            
+            
+            % Regressive
+            
+            stim_subset = 1:3;
+
+            condition_numbers = geno_data.grouped_conditions{7}.list(stim_subset);
+
+            [avg{i}, variance{i}] = geno_data.get_trial_data_set(condition_numbers,'lmr','mean','yes','all',curr_norm_val);
+
+            reg.avg = cell2mat(avg{i});
+
+            reg.sem = cell2mat(variance{i});
+
+            reg.condition_numbers = condition_numbers;
+            reg.stim_subset = stim_subset;
+            reg.name = geno_data.experiment{1}.line_name;
+            reg.num = numel(geno_data.experiment);
+
+            clear avg variance
+
+            % ts reg data
+
+            [avg{i}, variance{i}] = geno_data.get_trial_data_set(condition_numbers,'lmr','none','yes','all',curr_norm_val);
+
+            reg_ts.avg = (avg{i});
+            
+            reg_ts.sem = (variance{i});
+
+            reg_ts.condition_numbers = condition_numbers;
+            reg_ts.stim_subset = stim_subset;
+            reg_ts.name = geno_data.experiment{1}.line_name;
+            reg_ts.num = numel(geno_data.experiment);
+            
+            clear avg variance
+            
             % Save tuning_curves.mat with quick data, should be < 300 Mb
             tuning_curves.(struct_branch_name).expansion = expansion;
             tuning_curves.(struct_branch_name).contrast = contrast;
@@ -324,7 +461,14 @@ if 0
             tuning_curves.(struct_branch_name).small_field_grat_ts = small_field_grat_ts;
             tuning_curves.(struct_branch_name).osc_stim = osc_stim;
             tuning_curves.(struct_branch_name).osc_stim_ts = osc_stim_ts;
-
+            tuning_curves.(struct_branch_name).flow = flow;
+            tuning_curves.(struct_branch_name).flow_ts = flow_ts;
+            tuning_curves.(struct_branch_name).rp = rp;
+            tuning_curves.(struct_branch_name).rp_ts = rp_ts;
+            tuning_curves.(struct_branch_name).prog = prog;
+            tuning_curves.(struct_branch_name).prog_ts = prog_ts;
+            tuning_curves.(struct_branch_name).reg = reg;
+            tuning_curves.(struct_branch_name).reg_ts = reg_ts;            
         end
         
         % populate the final structure
@@ -351,14 +495,14 @@ if 1
     count = 0;
     
     % load the figure data summary
-    %load(fullfile(data_location,'..','fig_data_summ.mat'))
-    for i = 1%:numel(geno_names)
+    load(fullfile(data_location,'..','fig_data_summ.mat'))
+    for i = 1:numel(geno_names)
         % Determine averages for each point in all of the tuning_curves and
         % vel_null_sum substructures for later plotting comparison. 
         for struct_branch_name = {'not_norm','norm'}
 
             tune_curve_fieldnames = fieldnames(fig_data_summ(i).tuning_curves.(struct_branch_name{1}));
-
+            
             for tune_curve_fieldname = tune_curve_fieldnames'
 
 %                 [fig_data_summ(i).avg_tuning_curves.(struct_branch_name{1}).(tune_curve_fieldname{1}),fig_data_summ(i).sem_tuning_curves.(struct_branch_name{1}).(tune_curve_fieldname{1})] = ...
@@ -388,7 +532,7 @@ if 1
     
 end
 
-if 1
+if 0
     
     % load the figure data summary
     load(fullfile(data_location,'..','fig_data_summ.mat'))
@@ -430,7 +574,7 @@ if 1
 end
 
 
-if 1
+if 0
     
     % load the figure data summary
     load(fullfile(data_location,'..','fig_data_summ.mat'))

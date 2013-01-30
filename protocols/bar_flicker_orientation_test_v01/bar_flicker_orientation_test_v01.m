@@ -37,21 +37,21 @@ for bar_lum = 1:2
         for arena_loc = [1 2 3 4 4 5 6 7];
 
             for bar_type = [1 3 4 6]
-
+                
                 Conditions(cond_num).PatternID      = bar_lum; %#ok<*AGROW>
                 Conditions(cond_num).PatternName    = patterns{bar_lum};
                 Conditions(cond_num).Gains          = [0 0 0 0];
                 Conditions(cond_num).Mode           = [4 0];
                 Conditions(cond_num).InitialPosition= [1 bar_type];
                 Conditions(cond_num).PosFuncLoc     = pos_func_loc;
-
+                
                 switch flicker_type
                     case 1
                         x_pos_func = arena_loc + 0;
                     case 2
                         x_pos_func = arena_loc + 7;
                 end
-
+                
                 Conditions(cond_num).PosFunctionX   = [1 x_pos_func];
                 Conditions(cond_num).FuncFreqX 		= default_frequency;
                 Conditions(cond_num).PosFuncNameX   = position_functions{x_pos_func};

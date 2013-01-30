@@ -10,152 +10,178 @@
 % ccw_left(-) and cw_right(+)  go together -- progressive!!!!
 % cw_left(+)  and ccw_right(-) go together -- regressive!!!!!
 sym_conditions = [];
+ 
+% OFF / ON
+% Shortflick / Longflick
+% 1 2 3 4 4 5 6 7
+% Thick-Long / Thick-Short / Thin-Long / Thin-Short
 
-grouped_conditions{1}.name = '30 Degree Standard Phi Full Field'; % OKAY
-grouped_conditions{1}.tf = [.25, .5, 2, 4, 8, 12, 25, 50, 75, 100];
-grouped_conditions{1}.speed = [.25, .5, 2, 4, 8, 12, 25, 50, 75, 100]*8;
-grouped_conditions{1}.list = {[1,2],...
-                              [3,4],...
-                              [5,6],...
-                              [7,8],...
-                              [9,10],...
-                              [11,12],...
-                              [13,14],...
-                              [15,16],...
-                              [17,18],...
-                              [19,20]};
+fx = @(x)(mat2cell([x;fliplr(x)]',[ones(1,size(x,2))],[2]));
+fx = @(x)(mat2cell([x]',[ones(1,size(x,2))],[1]));
+rx = @(x)(mat2cell([x(4:-1:1); x(5:8)]',[ones(1,size(x,2)/2)],[2]));
 
-grouped_conditions{2}.name = '30 Degree Standard Phi Progressive Motion'; % OKAY
-grouped_conditions{2}.tf = [.25, .5, 2, 4, 8, 12, 25, 50, 75, 100];
-grouped_conditions{2}.speed = [.25, .5, 2, 4, 8, 12, 25, 50, 75, 100]*8;
-grouped_conditions{2}.direction = 'Progressive';
-grouped_conditions{2}.list = {[41,22],... % DEFINITELY FIXED
-                              [43,24],...
-                              [45,26],...
-                              [47,28],...
-                              [49,30],...
-                              [51,32],...
-                              [53,34],...
-                              [55,36],...
-                              [57,38],...
-                              [59,40]};
-%                           {[22,41],...
-%                               [24,43],...
-%                               [26,45],...
-%                               [28,47],...
-%                               [30,49],...
-%                               [32,51],...
-%                               [34,53],...
-%                               [36,55],...
-%                               [38,57],...
-%                               [40,59]};
+Off_shortflick_thicklong = 1:4:32;
+Off_shortflick_thickshort = (1:4:32)+1;
+Off_shortflick_thinlong = (1:4:32)+2;
+Off_shortflick_thinshort = (1:4:32)+3;
 
-grouped_conditions{3}.name = '30 Degree Standard Phi Regressive Motion'; % OKAY
-grouped_conditions{3}.tf = [.25, .5, 2, 4, 8, 12, 25, 50, 75, 100];
-grouped_conditions{3}.speed = [.25, .5, 2, 4, 8, 12, 25, 50, 75, 100]*8;
-grouped_conditions{3}.direction = 'Regressive';
-grouped_conditions{3}.list = {[21,42],... % DEFINITELY FIXED
-                              [23,44],...
-                              [25,46],...
-                              [27,48],...
-                              [29,50],...
-                              [31,52],...
-                              [33,54],...
-                              [35,56],...
-                              [37,58],...
-                              [39,60]};
-                          
-%                             {[42,21],... 
-%                               [44,23],...
-%                               [46,25],...
-%                               [48,27],...
-%                               [50,29],...
-%                               [52,31],...
-%                               [54,33],...
-%                               [56,35],...
-%                               [58,37],...
-%                               [60,39]};
+Off_longflick_thicklong = 33:4:64;
+Off_longflick_thickshort = (33:4:64)+1;
+Off_longflick_thinlong = (33:4:64)+2;
+Off_longflick_thinshort = (33:4:64)+3;
 
-grouped_conditions{4}.name = '60 Degree Standard Phi Full Field'; % OKAY
-grouped_conditions{4}.tf = [.5 4 8 25 75]; 
-grouped_conditions{4}.speed = [.5 4 8 25 75]*16;
-grouped_conditions{4}.list = {[61,62],...
-                              [63,64],...
-                              [65,66],...
-                              [67,68],...
-                              [69,70]};
+On_shortflick_thicklong  = 65:4:96;
+On_shortflick_thickshort  = (65:4:96)+1;
+On_shortflick_thinlong  = (65:4:96)+2;
+On_shortflick_thinshort  = (65:4:96)+3;
 
-grouped_conditions{5}.name = '60 Degree Standard Phi Progressive Motion'; %OKAY
-grouped_conditions{5}.tf = [.5 4 8 25 75]; 
-grouped_conditions{5}.speed = [.5 4 8 25 75]*16;
-grouped_conditions{5}.direction = 'Progressive';
-grouped_conditions{5}.list = {[81,72],... % FIXED FOR REAL
-                              [83,74],...
-                              [85,76],...
-                              [87,78],...
-                              [89,80]};
-                          
-%                              {[72,81],...
-%                               [74,83],...
-%                               [76,85],...
-%                               [78,87],...
-%                               [80,89]};
+On_longflick_thicklong  = 97:4:128;
+On_longflick_thickshort  = (97:4:128)+1;
+On_longflick_thinlong  = (97:4:128)+2;
+On_longflick_thinshort  = (97:4:128)+3;
 
-grouped_conditions{6}.name = '60 Degree Standard Phi Regressive Motion'; % OKAY
-grouped_conditions{6}.tf = [.5 4 8 25 75]; 
-grouped_conditions{6}.speed = [.5 4 8 25 75]*16;
-grouped_conditions{6}.direction = 'Regressive';
-grouped_conditions{6}.list = {[71,82],... % FIXED FOR REAL
-                              [73,84],...
-                              [75,86],...
-                              [77,88],...
-                              [79,90]};
-                             
-%                              {[82,71],...
-%                               [84,73],...
-%                               [86,75],...
-%                               [88,77],...
-%                               [90,79]};                          
+% OFF
+grouped_conditions(1).bar_type      = 'OFF';
+grouped_conditions(1).flick_time    = 50;
+grouped_conditions(1).bar_width     = 'Thick';
+grouped_conditions(1).bar_len       = 'Long';
+grouped_conditions(1).pos_degs      = [1 2 3 4 4 5 6 7];
+grouped_conditions(1).conds = Off_shortflick_thicklong;
+grouped_conditions(1).non_sym_list = fx(Off_shortflick_thicklong);
+grouped_conditions(1).sym_list = rx(Off_shortflick_thicklong);
 
-grouped_conditions{7}.name = '60 Degree Reverse Phi Full Field'; % OKAY
-grouped_conditions{7}.tf = [.5 4 8 25 75]; 
-grouped_conditions{7}.speed = [.5 4 8 25 75]*16;
-grouped_conditions{7}.list = {[91,92],...
-                              [93,94],...
-                              [95,96],...
-                              [97,98],...
-                              [99,100]};
+grouped_conditions(2).bar_type      = 'OFF';
+grouped_conditions(2).flick_time    = 50;
+grouped_conditions(2).bar_width     = 'Thick';
+grouped_conditions(2).bar_len       = 'Short';
+grouped_conditions(2).pos_degs      = [1 2 3 4 4 5 6 7];
+grouped_conditions(2).conds = Off_shortflick_thickshort;
+grouped_conditions(2).non_sym_list = fx(Off_shortflick_thickshort);
+grouped_conditions(2).sym_list = rx(Off_shortflick_thickshort);
 
-grouped_conditions{8}.name = '60 Degree Standard Phi Progressive Motion'; % OKAY
-grouped_conditions{8}.tf = [.5 4 8 25 75]; 
-grouped_conditions{8}.speed = [.5 4 8 25 75]*16;
-grouped_conditions{8}.direction = 'Progressive';
-grouped_conditions{8}.list = {[111,102],...
-                              [113,104],...
-                              [115,106],...
-                              [117,108],...
-                              [119,110]};
-                          
-%                           {[102,111],...
-%                               [104,113],...
-%                               [106,115],...
-%                               [108,117],...
-%                               [110,119]};
+grouped_conditions(3).bar_type      = 'OFF';
+grouped_conditions(3).flick_time    = 50;
+grouped_conditions(3).bar_width     = 'Thin';
+grouped_conditions(3).bar_len       = 'Long';
+grouped_conditions(3).pos_degs      = [1 2 3 4 4 5 6 7];
+grouped_conditions(3).conds = Off_shortflick_thinlong;
+grouped_conditions(3).non_sym_list = fx(Off_shortflick_thinlong);
+grouped_conditions(3).sym_list = rx(Off_shortflick_thinlong);
 
-grouped_conditions{9}.name = '60 Degree Standard Phi Regressive Motion'; % OKAY
-grouped_conditions{9}.tf = [.5 4 8 25 75]; 
-grouped_conditions{9}.speed = [.5 4 8 25 75]*16;
-grouped_conditions{9}.direction = 'Regressive';
-grouped_conditions{9}.list = {[101,112],... % fixed
-                              [103,114],...
-                              [105,116],...
-                              [107,118],...
-                              [109,120]};
-                          
-%                           {[112,101],... % fixed
-%                               [114,103],...
-%                               [116,105],...
-%                               [118,107],...
-%                               [120,109]};
-% 
-% 
+grouped_conditions(4).bar_type      = 'OFF';
+grouped_conditions(4).flick_time    = 50;
+grouped_conditions(4).bar_width     = 'Thin';
+grouped_conditions(4).bar_len       = 'Long';
+grouped_conditions(4).pos_degs      = [1 2 3 4 4 5 6 7];
+grouped_conditions(4).conds = Off_shortflick_thinshort;
+grouped_conditions(4).non_sym_list = fx(Off_shortflick_thinshort);
+grouped_conditions(4).sym_list = rx(Off_shortflick_thinshort);
+
+grouped_conditions(5).bar_type      = 'OFF';
+grouped_conditions(5).flick_time    = 200;
+grouped_conditions(5).bar_width     = 'Thick';
+grouped_conditions(5).bar_len       = 'Long';
+grouped_conditions(5).pos_degs      = [1 2 3 4 4 5 6 7];
+grouped_conditions(5).conds = Off_longflick_thicklong;
+grouped_conditions(5).non_sym_list = fx(Off_longflick_thicklong);
+grouped_conditions(5).sym_list = rx(Off_longflick_thicklong);
+
+grouped_conditions(6).bar_type      = 'OFF';
+grouped_conditions(6).flick_time    = 200;
+grouped_conditions(6).bar_width     = 'Thick';
+grouped_conditions(6).bar_len       = 'Short';
+grouped_conditions(6).pos_degs      = [1 2 3 4 4 5 6 7];
+grouped_conditions(6).conds = Off_longflick_thickshort;
+grouped_conditions(6).non_sym_list = fx(Off_longflick_thickshort);
+grouped_conditions(6).sym_list = rx(Off_longflick_thickshort);
+
+grouped_conditions(7).bar_type      = 'OFF';
+grouped_conditions(7).flick_time    = 200;
+grouped_conditions(7).bar_width     = 'Thin';
+grouped_conditions(7).bar_len       = 'Long';
+grouped_conditions(7).pos_degs      = [1 2 3 4 4 5 6 7];
+grouped_conditions(7).conds = Off_longflick_thinlong;
+grouped_conditions(7).non_sym_list = fx(Off_longflick_thinlong);
+grouped_conditions(7).sym_list = rx(Off_longflick_thinlong);
+
+grouped_conditions(8).bar_type      = 'OFF';
+grouped_conditions(8).flick_time    = 200;
+grouped_conditions(8).bar_width     = 'Thin';
+grouped_conditions(8).bar_len       = 'Short';
+grouped_conditions(8).pos_degs      = [1 2 3 4 4 5 6 7];
+grouped_conditions(8).conds = Off_longflick_thinshort;
+grouped_conditions(8).non_sym_list = fx(Off_longflick_thinshort);
+grouped_conditions(8).sym_list = rx(Off_longflick_thinshort);
+
+% ON
+grouped_conditions(9).bar_type      = 'ON';
+grouped_conditions(9).flick_time    = 50;
+grouped_conditions(9).bar_width     = 'Thick';
+grouped_conditions(9).bar_len       = 'Long';
+grouped_conditions(9).pos_degs      = [1 2 3 4 4 5 6 7];
+grouped_conditions(9).conds = On_shortflick_thicklong;
+grouped_conditions(9).non_sym_list = fx(On_shortflick_thicklong);
+grouped_conditions(9).sym_list = rx(On_shortflick_thicklong);
+
+grouped_conditions(10).bar_type      = 'ON';
+grouped_conditions(10).flick_time    = 50;
+grouped_conditions(10).bar_width     = 'Thick';
+grouped_conditions(10).bar_len       = 'Short';
+grouped_conditions(10).pos_degs      = [1 2 3 4 4 5 6 7];
+grouped_conditions(10).conds = On_shortflick_thickshort;
+grouped_conditions(10).non_sym_list = fx(On_shortflick_thickshort);
+grouped_conditions(10).sym_list = rx(On_shortflick_thickshort);
+
+grouped_conditions(11).bar_type      = 'ON';
+grouped_conditions(11).flick_time    = 50;
+grouped_conditions(11).bar_width     = 'Thin';
+grouped_conditions(11).bar_len       = 'Long';
+grouped_conditions(11).pos_degs      = [1 2 3 4 4 5 6 7];
+grouped_conditions(11).conds = On_shortflick_thinlong;
+grouped_conditions(11).non_sym_list = fx(On_shortflick_thinlong);
+grouped_conditions(11).sym_list = rx(On_shortflick_thinlong);
+
+grouped_conditions(12).bar_type      = 'ON';
+grouped_conditions(12).flick_time    = 50;
+grouped_conditions(12).bar_width     = 'Thin';
+grouped_conditions(12).bar_len       = 'Short';
+grouped_conditions(12).pos_degs      = [1 2 3 4 4 5 6 7];
+grouped_conditions(12).conds = On_shortflick_thinshort;
+grouped_conditions(12).non_sym_list = fx(On_shortflick_thinshort);
+grouped_conditions(12).sym_list = rx(On_shortflick_thinshort);
+
+grouped_conditions(13).bar_type      = 'ON';
+grouped_conditions(13).flick_time    = 200;
+grouped_conditions(13).bar_width     = 'Thick';
+grouped_conditions(13).bar_len       = 'Long';
+grouped_conditions(13).pos_degs      = [1 2 3 4 4 5 6 7];
+grouped_conditions(13).conds = On_longflick_thicklong;
+grouped_conditions(13).non_sym_list = fx(On_longflick_thicklong);
+grouped_conditions(13).sym_list = rx(On_longflick_thicklong);
+
+grouped_conditions(14).bar_type      = 'ON';
+grouped_conditions(14).flick_time    = 200;
+grouped_conditions(14).bar_width     = 'Thick';
+grouped_conditions(14).bar_len       = 'Short';
+grouped_conditions(14).pos_degs      = [1 2 3 4 4 5 6 7];
+grouped_conditions(14).conds = On_longflick_thickshort;
+grouped_conditions(14).non_sym_list = fx(On_longflick_thickshort);
+grouped_conditions(14).sym_list = rx(On_longflick_thickshort);
+
+grouped_conditions(15).bar_type      = 'ON';
+grouped_conditions(15).flick_time    = 200;
+grouped_conditions(15).bar_width     = 'Thin';
+grouped_conditions(15).bar_len       = 'Long';
+grouped_conditions(15).pos_degs      = [1 2 3 4 4 5 6 7];
+grouped_conditions(15).conds = On_longflick_thinlong;
+grouped_conditions(15).non_sym_list = fx(On_longflick_thinlong);
+grouped_conditions(15).sym_list = rx(On_longflick_thinlong);
+
+grouped_conditions(16).bar_type      = 'ON';
+grouped_conditions(16).flick_time    = 200;
+grouped_conditions(16).bar_width     = 'Thin';
+grouped_conditions(16).bar_len       = 'Short';
+grouped_conditions(16).pos_degs      = [1 2 3 4 4 5 6 7];
+grouped_conditions(16).conds = On_longflick_thinshort;
+grouped_conditions(16).non_sym_list = fx(On_longflick_thinshort);
+grouped_conditions(16).sym_list = rx(On_longflick_thinshort);

@@ -463,6 +463,8 @@ classdef ExpSet < handle
         function [cond_data, sem] = get_offset_calculated_turning_resps(self,...
                 cond_num_mat,daq_channel,computation,use_sym_conds,average_type,normalization_value,inds_for_offset_calc,offset_calc,return_inds)
             
+            [B,A]=butter(2,.05,'low');
+            
             get_samples = @(vec)(vec(:));
             
             % Get all of the data in one giant cell array to work on
@@ -501,9 +503,10 @@ classdef ExpSet < handle
             
             for i = 1:numel(temp_cond_data)
                 for j = 1:size(temp_cond_data{i},1)
-                   temp_cond_data{i}(j,:) =  temp_cond_data{i}(j,:)-offset_computation(temp_cond_data{i}(j,inds_for_offset_calc));
                    
-                   reshaped_temp_cond_data{i}(j,:) = temp_cond_data{i}(j,return_inds);
+                    temp_cond_data{i}(j,:) =  filter(B,A,temp_cond_data{i}(j,:))-filter(B,A,offset_computation(temp_cond_data{i}(j,inds_for_offset_calc)));
+                   
+                    reshaped_temp_cond_data{i}(j,:) = temp_cond_data{i}(j,return_inds);
                    
                 end
                 

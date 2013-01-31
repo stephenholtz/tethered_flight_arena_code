@@ -79,7 +79,7 @@ if 0
                 curve_name = 'On_longflick_thinshort';
             end
             
-            condition_numbers = geno_data{i}.grouped_conditions(condition_set_number).sym_list;
+            condition_numbers = geno_data{i}.grouped_conditions(condition_set_number).non_sym_list;
             flick_off_point = geno_data{i}.grouped_conditions(condition_set_number).flick_time + 401;
             
             % L - R data normalized
@@ -126,8 +126,8 @@ if 0
             tuning_curves.(curve_name)(i).N                 = numel(geno_data{i}.experiment);
             
             % Get offset calculated portions
-            [avg, variance]                 = geno_data{i}.get_offset_calculated_turning_resps_set(condition_numbers,'lmr','mean','yes','all',geno_norm_values(i),381:400,'median',301:1200);
-            [avg_ts, variance_ts]           = geno_data{i}.get_offset_calculated_turning_resps_set(condition_numbers,'lmr','none','yes','all',geno_norm_values(i),381:400,'median',301:1200);
+            [avg, variance]                 = geno_data{i}.get_offset_calculated_turning_resps_set(condition_numbers,'lmr','mean','yes','all',geno_norm_values(i),375:400,'median',301:1200);
+            [avg_ts, variance_ts]           = geno_data{i}.get_offset_calculated_turning_resps_set(condition_numbers,'lmr','none','yes','all',geno_norm_values(i),375:400,'median',301:1200);
             
             tuning_curves.(curve_name)(i).pre_flick_avg               = cell2mat(avg);
             tuning_curves.(curve_name)(i).pre_flick_sem               = cell2mat(variance);

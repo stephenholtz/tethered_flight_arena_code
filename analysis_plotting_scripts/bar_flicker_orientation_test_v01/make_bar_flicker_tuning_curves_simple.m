@@ -141,7 +141,7 @@ if 1
 
     i = 1;
     N = 7;
-	plot_this = 1;
+	plot_this = 0;
     for cn = tuning_curves.names
         curve_name = cn{1};
         if plot_this
@@ -275,7 +275,7 @@ if 1
             set(lh,'Position',[0.0540752351097179 0.497872340425532 0.111686997141876 0.404255319148936]);
 
         end
-        
+        axis([0 8 -.4 .4])
     end
     
     export_fig(gcf,fullfile(data_location,filesep,'all_curves_figure'),'-pdf') 

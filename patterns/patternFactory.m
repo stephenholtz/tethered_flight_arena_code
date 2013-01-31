@@ -86,7 +86,7 @@ classdef patternFactory < handle
                 case 2
                     obj.low_val     = 0;
                     obj.mid_val     = 1;
-                    obj.high_val    = 2;
+                    obj.high_val    = 3;
                 case 3
                     obj.low_val     = 0;
                     obj.mid_val     = 3;

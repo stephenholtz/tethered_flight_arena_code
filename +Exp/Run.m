@@ -43,11 +43,11 @@ function Run(protocol,varargin)
 % SLH - 2012
 
 % Set up some Defaults
-default_reps = 3;
-default_record = true;
-check_flying = true;
-randomize = 1;
-startle_type = 1; %1 works well with buzzer and puffer
+default_reps    = 3;
+default_record  = 1;
+check_flying    = 1;
+randomize       = 1;
+startle_type    = 1; %1 works well with buzzer and puffer
 
 disp('STANDARD PROTOCOL STARTING')
 
@@ -55,7 +55,7 @@ disp('STANDARD PROTOCOL STARTING')
     %% Primary checks in this order: For folder. Folder contents. Condition function. Metadata. Genotype.
     % Start a timer + Check the metadata is correct with a(n overly complex) gui.
     tID = tic;
-    [metadata cond_struct meta_file path_files] = Exp.Utilities.do_all_protocol_checks(protocol);
+    [metadata, cond_struct, meta_file, path_files] = Exp.Utilities.do_all_protocol_checks(protocol);
     choice = Exp.Utilities.make_metadata_gui(metadata,meta_file);
     if ~choice
         return
@@ -64,7 +64,7 @@ disp('STANDARD PROTOCOL STARTING')
     %% Initialize the hardware and neccessary channels. Hard coded for sanity.
     string = ('Initializing hardware');
     Exp.Utilities.unixy_output_pt1(string)
-    [AI_wbf DIO_trig AI_stim_sync] = Exp.Utilities.initialize_default_hardware;
+    [AI_wbf, DIO_trig, AI_stim_sync] = Exp.Utilities.initialize_default_hardware;
     
     % For acquiring the actual data, if wanted
     if nargin > 2 ;
@@ -134,7 +134,7 @@ disp('STANDARD PROTOCOL STARTING')
         if randomize
             cond_nums = randperm(Nconds-1);
         else
-            cond_nums = 1:(Nconds-1);
+            cond_nums = 1:(Nconds-1); %#ok<*UNRCH>
         end
             
         while ~isempty(cond_nums)
@@ -147,7 +147,7 @@ disp('STANDARD PROTOCOL STARTING')
             condition_progress = [ '[' repmat(' ',1,4-numel(num2str(cond))) num2str(cond) '/' repmat(' ',1,4-numel(num2str(Nconds-1))) num2str(Nconds-1) ']'];
             fprintf('Repetition %s -- Trial %s -- Condition %s  ', rep_progress, trial_progress, condition_progress);
             
-            [time voltage] = Exp.Utilities.set_Panel_com(cond_struct(cond));
+            [time, voltage] = Exp.Utilities.set_Panel_com(cond_struct(cond));
             % need to convert the voltage to 16 bit (2^15)-1
             voltage_16bit=voltage*(32767/10);
             Panel_com('stop');
@@ -183,6 +183,7 @@ disp('STANDARD PROTOCOL STARTING')
                     end
                     error('Stimulus failed to display for 5 seconds')
                 end
+                stop(AI_stim_sync)
             end
             
             flying = 1;
@@ -235,18 +236,22 @@ disp('STANDARD PROTOCOL STARTING')
             curr_cond_index = curr_cond_index+1;
 
             % Interspersed condition (voltage already set to zero above)
-            [time ~] = Exp.Utilities.set_Panel_com(cond_struct(Nconds));
+            [time, ~] = Exp.Utilities.set_Panel_com(cond_struct(Nconds));
             % Turn the trigger back on
             Panel_com('set_ao',[4,5*(32767/10)]);
             Panel_com('start');
             start(AI_stim_sync)
             % Get the sample (removes it from SamplesAvailable)
             stim_start_trigger = getdata(AI_stim_sync);
-
+            stop(AI_stim_sync)
+            
             % This depends on the analog output values
             while stim_start_trigger < 2.5
                 start(AI_stim_sync)
                 stim_start_trigger = getdata(AI_stim_sync);
+                pause(.001)
+                stop(AI_stim_sync)
+                pause(.001)
             end
             
             ticHandle = tic;
@@ -262,7 +267,7 @@ disp('STANDARD PROTOCOL STARTING')
                         time = time + 1.3;
                         pause(1.25)
                     end
-
+                    
                     if time_elapsed > base_time*10 && reluctant_email_sent == 0;
                         email_subject = ['WARNING: tfExperiment on ' metadata.Arena ' Requires Attention.'];
                         email_message = ['Fly failed to start flight after ' num2str(time_elapsed) ' seconds.'];

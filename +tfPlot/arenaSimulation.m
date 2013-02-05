@@ -247,7 +247,7 @@ classdef arenaSimulation < handle
                 
                 y_ind = obj.y_pos_vector(curr_pos);                
                 x_ind = obj.x_pos_vector(curr_pos);
-                
+
                 % Effectively hard coded...
                 if obj.row_compression
                     obj.stim_frames(:,:,curr_pos) = [   repmat(obj.pattern(1,:,x_ind,y_ind),8,1);...
@@ -267,14 +267,14 @@ classdef arenaSimulation < handle
             
             switch color_mode
                 case 'green'
-                    obj.colormap = repmat([0 -1 0],obj.grayscale_val^2 - 1,1);
+                    obj.colormap = repmat([0 -1 0],obj.grayscale_val^2,1);
                 case 'red'
-                    obj.colormap = repmat([-1 0 0],obj.grayscale_val^2 - 1,1);
+                    obj.colormap = repmat([-1 0 0],obj.grayscale_val^2,1);
                 case 'alien'
-                    obj.colormap = repmat([.1 -1 .5],obj.grayscale_val^2 - 1,1);
+                    obj.colormap = repmat([.1 -1 .5],obj.grayscale_val^2,1);
             end
             
-            obj.colormap(obj.colormap == -1) = linspace(0,1,obj.grayscale_val^2-1)';
+            obj.colormap(obj.colormap == -1) = linspace(0,1,obj.grayscale_val^2)';
             
             cmap = obj.colormap;
             
@@ -298,7 +298,7 @@ classdef arenaSimulation < handle
             std_handle = figure('Color',[0 0 0],'Colormap',obj.colormap,'Name','Space-Time Diagram','NumberTitle','off');
             
             subplot('Position',[0 0 1 1])
-            image(space_time_mat);
+            imagesc(space_time_mat);
             axis off
             
         end

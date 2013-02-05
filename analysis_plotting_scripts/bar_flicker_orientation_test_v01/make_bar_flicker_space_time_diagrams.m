@@ -1,8 +1,8 @@
 % Script to make/save space time diagrams and movies
 
-conditions = bar_flicker_orientation_test_v02;
+conditions = bar_flicker_orientation_test_v03;
 
-save_path = '/Users/stephenholtz/Desktop/temp_space_time/bar_flicker2';
+save_path = '/Users/stephenholtz/Desktop/temp_space_time/bar_flicker3';
 
 if ~exist(save_path,'dir')
     mkdir(save_path)

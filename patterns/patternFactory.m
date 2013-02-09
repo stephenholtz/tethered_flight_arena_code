@@ -290,7 +290,7 @@ classdef patternFactory < handle
             end
             
             % note the -arena_offset to make the standard pattern start behind the fly
-            bar = circshift(bar',offset_start_pos-pattern_offset*2)'; 
+            bar = circshift(bar',offset_start_pos-(pattern_offset)-bar_width/2)';
             
             iter = 1;
             for shift = relative_loop_vec
@@ -346,6 +346,159 @@ classdef patternFactory < handle
             
         end
         
+        function obj = MinimalMotion(obj,bar_size,start_cols,direction,edge_type_1,edge_type_2)
+            
+            % this is terrible, don't look
+            
+            obj.pattern = [];
+            
+            switch direction
+                
+                case {'cw'}
+
+                    switch edge_type_1
+
+                        case {'off'}
+
+                            bar_t_1 = [obj.low_val*ones(obj.num_arena_rows,bar_size),...
+                                obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols-bar_size)];
+
+                            switch edge_type_2
+                                case {'off'}
+                                    bar_t_2 = [obj.low_val*ones(obj.num_arena_rows,bar_size),...
+                                        obj.low_val*ones(obj.num_arena_rows,bar_size),...
+                                        obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols-(2*bar_size))];
+                                case {'on'}
+                                    bar_t_2 = [obj.low_val*ones(obj.num_arena_rows,bar_size),...
+                                        obj.high_val*ones(obj.num_arena_rows,bar_size),...
+                                        obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols-(2*bar_size))];                            
+                            end
+
+                        case {'on'}
+
+                            bar_t_1 = [obj.high_val*ones(obj.num_arena_rows,bar_size),...
+                                        obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols-bar_size)];                    
+
+                            switch edge_type_2
+                                case {'off'}      
+                                    bar_t_2 = [obj.high_val*ones(obj.num_arena_rows,bar_size),...
+                                        obj.low_val*ones(obj.num_arena_rows,bar_size),...
+                                        obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols-(2*bar_size))];
+                                case {'on'}
+                                    bar_t_2 = [obj.high_val*ones(obj.num_arena_rows,bar_size),...
+                                        obj.high_val*ones(obj.num_arena_rows,bar_size),...
+                                        obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols-(2*bar_size))];                            
+                            end
+
+                    end
+                    
+                case {'ccw'}
+                    switch edge_type_1
+                        
+                        case {'off'}
+
+                            bar_t_1 = [obj.low_val*ones(obj.num_arena_rows,bar_size),...
+                                obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols-bar_size)];
+
+                            switch edge_type_2
+                                case {'off'}
+                                    bar_t_2 = [obj.low_val*ones(obj.num_arena_rows,bar_size),...
+                                        obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols-(2*bar_size)),...
+                                        obj.low_val*ones(obj.num_arena_rows,bar_size)];
+                                case {'on'}
+                                    bar_t_2 = [obj.low_val*ones(obj.num_arena_rows,bar_size),...
+                                        obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols-(2*bar_size)),...
+                                        obj.high_val*ones(obj.num_arena_rows,bar_size)];
+                            end
+
+                        case {'on'}
+
+                            bar_t_1 = [obj.high_val*ones(obj.num_arena_rows,bar_size),...
+                                        obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols-bar_size)];                    
+
+                            switch edge_type_2
+                                case {'off'}      
+                                    bar_t_2 = [obj.high_val*ones(obj.num_arena_rows,bar_size),...
+                                        obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols-(2*bar_size)),...
+                                        obj.low_val*ones(obj.num_arena_rows,bar_size)];
+                                case {'on'}
+                                    bar_t_2 = [obj.high_val*ones(obj.num_arena_rows,bar_size),...
+                                        obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols-(2*bar_size)),...
+                                        obj.high_val*ones(obj.num_arena_rows,bar_size)];
+                            end
+                    end
+            end
+            
+            % Get symmetry with cw and ccw... this way
+            pattern_offset = 4;
+            % make the bar start in a bunch of different places
+            
+            start_pos_iter = 1;
+            for start_pos = start_cols
+                
+                obj.pattern(:,:,1,start_pos_iter) = circshift(bar_t_1',start_pos-(pattern_offset)-bar_size/2)';
+                obj.pattern(:,:,2,start_pos_iter) = circshift(bar_t_2',start_pos-(pattern_offset)-bar_size/2)';
+                
+                start_pos_iter = start_pos_iter + 1;
+                
+            end
+            
+        end
+        
+        function obj = MakeONOFFEdges(obj,start_loc,jump_size,on_direction)
+            
+            movement_range = (obj.num_arena_cols/2);
+            step_vector = 0:jump_size:movement_range;
+            
+            x_iter = 1;
+            for es = step_vector
+                switch on_direction
+                    case {'cw'}
+                        obj.pattern(:,:,x_iter) = ...
+                            [obj.high_val*ones(obj.num_arena_rows,es),...
+                            obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols-(es*2)),...
+                            obj.low_val*ones(obj.num_arena_rows,es)];
+                            
+                    case {'ccw'}
+                        obj.pattern(:,:,x_iter) = ...
+                            [obj.low_val*ones(obj.num_arena_rows,es),...
+                            obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols-(es*2)),...
+                            obj.high_val*ones(obj.num_arena_rows,es)];
+                end
+                
+                x_iter = x_iter + 1;
+            end
+            
+            % second half of the stimulus where both sides 'recede'
+            for es = fliplr(step_vector(1:end-1))
+                switch on_direction
+                    case {'cw'}
+                        obj.pattern(:,:,x_iter) = ...
+                            [obj.high_val*ones(obj.num_arena_rows,es),...
+                            obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols-(es*2)),...
+                            obj.low_val*ones(obj.num_arena_rows,es)];
+                            
+                    case {'ccw'}
+                        obj.pattern(:,:,x_iter) = ...
+                            [obj.low_val*ones(obj.num_arena_rows,es),...
+                            obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols-(es*2)),...
+                            obj.high_val*ones(obj.num_arena_rows,es)];
+                end
+                
+                x_iter = x_iter + 1;
+            end
+            
+            pattern_offset = 4;
+            
+            % Make whole pattern then shift to the start_loc
+            for x = 1:size(obj.pattern,3)
+                
+                obj.pattern(:,:,x) = circshift(obj.pattern(:,:,x)',start_loc-pattern_offset)';
+                
+            end
+            
+        end
+
         function empty_frame = MakeEmptyMidValFrame(obj,num_frames)
                         
             empty_frame = obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols);
@@ -384,19 +537,37 @@ classdef patternFactory < handle
             switch channel_dim
                 case {3,'x'}
                     obj.temp_pattern = obj.pattern;
-                    obj.pattern = obj.MakeEmptyMidValFrame(num_frames);
-                    obj.pattern(:,:,(1+num_frames):size(obj.temp_pattern,3)+num_frames,:) = obj.temp_pattern;
+                    obj.pattern = [];
+                    
+                    for i = 1:size(obj.temp_pattern,4)
+                        blank_pattern = obj.MakeEmptyMidValFrame(num_frames);
+                        
+                        blank_pattern(:,:,(1+num_frames):size(obj.temp_pattern,3)+num_frames) = obj.temp_pattern(:,:,:,i);
+                        
+                        obj.pattern(:,:,:,i) = blank_pattern;
+                        
+                        clear blank_pattern
+                    end
                 case {4,'y'}
                     obj.temp_pattern = obj.pattern;
-                    obj.pattern = obj.MakeEmptyMidValFrame(num_frames);
-                    obj.pattern(:,:,:,(1+num_frames):size(obj.temp_pattern,4)+num_frames) = obj.temp_pattern;
+                    obj.pattern = [];
+                    
+                    for i = 1:size(obj.temp_pattern,3)
+                        blank_pattern = obj.MakeEmptyMidValFrame(num_frames);
+                        
+                        blank_pattern(:,:,:,(1+num_frames):size(obj.temp_pattern,4)+num_frames) = obj.temp_pattern(:,:,i,:);
+                        
+                        obj.pattern(:,:,:,i) = blank_pattern;
+                        
+                        clear blank_pattern
+                    end
                 otherwise
                     error('channel_dim must be 3,''x'',4, or ''y''')
             end
             
             clear obj.temp_pattern;
             
-        end
+        end % y chan might not work, never tested
         
         function obj = SwitchXYChannels(obj)
             

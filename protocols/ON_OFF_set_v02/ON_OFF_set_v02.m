@@ -28,7 +28,7 @@ panel_cfgs = panel_cfgs.mat;
 cd(cf);
 
 % Minimal Motion stimuli - WORKING
-duration = .54;
+duration = .52;
 default_frequency = 250;
 cond_num = 1;
 total_ol_dur = 0;
@@ -56,7 +56,7 @@ for arena_position = [3 5 7 7 9 11]
 end
 
 % ON and OFF Edges 
-for dps = round([100 220]*3.75) % 78 and 234 dps of the bar
+for dps = round([100 220]/3.75) % 78 and 234 dps of the bar
     for pattern = 9:10 % converging vs diverging
         for on_off = 1:2 % y position has symm versions
             

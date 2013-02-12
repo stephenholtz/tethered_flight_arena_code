@@ -13,7 +13,7 @@ freq_str = 'SAMP_RATE_250Hz_';
 time_before = 80;
 time_between_1 = 100;
 time_between_2 = 160;
-time_after = 200;
+time_after = 500;
 
 before = ones(1,round(time_before/ms_per_sample));
 actual_time_before = round(time_before/ms_per_sample)*ms_per_sample;

@@ -1,4 +1,4 @@
-function [Conditions] = ON_OFF_set_v01
+function [Conditions] = ON_OFF_set_v02
 % Protocol with the couple of on and off stimuli, an expanded initial set
 % for testing. A few subsequent for loops to set them up, easily
 % modifiable. At least an extra .05 should be added to all durations
@@ -16,10 +16,10 @@ end
 
 % gather some information
 cf = pwd;
-patterns = what(fullfile(dir,'patterns','ON_OFF_set_v01'));
+patterns = what(fullfile(dir,'patterns','ON_OFF_set_v02'));
 pattern_loc = patterns.path;
 patterns = patterns.mat;
-pos_func_loc = fullfile(dir,'position_functions','ON_OFF_set_v01');
+pos_func_loc = fullfile(dir,'position_functions','ON_OFF_set_v02');
 position_functions = what(pos_func_loc);
 position_functions = position_functions.mat;
 panel_cfgs_loc = fullfile(dir,'panel_configs');
@@ -28,40 +28,35 @@ panel_cfgs = panel_cfgs.mat;
 cd(cf);
 
 % Minimal Motion stimuli - WORKING
-duration = .4;
+duration = .54;
 default_frequency = 250;
 cond_num = 1;
 total_ol_dur = 0;
-if 1
-    
-for time_between_motion = 1:3 % 44 76 and 116 ms
-    for arena_position = [3 5 7 9 11]
-        for pattern = [3 4 5 6]
-            Conditions(cond_num).PatternID      = pattern; %#ok<*AGROW>
-            Conditions(cond_num).PatternName    = patterns{pattern};
-            Conditions(cond_num).Gains          = [0 0 0 0];
-            Conditions(cond_num).Mode           = [4 0];
-            Conditions(cond_num).InitialPosition= [1 arena_position];
-            Conditions(cond_num).PosFuncLoc     = pos_func_loc;
-            Conditions(cond_num).PosFunctionX   = [1 time_between_motion];
-            Conditions(cond_num).FuncFreqX 		= default_frequency;
-            Conditions(cond_num).PosFuncNameX   = position_functions{time_between_motion};
 
-            Conditions(cond_num).PosFunctionY 	= [2 0];
-            Conditions(cond_num).FuncFreqY 		= default_frequency;
-            Conditions(cond_num).PosFuncNameY   = 'null';
+for arena_position = [3 5 7 7 9 11]
+    for pattern = 1:8
+        Conditions(cond_num).PatternID      = pattern; %#ok<*AGROW>
+        Conditions(cond_num).PatternName    = patterns{pattern};
+        Conditions(cond_num).Gains          = [0 0 0 0];
+        Conditions(cond_num).Mode           = [4 0];
+        Conditions(cond_num).InitialPosition= [1 arena_position];
+        Conditions(cond_num).PosFuncLoc     = pos_func_loc;
+        Conditions(cond_num).PosFunctionX   = [1 1]; % only one attempt this time
+        Conditions(cond_num).FuncFreqX 		= default_frequency;
+        Conditions(cond_num).PosFuncNameX   = position_functions{Conditions(cond_num).PosFunctionX(2)};
+        Conditions(cond_num).PosFunctionY 	= [2 0];
+        Conditions(cond_num).FuncFreqY 		= default_frequency;
+        Conditions(cond_num).PosFuncNameY   = 'null';
+        Conditions(cond_num).Duration       = duration;
+        Conditions(cond_num).note           = '';
 
-            Conditions(cond_num).Duration       = duration;
-            Conditions(cond_num).note           = '';
-
-            total_ol_dur = total_ol_dur + Conditions(cond_num).Duration + .02;
-            cond_num = cond_num + 1;
-        end
+        total_ol_dur = total_ol_dur + Conditions(cond_num).Duration + .02;
+        cond_num = cond_num + 1;
     end
 end
 
 % ON and OFF Edges 
-for dps = round([100 220]/3.75) % 78 and 234 dps of the bar
+for dps = round([100 220]*3.75) % 78 and 234 dps of the bar
     for pattern = 9:10 % converging vs diverging
         for on_off = 1:2 % y position has symm versions
             
@@ -74,12 +69,10 @@ for dps = round([100 220]/3.75) % 78 and 234 dps of the bar
             Conditions(cond_num).PosFunctionX   = [1 0];
             Conditions(cond_num).FuncFreqX 		= default_frequency;
             Conditions(cond_num).PosFuncNameX   = 'null';%position_functions{dps};
-
             Conditions(cond_num).PosFunctionY 	= [2 0];
             Conditions(cond_num).FuncFreqY 		= default_frequency;
             Conditions(cond_num).PosFuncNameY   = 'null';
-
-            Conditions(cond_num).Duration       = 98/dps;
+            Conditions(cond_num).Duration       = 97/dps;
             Conditions(cond_num).note           = '';
 
             total_ol_dur = total_ol_dur + Conditions(cond_num).Duration + .02;
@@ -92,30 +85,27 @@ end
 for dps = round([100 220]/3.75)%4:5 % 78 and 234 dps of the bar
     for on_off = 1:2 % y position has on vs off, 4px wide
         for pattern = 11:12 % CW CCW
-                    Conditions(cond_num).PatternID      = pattern; %#ok<*AGROW>
-                    Conditions(cond_num).PatternName    = patterns{pattern};
-                    Conditions(cond_num).Gains          = [dps 0 0 0];
-                    Conditions(cond_num).Mode           = [0 0];
-                    Conditions(cond_num).InitialPosition= [1 on_off];
-                    Conditions(cond_num).PosFuncLoc     = pos_func_loc;
-                    Conditions(cond_num).PosFunctionX   = [1 0];
-                    Conditions(cond_num).FuncFreqX 		= default_frequency;
-                    Conditions(cond_num).PosFuncNameX   = 'null';%position_functions{dps};
+            Conditions(cond_num).PatternID      = pattern; %#ok<*AGROW>
+            Conditions(cond_num).PatternName    = patterns{pattern};
+            Conditions(cond_num).Gains          = [dps 0 0 0];
+            Conditions(cond_num).Mode           = [0 0];
+            Conditions(cond_num).InitialPosition= [1 on_off];
+            Conditions(cond_num).PosFuncLoc     = pos_func_loc;
+            Conditions(cond_num).PosFunctionX   = [1 0];
+            Conditions(cond_num).FuncFreqX 		= default_frequency;
+            Conditions(cond_num).PosFuncNameX   = 'null';%position_functions{dps};
+            Conditions(cond_num).PosFunctionY 	= [2 0];
+            Conditions(cond_num).FuncFreqY 		= default_frequency;
+            Conditions(cond_num).PosFuncNameY   = 'null';
+            Conditions(cond_num).Duration       = 97/dps;
+            Conditions(cond_num).note           = '';
 
-                    Conditions(cond_num).PosFunctionY 	= [2 0];
-                    Conditions(cond_num).FuncFreqY 		= default_frequency;
-                    Conditions(cond_num).PosFuncNameY   = 'null';
-
-                    Conditions(cond_num).Duration       = 98/dps;
-                    Conditions(cond_num).note           = '';
-
-                    total_ol_dur = total_ol_dur + Conditions(cond_num).Duration + .02;
-                    cond_num = cond_num + 1;
+            total_ol_dur = total_ol_dur + Conditions(cond_num).Duration + .02;
+            cond_num = cond_num + 1;
         end
     end
 end
 
-end
 
 % Telethon ON-OFF stimuli
 Conditions(cond_num).PatternID = 14;
@@ -251,9 +241,8 @@ Conditions(cond_num).FuncFreqY 		= 50;
 Conditions(cond_num).FuncFreqX 		= 50;
 Conditions(cond_num).PosFunctionY 	= [2 0];
 
-
-
 % closed loop inter-trial stimulus
+cond_num = cond_num+ 1;
 Conditions(cond_num).PatternID      = numel(patterns); % single stripe 8 wide, same contrast as rev phi stims
 Conditions(cond_num).PatternName    = patterns(numel(patterns));
 Conditions(cond_num).PatternLoc     = pattern_loc;

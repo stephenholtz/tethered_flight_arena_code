@@ -105,7 +105,9 @@ for flyNum = 1:numel(data_files)
         
         if ~isempty(condition_lengths)
         condition_length = condition_lengths(condition_number)*SAMPLERATE;
-            
+        % this might cause problems!!
+        condition_length = floor(condition_length);
+        
             if numel(current_block) >= condition_length;
             ExpData{rep, condition_number}.left_amp         = RawData(current_block(1:condition_length),1)';
             ExpData{rep, condition_number}.x_pos            = RawData(current_block(1:condition_length),4)';

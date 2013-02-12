@@ -54,7 +54,7 @@ classdef Utilities
     
     %-----METHODS FOR SETTING Panel_com/running experiment-----------------
     methods (Static)
-        function [time voltage] = set_Panel_com(cond_struct)
+        function [time, voltage] = set_Panel_com(cond_struct)
         % Runs a condition based on the fields of the struct. Returns the
         % time that it should be allowed to run (a pause).
         
@@ -95,28 +95,36 @@ classdef Utilities
                 end
                 
                 Panel_com('send_gain_bias',cond_struct.Gains);
+                pause(.03)
+                Panel_com('set_funcy_freq',cond_struct.FuncFreqY);
+                pause(.03)
+                Panel_com('set_posfunc_id',cond_struct.PosFunctionY);
+                pause(.03)
+                Panel_com('set_funcx_freq',cond_struct.FuncFreqX);
+                pause(.03)
+                Panel_com('set_posfunc_id',cond_struct.PosFunctionX);
+                pause(.03)
                 
-                % Some new issues 12/12, need to meet with Jin
-                if cond_struct.PosFunctionY(2)
-                    Panel_com('set_posfunc_id',cond_struct.PosFunctionY);
-                    pause(.05)
-                end
-                
-                if cond_struct.PosFunctionX(2)
-                    Panel_com('set_posfunc_id',cond_struct.PosFunctionX);
-                    pause(.05)
-                end
-                
-                if cond_struct.PosFunctionY(2)
-                    Panel_com('set_funcy_freq',cond_struct.FuncFreqY);
-                    pause(.05)
-                end
-                
-                if cond_struct.PosFunctionX(2)
-                    Panel_com('set_funcx_freq',cond_struct.FuncFreqX);
-                    pause(.05)
-                end
-                
+%                % Some new issues 12/12, need to meet with Jin
+%                 if cond_struct.PosFunctionY(2)
+%                     Panel_com('set_posfunc_id',cond_struct.PosFunctionY);
+%                     pause(.05)
+%                 end
+%                 
+%                 if cond_struct.PosFunctionX(2)
+%                     Panel_com('set_posfunc_id',cond_struct.PosFunctionX);
+%                     pause(.05)
+%                 end
+%                 
+%                 if cond_struct.PosFunctionY(2)
+%                     Panel_com('set_funcy_freq',cond_struct.FuncFreqY);
+%                     pause(.05)
+%                 end
+%                 
+%                 if cond_struct.PosFunctionX(2)
+%                     Panel_com('set_funcx_freq',cond_struct.FuncFreqX);
+%                     pause(.05)
+%                 end
             end
             
             time = cond_struct.Duration;
@@ -159,7 +167,7 @@ classdef Utilities
                 stop(monitor_channel);
         end
             
-        function [AI_wbf DIO_trig AI_stim_sync] = initialize_default_hardware()
+        function [AI_wbf, DIO_trig, AI_stim_sync] = initialize_default_hardware()
         % Initialize the hardware and neccessary channels. Hard coded for sanity.
             % Reset the daq
             daqreset; % useful!
@@ -184,7 +192,7 @@ classdef Utilities
         
         end
         
-        function [AI_wbf DIO_trig AI_stim_sync] = initialize_timecourse_hardware()
+        function [AI_wbf, DIO_trig, AI_stim_sync] = initialize_timecourse_hardware()
         % Initialize the hardware and neccessary channels. Hard coded for sanity.
             % Reset the daq
             daqreset; % useful!
@@ -241,10 +249,6 @@ classdef Utilities
             
         end
         
-        function [curr_temp] = return_current_temp(temp_channel)
-            
-        end
-        
 	end
     
     %-----METHODS FOR ERROR CHECKING---------------------------------------
@@ -260,7 +264,7 @@ classdef Utilities
                 Exp.Utilities.unixy_output_pt1(string)
             end
             
-            [result condition_func meta_file path_files.funcs_on_SD_path path_files.pats_on_SD_path path_files.cfgs_on_SD_path] = Exp.Utilities.get_check_protocol_input(protocol);
+            [result, condition_func, meta_file, path_files.funcs_on_SD_path, path_files.pats_on_SD_path, path_files.cfgs_on_SD_path] = Exp.Utilities.get_check_protocol_input(protocol);
             % The result of this function is informative. Nice to see what went wrong.
             if result.has_funcs && result.has_pats && result.has_cfgs && result.has_conds && result.has_meta
                 Exp.Utilities.unixy_output_pt2(1)
@@ -274,7 +278,7 @@ classdef Utilities
                 error('SD card info requred');
             end
 
-            [result cond_struct] = Exp.Utilities.get_checked_cond_input(condition_func);
+            [result, cond_struct] = Exp.Utilities.get_checked_cond_input(condition_func);
             string = ('Checking condition function');
             Exp.Utilities.unixy_output_pt1(string)
             if ~result;
@@ -296,7 +300,7 @@ classdef Utilities
             end
 
             metadata.Protocol = protocol;
-            [result metadata] = Exp.Utilities.get_check_meta_file(meta_file,metadata);
+            [result, metadata] = Exp.Utilities.get_check_meta_file(meta_file,metadata);
             string = ('Checking metadata file and contents');
             Exp.Utilities.unixy_output_pt1(string)
             if ~result;
@@ -629,11 +633,11 @@ classdef Utilities
             annotation(main_fh, 'textbox',[.035 .885 .1 .1],'String',figName,'FontSize',12, 'FontWeight','demi', 'EdgeColor', 'white')
             
             decision = 0;
-            [type value] = return_type_value(metadata);
+            [type, value] = return_type_value(metadata);
             make_popup_metadata_ui(main_fh,type,value);
 
             % Function to get a type and value cell for display on the 'gui'
-                function [value_cell type_cell] = return_type_value(metadata)
+                function [value_cell, type_cell] = return_type_value(metadata)
                     fields = fieldnames(metadata);
                     for ind = 1:numel(fieldnames(metadata))
                     value_cell{ind} = {getfield(metadata, fields{ind})}; %#ok<*GFLD,*AGROW>            
@@ -679,7 +683,7 @@ classdef Utilities
                             % close/continue.
                             decision = 2;
                             [metadata] = Exp.Utilities.testing_metadata;
-                            [type_cell value_cell] = return_type_value(metadata);
+                            [type_cell, value_cell] = return_type_value(metadata);
                             make_popup_metadata_ui(fig_handle,type_cell,value_cell);
                             pause(1);
                             close(fig_handle);

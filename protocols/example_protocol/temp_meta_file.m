@@ -4,11 +4,11 @@
 % Exp.Run, in order to avoid mistakes in typing it in.
 
 % Transgene metadata
-metadata.Line               = 'gmr_26a03dbd'; %'gmr_42f06_ae_01';
+metadata.Line               = 'gmr_48a08ad'; %'gmr_42f06_ae_01';
 metadata.Chromo2            = 'gmr; tubp_gal80ts';
 metadata.Chromo3            = 'gmr_26a03dbd; uas_kir_2.1';
 metadata.Sex                = 'female'; % 'male' 'female'
-metadata.DoB                = '8_24_12';
+metadata.DoB                = '2_4_13';
 metadata.HeadGlued          = '0'; % '1' '0'
 metadata.Effector           = 'gal80ts_kir21'; % 'gal80ts_kir21' 'gal80ts_tnt'
 metadata.daqFile            = 'raw_data.daq';

@@ -4,11 +4,11 @@
 % Exp.Run, in order to avoid mistakes in typing it in.
 
 % Transgene metadata
-metadata.Line               = 'gmr_26a03dbd'; %'gmr_42f06_ae_01';
-metadata.Chromo2            = '';
-metadata.Chromo3            = '';
+metadata.Line               = 'gmr_48a08ad'; %'gmr_42f06_ae_01';
+metadata.Chromo2            = 'gmr; tubp_gal80ts';
+metadata.Chromo3            = 'gmr_26a03dbd; uas_kir_2.1';
 metadata.Sex                = 'female'; % 'male' 'female'
-metadata.DoB                = '12_26_12';
+metadata.DoB                = '2_4_13';
 metadata.HeadGlued          = '0'; % '1' '0'
 metadata.Effector           = 'gal80ts_kir21'; % 'gal80ts_kir21' 'gal80ts_tnt'
 metadata.daqFile            = 'raw_data.daq';
@@ -20,7 +20,7 @@ metadata.temp_experiment    = 20.1;
 metadata.temp_ambient       = metadata.temp_experiment;
 metadata.humidity_ambient   = 60.2;
 metadata.fly_tag            = ''; % ['pal_' datestr(now,30)];
-metadata.note               = 'vel_null_working'; % 'ocelli_dark_paint' 'ocelli_clear_paint'
+metadata.note               = ''; % 'ocelli_dark_paint' 'ocelli_clear_paint'
 
 time = 2;
 switch time % Prevents me from messing up the light cycles, kinda.

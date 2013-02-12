@@ -97,7 +97,7 @@ grouped_conditions(12).conds         = {[79,80]};
 % tuthill ON sawtooth
 grouped_conditions(13).bar_type      = 'ON';
 grouped_conditions(13).speed         = 3*3.75;
-grouped_conditions(13).conds         = {[83]}; %%%%%%%%% MISSING COND!!
+grouped_conditions(13).conds         = {[83,84]};
 % tuthill OFF sawtooth
 grouped_conditions(14).bar_type      = 'OFF';
 grouped_conditions(14).speed         = 3*3.75;

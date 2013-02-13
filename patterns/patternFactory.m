@@ -450,7 +450,7 @@ classdef patternFactory < handle
             % this is terrible, don't look
             obj.pattern = [];
             iter = 1;
-            for et = {[edge_type_1], [edge_type_2]}
+            for et = {edge_type_1, edge_type_2}
                 switch et{1}
                     case {'on'}
                         bar(iter) = obj.high_val;
@@ -480,14 +480,14 @@ classdef patternFactory < handle
                                     bar(1)*ones(obj.num_arena_rows,bar_size),...
                                     obj.mid_val*ones(obj.num_arena_rows,dist_bn_bars)],...
                                     1,n_bar_reps);
+                        bar_t_1 = circshift(bar_t_1',-bar_size)';
                         bar_t_2 = repmat(   [bar(2)*ones(obj.num_arena_rows,bar_size),...
                                     bar(1)*ones(obj.num_arena_rows,bar_size),...
                                     obj.mid_val*ones(obj.num_arena_rows,dist_bn_bars)],...
                                     1,n_bar_reps);
+                        bar_t_2 = circshift(bar_t_2',-bar_size)';
                 end
             end
-            
-
             
             % Get symmetry with cw and ccw... this way
             pattern_offset = 4;

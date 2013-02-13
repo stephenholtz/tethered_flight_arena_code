@@ -1,16 +1,16 @@
 % Script to make/save space time diagrams and movies
 
-conditions = ON_OFF_set_v02;
+conditions = ON_OFF_set_v03;
 
-save_path = '/Users/stephenholtz/Desktop/temp_space_time/on_off_set_v02';
+save_path = '/Users/stephenholtz/Desktop/temp_space_time/on_off_set_v03';
 
 if ~exist(save_path,'dir')
     mkdir(save_path)
 end
 
-make_vids = 0;
+make_vids = 1;
 
-for i = 66:(numel(conditions)-1)
+for i = 1:(numel(conditions)-1)
     
     stim_name = ['cond_' num2str(i) '_pat_' conditions(i).PatternName(12:(end-20))];
     

@@ -399,7 +399,7 @@ classdef patternFactory < handle
 
                             bar_t_1 = [obj.low_val*ones(obj.num_arena_rows,bar_size),...
                                 obj.mid_val*ones(obj.num_arena_rows,obj.num_arena_cols-bar_size)];
-
+                            
                             switch edge_type_2
                                 case {'off'}
                                     bar_t_2 = [obj.low_val*ones(obj.num_arena_rows,bar_size),...
@@ -445,6 +445,65 @@ classdef patternFactory < handle
             
         end
         
+        function obj = MinimalMotionMultiple(obj,bar_size,start_cols,direction,edge_type_1,edge_type_2,dist_bn_bars)
+            
+            % this is terrible, don't look
+            obj.pattern = [];
+            iter = 1;
+            for et = {[edge_type_1], [edge_type_2]}
+                switch et{1}
+                    case {'on'}
+                        bar(iter) = obj.high_val;
+                    case {'off'}
+                        bar(iter) = obj.low_val; 
+                end
+                iter = 1 + iter;
+            end
+            
+            if round(obj.num_arena_cols/(bar_size*2 + dist_bn_bars)) ~= obj.num_arena_cols/(bar_size*2 + dist_bn_bars);
+                error('bars do not add up to number of arena cols')
+            else
+                n_bar_reps = obj.num_arena_cols/(bar_size*2 + dist_bn_bars);
+                switch direction
+                    case {'cw'}
+                        bar_t_1 = repmat(   [bar(1)*ones(obj.num_arena_rows,bar_size),...
+                                    obj.mid_val*ones(obj.num_arena_rows,bar_size),...
+                                    obj.mid_val*ones(obj.num_arena_rows,dist_bn_bars)],...
+                                    1,n_bar_reps);
+                        bar_t_2 = repmat(   [bar(1)*ones(obj.num_arena_rows,bar_size),...
+                                    bar(2)*ones(obj.num_arena_rows,bar_size),...
+                                    obj.mid_val*ones(obj.num_arena_rows,dist_bn_bars)],...
+                                    1,n_bar_reps);
+                    
+                    case {'ccw'}
+                        bar_t_1 = repmat(   [obj.mid_val*ones(obj.num_arena_rows,bar_size),...
+                                    bar(1)*ones(obj.num_arena_rows,bar_size),...
+                                    obj.mid_val*ones(obj.num_arena_rows,dist_bn_bars)],...
+                                    1,n_bar_reps);
+                        bar_t_2 = repmat(   [bar(2)*ones(obj.num_arena_rows,bar_size),...
+                                    bar(1)*ones(obj.num_arena_rows,bar_size),...
+                                    obj.mid_val*ones(obj.num_arena_rows,dist_bn_bars)],...
+                                    1,n_bar_reps);
+                end
+            end
+            
+
+            
+            % Get symmetry with cw and ccw... this way
+            pattern_offset = 4;
+            % make the bar start in a bunch of different places
+            
+            start_pos_iter = 1;
+            for start_pos = start_cols
+                
+                obj.pattern(:,:,1,start_pos_iter) = circshift(bar_t_1',start_pos-(pattern_offset)-bar_size/2)';
+                obj.pattern(:,:,2,start_pos_iter) = circshift(bar_t_2',start_pos-(pattern_offset)-bar_size/2)';
+                
+                start_pos_iter = start_pos_iter + 1;
+                
+            end
+        end
+            
         function obj = MakeONOFFEdges(obj,start_loc,jump_size,on_direction)
             
             movement_range = (obj.num_arena_cols/2);

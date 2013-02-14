@@ -8,7 +8,7 @@ clear Pats
 project = 'ON_OFF_set_v04';
 
 % Pattern properties needed later
-row_compression = 1;
+row_compression = 0;
 gs_val = 2;
 testing_flag = 0;
 

@@ -10,7 +10,7 @@ end
 
 make_vids = 0;
 
-for i = 1:(numel(conditions)-14)
+for i = 45:(numel(conditions)-1)
     
     stim_name = ['cond_' num2str(i) '_pat_' conditions(i).PatternName(12:(end-20))];
     

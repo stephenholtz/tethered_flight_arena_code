@@ -557,6 +557,63 @@ classdef patternFactory < handle
             end
             
         end
+        
+        function obj = SteadyStateONOFFStimulus(obj,start_mid_end_locs,direction,edge_type_1,edge_type_2)
+            
+            % this is terrible, don't look
+            obj.pattern = [];
+            iter = 1;
+            for et = {edge_type_1, edge_type_2}
+                switch et{1}
+                    case {'on'}
+                        bar(iter) = obj.high_val;
+                    case {'off'}
+                        bar(iter) = obj.low_val; 
+                end
+                iter = 1 + iter;
+            end
+            
+            
+            switch direction
+                case {'cw'}
+                    edge_1_inds = start_mid_end_locs(1):start_mid_end_locs(2);
+                    edge_2_inds = (start_mid_end_locs(2)+1):start_mid_end_locs(3);
+                case {'ccw'}
+                    edge_1_inds = start_mid_end_locs(3):-1:(start_mid_end_locs(2)+1);
+                    edge_2_inds = (start_mid_end_locs(2)):-1:start_mid_end_locs(1);
+            end
+            
+            frame_iter = 1;
+            
+            base_pattern = obj.mid_val*ones(obj.num_arena_rows,(obj.num_arena_cols));
+            
+            obj.pattern(:,:,frame_iter) = base_pattern;
+            
+            for edge_1_cols = 1:numel(edge_1_inds)
+                
+                if edge_1_cols > 1
+                    obj.pattern(:,:,frame_iter) = obj.pattern(:,:,frame_iter-1);
+                end
+                
+                curr_col = edge_1_inds(edge_1_cols);
+                
+                obj.pattern(:,curr_col,frame_iter) = bar(1)*ones(obj.num_arena_rows,numel(curr_col));
+                
+                frame_iter = frame_iter + 1;
+            end
+            
+            for edge_2_cols = 1:numel(edge_2_inds)
+                
+                obj.pattern(:,:,frame_iter) = obj.pattern(:,:,frame_iter-1);
+                
+                curr_col = edge_2_inds(edge_2_cols);
+                
+                obj.pattern(:,curr_col,frame_iter) = bar(2)*ones(obj.num_arena_rows,numel(curr_col));
+                
+                frame_iter = frame_iter + 1;
+            end
+            
+        end
 
         function empty_frame = MakeEmptyMidValFrame(obj,num_frames)
                         

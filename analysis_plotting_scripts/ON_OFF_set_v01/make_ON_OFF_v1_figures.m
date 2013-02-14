@@ -6,7 +6,7 @@ data_location = '/Users/stephenholtz/local_experiment_copies/ON_OFF_set_v01';
 exp_dir = data_location;
 
 %geno_names{1} = 'gmr_48a08ad_gal80ts_kir21';
-geno_names{1} = 'gmr_wrking_48a08ad_gal80ts_kir21';
+geno_names{1} = 'gmr_48a08ad_gal80ts_kir21';
 
 %% Process initial raw data and save summary.mat files
 
@@ -19,24 +19,24 @@ if 0
     end
 end
 
-%% Load in summary files
-
-if 0
-    
-    addpath(genpath('/Users/stephenholtz/matlab-utils'))
-    
-    for g = 1:numel(geno_names)
-        [summary_file,summary_filepath] = returnDirFileList(fullfile(data_location,geno_names{g}),'summary.mat');
-        load(summary_filepath{:});
-        
-        geno_data{g} = tfAnalysis.ExpSet(eval(summary_file{1}(1:end-4))); %#ok<*AGROW>
-    end
-   
-end
 
 %% Use summary files to save specific subsets of data in tuning_curves.mat
 
-if 0
+if 1
+    
+    % Load in the summarized data if it isn't already done
+    if ~exist('geno_data','var')
+
+        addpath(genpath('/Users/stephenholtz/matlab-utils'))
+
+        for g = 1:numel(geno_names)
+            [summary_file,summary_filepath] = returnDirFileList(fullfile(data_location,geno_names{g}),'summary.mat');
+            load(summary_filepath{:});
+
+            geno_data{g} = tfAnalysis.ExpSet(eval(summary_file{1}(1:end-4))); %#ok<*AGROW>
+        end
+    end
+    
     % Calculate normalization value per genotype
     for i = 1:numel(geno_names)
        mean_turning_resps(i) = geno_data{i}.exp_set_turning_resp; %#ok<*SAGROW>
@@ -88,29 +88,31 @@ if 0
             
             % L - R data normalized
             [avg_ts, variance_ts]                   = geno_data{i}.get_trial_data_set(condition_numbers,'lmr','none','yes','all',geno_norm_values(i));
-            tuning_curves.(curve_name)(i).avg_ts    = avg_ts;
-            tuning_curves.(curve_name)(i).sem_ts    = variance_ts;
+            tuning_curves.raw.(curve_name)(i).avg_ts    = avg_ts;
+            tuning_curves.raw.(curve_name)(i).sem_ts    = variance_ts;
             
             [avg, variance]                         = geno_data{i}.get_trial_data_set(condition_numbers,'lmr','mean','yes','all',geno_norm_values(i));
-            tuning_curves.(curve_name)(i).avg       = avg;
-            tuning_curves.(curve_name)(i).sem       = variance;
+            tuning_curves.raw.(curve_name)(i).avg       = avg;
+            tuning_curves.raw.(curve_name)(i).sem       = variance;
             
             [avg_ts, ~]           = geno_data{i}.get_trial_data_set(condition_numbers,'lmr','none','yes','none',geno_norm_values(i));
-            tuning_curves.(curve_name)(i).all_ts            = avg_ts;
+            tuning_curves.raw.(curve_name)(i).all_ts            = avg_ts;
             
             % X position
             [avg_ts, ~]           = geno_data{i}.get_trial_data_set(condition_numbers,'x_pos','none','yes','none',1);
-            tuning_curves.(curve_name)(i).all_x_avg_ts            = avg_ts;
+            tuning_curves.raw.(curve_name)(i).all_x_avg_ts            = avg_ts;
+            [avg_ts, ~]           = geno_data{i}.get_trial_data_set(condition_numbers,'x_pos','none','no','all',geno_norm_values(i));
+            tuning_curves.raw.(curve_name)(i).x_avg_ts            = avg_ts;
             
             [avg_ts, ~]           = geno_data{i}.get_trial_data_set(condition_numbers,'voltage_signal','none','no','none',1);
-            tuning_curves.(curve_name)(i).all_voltage_avg_ts            = avg_ts;
+            tuning_curves.raw.(curve_name)(i).all_voltage_avg_ts            = avg_ts;
             
             tuning_curves.names{condition_set_number} = curve_name;
-            try tuning_curves.(curve_name)(i).speed = geno_data{i}.grouped_conditions(condition_set_number).speed; end
-            try tuning_curves.(curve_name)(i).bar_type = geno_data{i}.grouped_conditions(condition_set_number).bar_type; end
+            try tuning_curves.raw.(curve_name)(i).speed = geno_data{i}.grouped_conditions(condition_set_number).speed; end
+            try tuning_curves.raw.(curve_name)(i).bar_type = geno_data{i}.grouped_conditions(condition_set_number).bar_type; end
             
             if sum(strcmpi(curve_name,{'min_mot_ON_44','min_mot_OFF_44','min_mot_ON_76','min_mot_OFF_76','min_mot_ON_116','min_mot_OFF_116'}))
-                % L - R data normalized, aligned
+                 % L - R data normalized, aligned
                 [lmr_ts, ~]           = geno_data{i}.get_trial_data_set(condition_numbers,'lmr','none','yes','none',geno_norm_values(i));
 
                 % X position
@@ -120,53 +122,69 @@ if 0
 
                 buffer_amt = 20; % ms trimmed off of the end for shifting the responses to match each other
 
-                shift_start_pos = 120; % all will be shifted to 'start' at x pos 270
-
-                trace_iter = 0;
+                shift_start_pos = 75; % all will be shifted to 'start' at x pos 270
 
                 for sub_stim = 1:numel(lmr_ts)
+                    
+                trace_iter = 0;                    
+                
                     for trace = 1:size(lmr_ts{sub_stim},1)
 
-                        [~,flick_loc] = max(diff(x_pos_ts{sub_stim}(trace,100:end)));
+                        [~,flick_loc] = max(diff(x_pos_ts{sub_stim}(trace,70:100)));
 
-                        shift_amt = flick_loc - 1 + 100 - shift_start_pos;
-
+                        shift_amt = flick_loc - 1 + 70 - shift_start_pos;
+                        
                         % Something is wrong if the shift_amt is negative (i.e.
                         % the jump happened in a really strange place , or the
                         % sitmulus went to closed loop for some reason). Just
                         % ignore these.
-                        if shift_amt < buffer_amt && shift_amt >= 0
+                        if shift_amt < buffer_amt && shift_amt > 0
 
                             trace_iter = trace_iter + 1;    
-                            tuning_curves.raw.(curve_name)(i).ts{sub_stim}(trace_iter,:)            = lmr_ts{sub_stim}(trace,(shift_amt:(end-buffer_amt+shift_amt)));
-                            tuning_curves.raw.(curve_name)(i).x_pos_ts{sub_stim}(trace_iter,:)      = x_pos_ts{sub_stim}(trace,(shift_amt:(end-buffer_amt+shift_amt)));
-                            tuning_curves.raw.(curve_name)(i).voltage_ts{sub_stim}(trace_iter,:)    = volt_ts{sub_stim}(trace,(shift_amt:(end-buffer_amt+shift_amt)));
+                            tuning_curves.pruned.(curve_name)(i).ts{sub_stim}(trace_iter,:)            = lmr_ts{sub_stim}(trace,(shift_amt:(end-buffer_amt+shift_amt)));
+                            tuning_curves.pruned.(curve_name)(i).x_pos_ts{sub_stim}(trace_iter,:)      = x_pos_ts{sub_stim}(trace,(shift_amt:(end-buffer_amt+shift_amt)));
+                            tuning_curves.pruned.(curve_name)(i).voltage_ts{sub_stim}(trace_iter,:)    = volt_ts{sub_stim}(trace,(shift_amt:(end-buffer_amt+shift_amt)));
+                        elseif shift_amt == 0
+                            trace_iter = trace_iter + 1;
+                            tuning_curves.pruned.(curve_name)(i).ts{sub_stim}(trace_iter,:)            = lmr_ts{sub_stim}(trace,1:(1+end-buffer_amt));
+                            tuning_curves.pruned.(curve_name)(i).x_pos_ts{sub_stim}(trace_iter,:)      = x_pos_ts{sub_stim}(trace,1:(1+end-buffer_amt));
+                            tuning_curves.pruned.(curve_name)(i).voltage_ts{sub_stim}(trace_iter,:)    = volt_ts{sub_stim}(trace,1:(1+end-buffer_amt));
                         end
                     end
                 end
-
+                
                 % Filtered data
-                for sub_stim = 1:size(tuning_curves.raw.(curve_name)(i).ts,2)
-                    for trace = 1:size(tuning_curves.raw.(curve_name)(i).ts{sub_stim},1)
-                        tuning_curves.butter.(curve_name)(i).ts{sub_stim}(trace,:) = filter(B,A,tuning_curves.raw.(curve_name)(i).ts{sub_stim}(trace,:));
+                for sub_stim = 1:size(tuning_curves.pruned.(curve_name)(i).ts,2)
+                    for trace = 1:size(tuning_curves.pruned.(curve_name)(i).ts{sub_stim},1)
+                        tuning_curves.butter.(curve_name)(i).ts{sub_stim}(trace,:) = filter(B,A,tuning_curves.raw.(curve_name)(i).all_ts{sub_stim}(trace,:));
                     end
+                    
+                    tuning_curves.butter.(curve_name)(i).avg_ts{sub_stim} = mean(tuning_curves.butter.(curve_name)(i).ts{sub_stim});
+                    tuning_curves.butter.(curve_name)(i).sem_ts{sub_stim} = std(tuning_curves.butter.(curve_name)(i).ts{sub_stim})/sqrt(size((tuning_curves.butter.(curve_name)(i).ts{sub_stim}),1));
+                    
                 end
-
+                
                 % Offset corrected
-                for sub_stim = 1:size(tuning_curves.raw.(curve_name)(i).ts,2)
-                    for trace = 1:size(tuning_curves.raw.(curve_name)(i).ts{sub_stim},1)
+                for sub_stim = 1:size(tuning_curves.pruned.(curve_name)(i).ts,2)
+                    for trace = 1:size(tuning_curves.pruned.(curve_name)(i).ts{sub_stim},1)
 
                         offset_amt = mean(tuning_curves.butter.(curve_name)(i).ts{sub_stim}(trace,110:120));
                         tuning_curves.butter_offset.(curve_name)(i).ts{sub_stim}(trace,:) = tuning_curves.butter.(curve_name)(i).ts{sub_stim}(trace,:) - offset_amt;
 
-                        offset_amt = mean(tuning_curves.raw.(curve_name)(i).ts{sub_stim}(trace,245:270));
-                        tuning_curves.offset.(curve_name)(i).ts{sub_stim}(trace,:) = tuning_curves.raw.(curve_name)(i).ts{sub_stim}(trace,:) - offset_amt;                    
+                        offset_amt = mean(tuning_curves.pruned.(curve_name)(i).ts{sub_stim}(trace,245:270));
+                        tuning_curves.offset.(curve_name)(i).ts{sub_stim}(trace,:) = tuning_curves.pruned.(curve_name)(i).ts{sub_stim}(trace,:) - offset_amt;                    
                     end
+                    
+                    tuning_curves.offset.(curve_name)(i).avg_ts{sub_stim}=mean(tuning_curves.offset.(curve_name)(i).ts{sub_stim});
+                    tuning_curves.offset.(curve_name)(i).sem_ts{sub_stim}=std(tuning_curves.offset.(curve_name)(i).ts{sub_stim})./sqrt(size(tuning_curves.offset.(curve_name)(i).ts{sub_stim},1));
+                    
+                    tuning_curves.butter_offset.(curve_name)(i).avg_ts{sub_stim}=mean(tuning_curves.butter_offset.(curve_name)(i).ts{sub_stim});
+                    tuning_curves.butter_offset.(curve_name)(i).sem_ts{sub_stim}=std(tuning_curves.butter_offset.(curve_name)(i).ts{sub_stim})./sqrt(size(tuning_curves.butter_offset.(curve_name)(i).ts{sub_stim},1));
+                    
                 end
             end
-        end
     end
-    
+    end   
     save(fullfile(data_location,'tuning_curves'),'tuning_curves')
     
     clear curve_name condition_set_number i avg variance avg_ts variance_ts
@@ -174,7 +192,7 @@ if 0
 end
 
 %% Make a simple timseries matrix for the on and off minimal motion
-if 1
+if 0
     
     load(fullfile(data_location,'tuning_curves'));
     
@@ -223,7 +241,7 @@ if 1
 end
 
 %% Make a simple timseries matrix for the on and off edges
-if 1
+if 0
     
     load(fullfile(data_location,'tuning_curves'));
     

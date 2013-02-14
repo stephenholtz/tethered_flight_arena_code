@@ -122,7 +122,7 @@ bar_factory.SingleBar(8,'low',0,loop_vec);
 bar_factory.AddDummyFrames('x',1);
 Pats(:,:,:,4) = bar_factory.ReturnPatternAndParams;
 
-pattern_name = ['ON_OFF_looping_bar_CW_4_8_wide_w_dummy_x_frame'];
+pattern_name = 'ON_OFF_looping_bar_CW_4_8_wide_w_dummy_x_frame';
 
 counter = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_name,project,counter,testing_flag);
 
@@ -147,7 +147,7 @@ bar_factory.SingleBar(8,'low',0,loop_vec);
 bar_factory.AddDummyFrames('x',1);
 Pats(:,:,:,4) = bar_factory.ReturnPatternAndParams;
 
-pattern_name = ['ON_OFF_looping_bar_CCW_4_8_wide_w_dummy_x_frame'];
+pattern_name = 'ON_OFF_looping_bar_CCW_4_8_wide_w_dummy_x_frame';
 
 counter = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_name,project,counter,testing_flag);
 

@@ -64,7 +64,7 @@ end
 % ON and OFF Edges
 for dps = round([100 220]/3.75) % 78 and 234 dps of the bar
     for pattern = 9:10 % converging vs diverging
-        for on_off = 3:4 % y position has symm versions (8 px wide)
+        for on_off = 1:2 % y position has symm versions (8 px wide)
             
             Conditions(cond_num).PatternID      = pattern; %#ok<*AGROW>
             Conditions(cond_num).PatternName    = patterns{pattern};
@@ -89,7 +89,7 @@ end
 
 % Sweeping bar
 for dps = round([100 220]/3.75)%4:5 % 78 and 234 dps of the bar
-    for on_off = 1:2 % y position has on vs off, 4px wide
+    for on_off = 3:4 % y position has on vs off, 4px wide
         for pattern = 11:12 % CW CCW
             Conditions(cond_num).PatternID      = pattern; %#ok<*AGROW>
             Conditions(cond_num).PatternName    = patterns{pattern};
@@ -139,7 +139,6 @@ end
 
 
 % Telethon-like on/off pattern that john made to mimic dc's
-cond_num = cond_num + 1;
 Conditions(cond_num).PatternID = 29;
 Conditions(cond_num).Duration = 2;
 Conditions(cond_num).InitialPosition = [1 1];
@@ -212,6 +211,7 @@ Conditions(cond_num).PosFunctionY 	= [2 0];
 total_ol_dur = total_ol_dur + Conditions(cond_num).Duration + .12;
 
 % Telethon ON-OFF stimuli
+cond_num = cond_num + 1;
 Conditions(cond_num).PatternID = 22;
 Conditions(cond_num).Duration = 3;
 Conditions(cond_num).InitialPosition = [1 1];

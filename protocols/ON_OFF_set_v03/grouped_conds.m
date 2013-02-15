@@ -71,3 +71,52 @@ grouped_conditions(11).conds         = {[55,56]};
 grouped_conditions(12).bar_type      = 'OFF';
 grouped_conditions(12).speed         = 3*3.75;
 grouped_conditions(12).conds         = {[53,54]};
+
+
+% Minimal motion Groups for later analysis
+grouped_conditions(13).bar_type      = 'ON-ON';
+grouped_conditions(13).loc           = [1 2];
+grouped_conditions(13).len           = [80 80];
+grouped_conditions(13).conds         = {[1,2],...
+                                        [9,10]};
+grouped_conditions(14).bar_type      = 'ON-ON';
+grouped_conditions(14).loc           = [1 2];
+grouped_conditions(14).len           = [160 160];
+grouped_conditions(14).conds         = {[17,18],...
+                                        [25,26]};
+% Minimal motion: ON-OFF
+grouped_conditions(15).bar_type      = 'ON-OFF';
+grouped_conditions(15).loc           = [1 2];
+grouped_conditions(15).len           = [80 80];
+grouped_conditions(15).conds         = {2+[1,2],...
+                                       2+[9,10]};
+% Minimal motion: ON-OFF
+grouped_conditions(16).bar_type      = 'ON-OFF';
+grouped_conditions(16).loc           = [1 2];
+grouped_conditions(16).len           = [160 160];
+grouped_conditions(16).conds         = {2+[17,18],...
+                                       2+[25,26]};
+% Minimal motion: OFF-ON
+grouped_conditions(17).bar_type      = 'OFF-ON';
+grouped_conditions(17).loc           = [1 2];
+grouped_conditions(17).len           = [80 80];
+grouped_conditions(17).conds         = {4+[1,2],...
+                                       4+[9,10]};
+% Minimal motion: OFF-ON
+grouped_conditions(18).bar_type      = 'OFF-ON';
+grouped_conditions(18).loc           = [1 2];
+grouped_conditions(18).len           = [160 160];
+grouped_conditions(18).conds         = {4+[17,18],...
+                                       4+[25,26]};
+% Minimal motion: OFF-OFF
+grouped_conditions(19).bar_type      = 'OFF-OFF';
+grouped_conditions(19).loc           = [1 2];
+grouped_conditions(19).len           = [80 80];
+grouped_conditions(19).conds         = {6+[1,2],...
+                                       6+[9,10]};
+% Minimal motion: OFF-OFF
+grouped_conditions(20).bar_type      = 'OFF-OFF';
+grouped_conditions(20).loc           = [1 2];
+grouped_conditions(20).len           = [160 160];
+grouped_conditions(20).conds         = {6+[17,18],...
+                                       6+[25,26]};

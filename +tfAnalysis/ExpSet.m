@@ -233,7 +233,6 @@ classdef ExpSet < handle
                     temp_mean_mat = [];
                     
                     for e = 1:size(temp_cond_data,1)
-                        
                         % average an experiment's trials
                         for c = 1:size(temp_cond_data(e,:),2)
                             if size(temp_cond_data{e,c},1) > 1
@@ -242,7 +241,6 @@ classdef ExpSet < handle
                                 temp_mean_mat(c,:) = resp_func(temp_cond_data{e,c},2);
                             end
                         end
-                        
                         % average across an experiment's sym trials
                         if ~isempty(temp_mean_mat)
                             exp_iter = exp_iter + 1;

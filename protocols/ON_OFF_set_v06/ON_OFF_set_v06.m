@@ -16,10 +16,10 @@ end
 
 % gather some information
 cf = pwd;
-patterns = what(fullfile(dir,'patterns','ON_OFF_set_v05'));
+patterns = what(fullfile(dir,'patterns','ON_OFF_set_v06'));
 pattern_loc = patterns.path;
 patterns = patterns.mat;
-pos_func_loc = fullfile(dir,'position_functions','ON_OFF_set_v05');
+pos_func_loc = fullfile(dir,'position_functions','ON_OFF_set_v06');
 position_functions = what(pos_func_loc);
 position_functions = position_functions.mat; %#ok<*NASGU>
 panel_cfgs_loc = fullfile(dir,'panel_configs');

@@ -29,7 +29,7 @@ classdef Data < handle
     
     properties (Constant = true, Access = private)
         WBF_THRESHOLD = 1.35;
-        RPL_THRESHOLD = 1.65;
+        RPL_THRESHOLD = 1.15;
         ACQUISITION_SAMPLING_RATE = 1000; 
         DEFAULT_DOWNSAMPLING_VALUE = 500;
         

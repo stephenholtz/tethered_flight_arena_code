@@ -66,55 +66,62 @@ grouped_conditions(12).bar_type      = 'OFF-OFF';
 grouped_conditions(12).speed         = [100 220];
 grouped_conditions(12).conds         = {6+[33,34],...
                                        6+[41,42]};
-% tuthill rotation opposed
-grouped_conditions(13).bar_type      = 'Opposed ON/OFF';
+% tuthill rotation
+grouped_conditions(13).bar_type      = 'lam_30_grating';
 grouped_conditions(13).speed         = [15 30];
 grouped_conditions(13).conds         = {[49,50],...
-                                       [51,52]};
+                                       [51,52],...
+                                       [53,54]};
+% tuthill rotation opposed
+grouped_conditions(14).bar_type      = 'Opposed ON/OFF';
+grouped_conditions(14).speed         = [4 24 72]*3.75;
+grouped_conditions(14).conds         = {[55,56]};
 % tuthill ON expansion
-grouped_conditions(14).bar_type      = 'ON';
-grouped_conditions(14).speed         = 3*3.75;
-grouped_conditions(14).conds         = {[53,54]};
+grouped_conditions(15).bar_type      = 'ON';
+grouped_conditions(15).speed         = 3*3.75;
+grouped_conditions(15).conds         = {[57,58]};
 % tuthill OFF expansion
-grouped_conditions(15).bar_type     = 'OFF';
-grouped_conditions(15).speed        = 3*3.75;
-grouped_conditions(15).conds        = {[55,56]};
-% tuthill ON sawtooth
-grouped_conditions(16).bar_type     = 'ON';
+grouped_conditions(16).bar_type     = 'OFF';
 grouped_conditions(16).speed        = 3*3.75;
-grouped_conditions(16).conds        = {[57,58]};
-% tuthill OFF sawtooth
-grouped_conditions(17).bar_type     = 'OFF';
+grouped_conditions(16).conds        = {[59,60]};
+% tuthill ON sawtooth
+grouped_conditions(17).bar_type     = 'ON';
 grouped_conditions(17).speed        = 3*3.75;
-grouped_conditions(17).conds        = {[59,60]};
+grouped_conditions(17).conds        = {[61,62]};
+% tuthill OFF sawtooth
+grouped_conditions(18).bar_type     = 'OFF';
+grouped_conditions(18).speed        = 3*3.75;
+grouped_conditions(18).conds        = {[63,64]};
 
+
+%% For other uses
 
 % Minimal motion: ON-ON (all CW, CCW)
-grouped_conditions(18).bar_type      = 'ON-ON';
-grouped_conditions(18).len           = [.5];
-grouped_conditions(18).conds         = {[1,2]};
-
 grouped_conditions(19).bar_type      = 'ON-ON';
-grouped_conditions(19).len           = [.7];
-grouped_conditions(19).conds         = {[9,10]};
+grouped_conditions(19).len           = [.5];
+grouped_conditions(19).conds         = {[1,2]};
+
+grouped_conditions(20).bar_type      = 'ON-ON';
+grouped_conditions(20).len           = [.7];
+grouped_conditions(20).conds         = {[9,10]};
 
 % Minimal motion: ON-OFF
-grouped_conditions(20).bar_type      = 'ON-OFF';
-grouped_conditions(20).len           = [.5];
-grouped_conditions(20).conds         = {2+[1,2]};
-
 grouped_conditions(21).bar_type      = 'ON-OFF';
-grouped_conditions(21).len           = [.7];
-grouped_conditions(21).conds         = {2+[9,10]};
+grouped_conditions(21).len           = [.5];
+grouped_conditions(21).conds         = {2+[1,2]};
+
+grouped_conditions(22).bar_type      = 'ON-OFF';
+grouped_conditions(22).len           = [.7];
+grouped_conditions(22).conds         = {2+[9,10]};
 
 % Minimal motion: OFF-ON
-grouped_conditions(22).bar_type      = 'OFF-ON';
-grouped_conditions(22).len           = [.5];
-grouped_conditions(22).conds         = {4+[1,2]};
-
 grouped_conditions(23).bar_type      = 'OFF-ON';
-grouped_conditions(23).len           = [.7];
-grouped_conditions(23).conds         = {4+[9,10]};
+grouped_conditions(23).len           = [.5];
+grouped_conditions(23).conds         = {4+[1,2]};
+
+grouped_conditions(24).bar_type      = 'OFF-ON';
+grouped_conditions(24).len           = [.7];
+grouped_conditions(24).conds         = {4+[9,10]};
 
 % Minimal motion: OFF-OFF
 grouped_conditions(24).bar_type      = 'OFF-OFF';

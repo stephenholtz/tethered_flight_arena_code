@@ -47,7 +47,7 @@ if 0
     tfAnalysis.save_geno_group_summary_files(geno_names,data_location);
 end
 
-if 1
+if 0
     % Use summary files to save specific subsets of data in summ_data.mat
     
     addpath(genpath('/Users/stephenholtz/matlab-utils'))
@@ -58,7 +58,7 @@ if 1
 
     % Calculate normalization value per genotype
     for i = 1:numel(geno_names)
-       mean_turning_resps(i) = geno_data{i}.exp_set_turning_resp; %#ok<*SAGROW>
+       mean_turning_resps(i) = geno_data{1}.exp_set_turning_resp; %#ok<*SAGROW>
     end
     
     geno_norm_values = mean_turning_resps/mean(mean_turning_resps);
@@ -68,14 +68,16 @@ if 1
     % MAKE SURE TO CHANGE THIS TO THE LATEST VERSION!
     conditions = ON_OFF_set_v05;
     
-    for i = 1:numel(geno_names)
+    for i = 1:2
         
         for condition_set_number = 1:numel(curve_names)
             
             curve_name = curve_names{condition_set_number};
             
-            condition_numbers = geno_data{i}.grouped_conditions(condition_set_number).conds;
-            
+            condition_numbers = geno_data{1}.grouped_conditions(condition_set_number).conds;
+            for u = 1:numel(condition_numbers)
+                condition_numbers{u} = condition_numbers{u}(i);
+            end
             summ_data.names{condition_set_number} = curve_name;
             
             % add an example space time diagram to the summ_data
@@ -88,46 +90,46 @@ if 1
                 close all
             end
             
-            summ_data.(curve_name).raw(i).grouped_conditions = geno_data{i}.grouped_conditions(condition_set_number);
+            summ_data.(curve_name).raw(i).grouped_conditions = geno_data{1}.grouped_conditions(condition_set_number);
             
             % Pull out L-R, and X Data for each experiment: averages,
             % average timeseries, per-fly timeseries, all timeseries
             
-            [a, v] = geno_data{i}.get_trial_data_set(condition_numbers,'lmr','mean','yes','all',geno_norm_values(i));
+            [a, v] = geno_data{1}.get_trial_data_set(condition_numbers,'lmr','mean','no','all',geno_norm_values(1));
             
             summ_data.(curve_name).raw(i).avg_lmr = a;
             summ_data.(curve_name).raw(i).sem_lmr = v;
             
-            [a, v] = geno_data{i}.get_trial_data_set(condition_numbers,'lmr','none','yes','all',geno_norm_values(i));
+            [a, v] = geno_data{1}.get_trial_data_set(condition_numbers,'lmr','none','no','all',geno_norm_values(1));
             
             summ_data.(curve_name).raw(i).avg_lmr_ts = a;
             summ_data.(curve_name).raw(i).sem_lmr_ts = v;
             
-            [a, v] = geno_data{i}.get_trial_data_set(condition_numbers,'lmr','none','yes','exp',geno_norm_values(i));
+            [a, v] = geno_data{1}.get_trial_data_set(condition_numbers,'lmr','none','no','exp',geno_norm_values(1));
             
             summ_data.(curve_name).raw(i).avg_per_fly_lmr_ts = a;
             summ_data.(curve_name).raw(i).sem_per_fly_lmr_ts = v;
             
-            [a, ~] = geno_data{i}.get_trial_data_set(condition_numbers,'lmr','none','yes','none',geno_norm_values(i));
+            [a, ~] = geno_data{1}.get_trial_data_set(condition_numbers,'lmr','none','no','none',geno_norm_values(1));
             
             summ_data.(curve_name).raw(i).all_lmr_ts = a;
             
-            [a, v] = geno_data{i}.get_trial_data_set(condition_numbers,'x_pos','none','no','all',geno_norm_values(i));
+            [a, v] = geno_data{1}.get_trial_data_set(condition_numbers,'x_pos','none','no','all',geno_norm_values(1));
             
             summ_data.(curve_name).raw(i).avg_x_pos_ts = a;
             summ_data.(curve_name).raw(i).sem_x_pos_ts = v;
             
-            [a, v] = geno_data{i}.get_trial_data_set(condition_numbers,'x_pos','none','no','exp',geno_norm_values(i));
+            [a, v] = geno_data{1}.get_trial_data_set(condition_numbers,'x_pos','none','no','exp',geno_norm_values(1));
             
             summ_data.(curve_name).raw(i).avg_per_fly_x_pos_ts = a;
             summ_data.(curve_name).raw(i).sem_per_fly_x_pos_ts = v;
             
-            [a, ~] = geno_data{i}.get_trial_data_set(condition_numbers,'x_pos','none','no','none',geno_norm_values(i));
+            [a, ~] = geno_data{1}.get_trial_data_set(condition_numbers,'x_pos','none','no','none',geno_norm_values(1));
             
             summ_data.(curve_name).raw(i).all_x_pos_ts = a;
             
             summ_data.note = 'The x_pos data is spared the direction conserving flip+average segment during analysis. In these stimuli, the patterns determine the CW vs CCW and the position functions are always the same for processing ease (at least I thought!).';
-        
+            
         end
     end
     
@@ -179,13 +181,15 @@ if minimal_figure
 
             hold on
             
-            graph.avg{i}        = summ_data.(curve_name).raw(i).avg_lmr_ts{col};
-            graph.variance{i}   = summ_data.(curve_name).raw(i).sem_lmr_ts{col};
-            graph.color{i}      = my_colormap{i};
-
-            tfPlot.timeseries(graph);
+            for side = 1:2
+                graph.line{side}        = summ_data.(curve_name).raw(side).avg_lmr_ts{col};
+                graph.shade{side}   = summ_data.(curve_name).raw(side).sem_lmr_ts{col};
+                graph.color{side}      = my_lr_colormap{side};
+            end
+            
+            makeErrorShadedTimeseries(graph);
             box off
-            axis([0 size(graph.avg{i},2) -1.5 1.5])
+            axis([0 size(graph.line{i},2) -1.5 1.5])
 
             if height_iter == 1
                 if col == 1
@@ -210,9 +214,10 @@ if minimal_figure
             end
         end
     end
+    lh=legend('x_pos','cw','ccw'); set(lh,'interpreter','none');
     
-    if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'minimal_motion_v05'),'-pdf'); end
-    %if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'minimal_motion_v05'),'-fig'); end
+    if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'minimal_motion_no_flip_avg_v05'),'-pdf'); end
+    %if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'minimal_motion_no_flip_avg_v05'),'-fig'); end
 end
 
 if steady_state_figure
@@ -242,9 +247,11 @@ if steady_state_figure
 
             subplot('Position',sp_positions{height_iter,col})
             
-            graph.avg{i}        = summ_data.(curve_name).raw(i).avg_lmr_ts{col};
-            graph.variance{i}   = summ_data.(curve_name).raw(i).sem_lmr_ts{col};
-            graph.color{i}      = my_colormap{i};
+            for side = 1:2
+                graph.line{side}        = summ_data.(curve_name).raw(side).avg_lmr_ts{col};
+                graph.shade{side}   = summ_data.(curve_name).raw(side).sem_lmr_ts{col};
+                graph.color{side}      = my_lr_colormap{side};
+            end
             
             x_trace = summ_data.(curve_name).raw(i).avg_x_pos_ts{col};
             x_trace = x_trace-(mean(x_trace(1:10)));
@@ -252,13 +259,13 @@ if steady_state_figure
 
             hold on
             
-            switch_point = (size(graph.avg{i},2)/2) - 10;
+            switch_point = (size(graph.line{i},2)/2) - 10;
             plot(repmat(switch_point,7,1),-3:3,'--','Color',grey_map{2},'linewidth',1)
 
-            tfPlot.timeseries(graph);
+            makeErrorShadedTimeseries(graph);
             box off
             
-            axis([0 size(graph.avg{i},2) -3 3])
+            axis([0 size(graph.line{i},2) -3 3])
 
             if height_iter == 1
                 if col == 1
@@ -283,9 +290,10 @@ if steady_state_figure
             end
         end
     end
+    lh=legend('x_pos','cw','ccw'); set(lh,'interpreter','none');
     
-    if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'steady_state_v05'),'-pdf'); end
-    %if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'steady_state_v05'),'-fig'); end
+    if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'steady_state_no_flip_avg_v05'),'-pdf'); end
+    %if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'steady_state_no_flip_avg_v05'),'-fig'); end
     
 end
 
@@ -316,9 +324,11 @@ if edge_sweep_figure
 
             subplot('Position',sp_positions{height_iter,col})
             
-            graph.avg{i}        = summ_data.(curve_name).raw(i).avg_lmr_ts{col};
-            graph.variance{i}   = summ_data.(curve_name).raw(i).sem_lmr_ts{col};
-            graph.color{i}      = my_colormap{i};
+            for side = 1:2
+                graph.line{side}        = summ_data.(curve_name).raw(side).avg_lmr_ts{col};
+                graph.shade{side}   = summ_data.(curve_name).raw(side).sem_lmr_ts{col};
+                graph.color{side}      = my_lr_colormap{side};
+            end
             
             x_trace = summ_data.(curve_name).raw(i).avg_x_pos_ts{col};
             x_trace = x_trace-(mean(x_trace(1:10)));
@@ -326,13 +336,13 @@ if edge_sweep_figure
 
             hold on
             
-            %switch_point = (size(graph.avg{i},2)/2) - 10;
+            %switch_point = (size(graph.line{i},2)/2) - 10;
             %plot(repmat(switch_point,3,1),-1:1,'--','Color',grey_map{2},'linewidth',1)
 
-            tfPlot.timeseries(graph);
+            makeErrorShadedTimeseries(graph);
             box off
             
-            axis([0 size(graph.avg{i},2) -3 3])
+            axis([0 size(graph.line{i},2) -3 3])
             
             if height_iter == 1
                 if col == 1
@@ -358,9 +368,10 @@ if edge_sweep_figure
             
         end
     end
+    lh=legend('x_pos','cw','ccw'); set(lh,'interpreter','none');
     
-    if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'edges_sweep_v05'),'-pdf'); end
-    %if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'edges_sweep_v05'),'-fig'); end
+    if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'edges_sweep_no_flip_avg_v05'),'-pdf'); end
+    %if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'edges_sweep_no_flip_avg_v05'),'-fig'); end
 end
 
 if competing_edges
@@ -390,9 +401,11 @@ if competing_edges
 
             subplot('Position',sp_positions{height_iter,col})
             
-            graph.avg{i}        = summ_data.(curve_name).raw(i).avg_lmr_ts{col};
-            graph.variance{i}   = summ_data.(curve_name).raw(i).sem_lmr_ts{col};
-            graph.color{i}      = my_colormap{i};
+            for side = 1:2
+                graph.line{side}        = summ_data.(curve_name).raw(side).avg_lmr_ts{col};
+                graph.shade{side}   = summ_data.(curve_name).raw(side).sem_lmr_ts{col};
+                graph.color{side}      = my_lr_colormap{side};
+            end
             
             x_trace = summ_data.(curve_name).raw(i).avg_x_pos_ts{col};
             x_trace = x_trace-(mean(x_trace(1:10)));
@@ -400,13 +413,13 @@ if competing_edges
 
             hold on
             
-            %switch_point = (size(graph.avg{i},2)/2) - 10;
+            %switch_point = (size(graph.line{i},2)/2) - 10;
             %plot(repmat(switch_point,3,1),-1:1,'--','Color',grey_map{2},'linewidth',1)
 
-            tfPlot.timeseries(graph);
+            makeErrorShadedTimeseries(graph);
             box off
             
-            axis([0 size(graph.avg{i},2) -3 3])
+            axis([0 size(graph.line{i},2) -3 3])
             
             if height_iter == 1
                 if col == 1
@@ -433,9 +446,10 @@ if competing_edges
             
         end
     end
+    lh=legend('x_pos','cw','ccw'); set(lh,'interpreter','none');
 
-    if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'competing_edges_v05'),'-pdf'); end
-    %if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'competing_edges_v05'),'-fig'); end
+    if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'competing_edges_no_flip_avg_v05'),'-pdf'); end
+    %if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'competing_edges_no_flip_avg_v05'),'-fig'); end
 end
 
 if tuthill_opposed
@@ -465,9 +479,11 @@ if tuthill_opposed
 
             subplot('Position',sp_positions{height_iter,col})
             
-            graph.avg{i}        = summ_data.(curve_name).raw(i).avg_lmr_ts{col};
-            graph.variance{i}   = summ_data.(curve_name).raw(i).sem_lmr_ts{col};
-            graph.color{i}      = my_colormap{i};
+            for side = 1:2
+                graph.line{side}        = summ_data.(curve_name).raw(side).avg_lmr_ts{col};
+                graph.shade{side}   = summ_data.(curve_name).raw(side).sem_lmr_ts{col};
+                graph.color{side}      = my_lr_colormap{side};
+            end
             
             x_trace = summ_data.(curve_name).raw(i).avg_x_pos_ts{col};
             x_trace = x_trace-(mean(x_trace(1:10)));
@@ -475,13 +491,13 @@ if tuthill_opposed
 
             hold on
             
-            %switch_point = (size(graph.avg{i},2)/2) - 10;
+            %switch_point = (size(graph.line{i},2)/2) - 10;
             %plot(repmat(switch_point,3,1),-1:1,'--','Color',grey_map{2},'linewidth',1)
 
-            tfPlot.timeseries(graph);
+            makeErrorShadedTimeseries(graph);
             box off
             
-            axis([0 size(graph.avg{i},2) -3 3])
+            axis([0 size(graph.line{i},2) -3 3])
             
             if height_iter == 1
                 if col == 1
@@ -508,9 +524,10 @@ if tuthill_opposed
             
         end
     end
+    lh=legend('x_pos','cw','ccw'); set(lh,'interpreter','none');
 
-    if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'tuthill_competing_edges_v05'),'-pdf'); end
-    %if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'tuthill_competing_edges_v05'),'-fig'); end
+    if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'tuthill_competing_edges_no_flip_avg_v05'),'-pdf'); end
+    %if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'tuthill_competing_edges_no_flip_avg_v05'),'-fig'); end
 end
 
 if tuthill_motion
@@ -540,9 +557,11 @@ if tuthill_motion
 
             subplot('Position',sp_positions{height_iter,col})
             
-            graph.avg{i}        = summ_data.(curve_name).raw(i).avg_lmr_ts{col};
-            graph.variance{i}   = summ_data.(curve_name).raw(i).sem_lmr_ts{col};
-            graph.color{i}      = my_colormap{i};
+            for side = 1:2
+                graph.line{side}        = summ_data.(curve_name).raw(side).avg_lmr_ts{col};
+                graph.shade{side}   = summ_data.(curve_name).raw(side).sem_lmr_ts{col};
+                graph.color{side}      = my_lr_colormap{side};
+            end
             
             x_trace = summ_data.(curve_name).raw(i).avg_x_pos_ts{col};
             x_trace = x_trace-(mean(x_trace(1:10)));
@@ -550,13 +569,13 @@ if tuthill_motion
 
             hold on
             
-            %switch_point = (size(graph.avg{i},2)/2) - 10;
+            %switch_point = (size(graph.line{i},2)/2) - 10;
             %plot(repmat(switch_point,3,1),-1:1,'--','Color',grey_map{2},'linewidth',1)
 
-            tfPlot.timeseries(graph);
+            makeErrorShadedTimeseries(graph);
             box off
             
-            axis([0 size(graph.avg{i},2) -3 3])
+            axis([0 size(graph.line{i},2) -3 3])
             
             title('L-R WBA') 
             
@@ -577,9 +596,9 @@ if tuthill_motion
             
         end
     end
-
-    if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'tuthill_on_off_motion_v05'),'-pdf'); end
-    %if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'tuthill_on_off_motion_v05'),'-fig'); end
+    lh=legend('x_pos','cw','ccw'); set(lh,'interpreter','none');
+    if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'tuthill_on_off_motion_no_flip_avg_v05'),'-pdf'); end
+    %if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'tuthill_on_off_motion_no_flip_avg_v05'),'-fig'); end
 end
 
 if rotation_30_lam
@@ -610,9 +629,11 @@ if rotation_30_lam
 
             subplot('Position',sp_positions{height_iter,col})
             
-            graph.avg{i}        = summ_data.(curve_name).raw(i).avg_lmr_ts{col};
-            graph.variance{i}   = summ_data.(curve_name).raw(i).sem_lmr_ts{col};
-            graph.color{i}      = my_colormap{i};
+            for side = 1:2
+                graph.line{side}        = summ_data.(curve_name).raw(side).avg_lmr_ts{col};
+                graph.shade{side}   = summ_data.(curve_name).raw(side).sem_lmr_ts{col};
+                graph.color{side}      = my_lr_colormap{side};
+            end
             
             x_trace = summ_data.(curve_name).raw(i).avg_x_pos_ts{col};
             x_trace = x_trace-(mean(x_trace(1:10)));
@@ -620,13 +641,13 @@ if rotation_30_lam
 
             hold on
             
-            %switch_point = (size(graph.avg{i},2)/2) - 10;
+            %switch_point = (size(graph.line{i},2)/2) - 10;
             %plot(repmat(switch_point,3,1),-1:1,'--','Color',grey_map{2},'linewidth',1)
 
-            tfPlot.timeseries(graph);
+            makeErrorShadedTimeseries(graph);
             box off
             
-            axis([0 size(graph.avg{i},2) -3 3])
+            axis([0 size(graph.line{i},2) -3 3])
             
             title('L-R WBA') 
             
@@ -645,7 +666,8 @@ if rotation_30_lam
             end
         end
     end
+    lh=legend('x_pos','cw','ccw'); set(lh,'interpreter','none');
 
-    if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'rotation_lam_30_v05'),'-pdf'); end
-    %if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'tuthill_on_off_motion_v05'),'-fig'); end
+    if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'rotation_lam_30_no_flip_avg_v05'),'-pdf'); end
+    %if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'tuthill_on_off_motion_no_flip_avg_v05'),'-fig'); end
 end

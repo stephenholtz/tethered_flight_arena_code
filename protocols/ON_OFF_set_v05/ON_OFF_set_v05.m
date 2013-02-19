@@ -42,7 +42,7 @@ for timing = 1:2 % the position functions
     for pattern = 1:8
         
         Conditions(cond_num).PatternID      = pattern; %#ok<*AGROW>
-        Conditions(cond_num).PatternName    = patterns{pattern};
+        Conditions(cond_num).PatternName    = patterns{Conditions(cond_num).PatternID};
         Conditions(cond_num).Gains          = [0 0 0 0];
         Conditions(cond_num).Mode           = [4 0];
         Conditions(cond_num).InitialPosition= [1 1];
@@ -68,7 +68,7 @@ for dps = round([60 120]/3.75) % 78 and 234 dps of the bar
         for on_off = 1:2 % y position has symm versions (8 px wide)
             
             Conditions(cond_num).PatternID      = pattern; %#ok<*AGROW>
-            Conditions(cond_num).PatternName    = patterns{pattern};
+            Conditions(cond_num).PatternName    = patterns{Conditions(cond_num).PatternID};
             Conditions(cond_num).Gains          = [dps 0 0 0];
             Conditions(cond_num).Mode           = [0 0];
             Conditions(cond_num).InitialPosition= [1 on_off];
@@ -93,7 +93,7 @@ for dps = round([60 120]/3.75)%4:5 % 78 and 234 dps of the bar
     for on_off = 3:4 % y position has on vs off, 4px wide
         for pattern = 11:12 % CW CCW
             Conditions(cond_num).PatternID      = pattern; %#ok<*AGROW>
-            Conditions(cond_num).PatternName    = patterns{pattern};
+            Conditions(cond_num).PatternName    = patterns{Conditions(cond_num).PatternID};
             Conditions(cond_num).Gains          = [dps 0 0 0];
             Conditions(cond_num).Mode           = [0 0];
             Conditions(cond_num).InitialPosition= [1 on_off];
@@ -117,7 +117,7 @@ end
 for dps = round([60 120]/3.75)%4:5 % 78 and 234 dps of the bar
     for pattern = 13:20
         Conditions(cond_num).PatternID      = pattern; %#ok<*AGROW>
-        Conditions(cond_num).PatternName    = patterns{pattern};
+        Conditions(cond_num).PatternName    = patterns{Conditions(cond_num).PatternID};
         Conditions(cond_num).Gains          = [dps 0 0 0];
         Conditions(cond_num).Mode           = [0 0];
         Conditions(cond_num).InitialPosition= [1 1];
@@ -140,7 +140,7 @@ end
 % Rotation tuning curve for sanity
 for gain = [4 -4 24 -24 72 -72] % 78 and 234 dps of the bar
     Conditions(cond_num).PatternID      = 26; %#ok<*AGROW>
-    Conditions(cond_num).PatternName    = patterns{pattern};
+    Conditions(cond_num).PatternName    = patterns{Conditions(cond_num).PatternID};
     Conditions(cond_num).Gains          = [gain 0 0 0];
     Conditions(cond_num).Mode           = [0 0];
     Conditions(cond_num).InitialPosition= [1 1];

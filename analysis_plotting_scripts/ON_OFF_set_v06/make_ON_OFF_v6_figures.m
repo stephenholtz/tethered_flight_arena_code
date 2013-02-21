@@ -47,11 +47,11 @@ if 1
     % Use summary files to save specific subsets of data in summ_data.mat
     
     addpath(genpath('/Users/stephenholtz/matlab-utils'))
-
+    
     if ~exist('geno_data','var')
         geno_data = tfAnalysis.load_geno_group_summary_files(geno_names,data_location);
     end
-
+    
     % Calculate normalization value per genotype
     for i = 1:numel(geno_names)
        mean_turning_resps(i) = geno_data{i}.exp_set_turning_resp; %#ok<*SAGROW>
@@ -161,7 +161,7 @@ if steady_state_figure
                             'PaperOrientation','portrait');    
     height_iter     = 0;
 
-    for cn = curve_names([9 10 11 12])
+    for cn = curve_names([5 6 7 8])
         curve_name = cn{1};
         height_iter = height_iter+1;
 
@@ -169,9 +169,9 @@ if steady_state_figure
 
             subplot('Position',sp_positions{height_iter,col})
             
-            graph.line{i}        = summ_data.(curve_name).raw(i).avg_lmr_ts{col};
+            graph.line{i}    = summ_data.(curve_name).raw(i).avg_lmr_ts{col};
             graph.shade{i}   = summ_data.(curve_name).raw(i).sem_lmr_ts{col};
-            graph.color{i}      = my_colormap{i};
+            graph.color{i}   = my_colormap{i};
             
             x_trace = summ_data.(curve_name).raw(i).avg_x_pos_ts{col};
             x_trace = x_trace-(mean(x_trace(1:10)));
@@ -203,7 +203,8 @@ if steady_state_figure
                 ylabel(curve_name,'interpreter','none','FontWeight','bold')
                 if make_stds
                     subplot('Position',[0.01 sp_positions{height_iter,col}(2) .06 .06] )
-                    subimage(summ_data.(curve_name).space_time_diagram)
+                    %subimage(summ_data.(curve_name).space_time_diagram)
+                    sc(summ_data.(curve_name).space_time_diagram)
                     title('Space-Time')
                     axis off   
                 end             
@@ -235,7 +236,7 @@ if edge_sweep_figure
                             'PaperOrientation','portrait');    
     height_iter     = 0;
 
-    for cn = curve_names([7 8])
+    for cn = curve_names([3 4])
         curve_name = cn{1};
         height_iter = height_iter+1;
 
@@ -243,9 +244,9 @@ if edge_sweep_figure
 
             subplot('Position',sp_positions{height_iter,col})
             
-            graph.line{i}        = summ_data.(curve_name).raw(i).avg_lmr_ts{col};
+            graph.line{i}    = summ_data.(curve_name).raw(i).avg_lmr_ts{col};
             graph.shade{i}   = summ_data.(curve_name).raw(i).sem_lmr_ts{col};
-            graph.color{i}      = my_colormap{i};
+            graph.color{i}   = my_colormap{i};
             
             x_trace = summ_data.(curve_name).raw(i).avg_x_pos_ts{col};
             x_trace = x_trace-(mean(x_trace(1:10)));
@@ -309,7 +310,7 @@ if competing_edges
                             'PaperOrientation','portrait');    
     height_iter     = 0;
 
-    for cn = curve_names([5 6])
+    for cn = curve_names([1 2])
         curve_name = cn{1};
         height_iter = height_iter+1;
 
@@ -384,7 +385,7 @@ if tuthill_opposed
                             'PaperOrientation','portrait');    
     height_iter     = 0;
 
-    for cn = curve_names([14])
+    for cn = curve_names([10])
         curve_name = cn{1};
         height_iter = height_iter+1;
 
@@ -459,7 +460,7 @@ if tuthill_motion
                             'PaperOrientation','portrait');    
     height_iter     = 0;
 
-    for cn = curve_names([15 16 17 18])
+    for cn = curve_names([11 12 13 14])
         curve_name = cn{1};
         height_iter = height_iter+1;
 
@@ -528,7 +529,7 @@ if rotation_30_lam
                             'PaperOrientation','portrait');    
     height_iter     = 0;
 
-    for cn = curve_names(13)
+    for cn = curve_names([9])
         
         curve_name = cn{1};
         height_iter = height_iter+1;

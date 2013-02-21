@@ -2,7 +2,7 @@
 
 conditions = ON_OFF_set_v06;
 
-save_path = '/Users/stephenholtz/Desktop/temp_space_time/on_off_set_v05';
+save_path = '/Users/stephenholtz/Desktop/temp_space_time/on_off_set_v06';
 
 if ~exist(save_path,'dir')
     mkdir(save_path)
@@ -19,9 +19,9 @@ for i = 1:(numel(conditions)-1)
     stimulus = tfPlot.arenaSimulation('small',conditions(i));
     std_handle = stimulus.MakeSimpleSpaceTimeDiagram('green');
     %snaps_handle = stimulus.MakeSnapshotTimeSeries(10);
-    params_handle = stimulus.MakeParametersPage;
+    %params_handle = stimulus.MakeParametersPage;
     
-    tfPlot.arenaSimulation.SaveSpaceTimeDiagram(save_file,std_handle,params_handle);
+    tfPlot.arenaSimulation.SaveSpaceTimeDiagram(save_file,std_handle);
     
     if make_vids
         mov_handle = stimulus.MakeMovie('green',save_file);

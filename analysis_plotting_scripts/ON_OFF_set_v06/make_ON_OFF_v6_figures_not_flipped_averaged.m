@@ -42,7 +42,7 @@ if 0
     tfAnalysis.save_geno_group_summary_files(geno_names,data_location);
 end
 
-if 1
+if 0
     % Use summary files to save specific subsets of data in lr_summ_data.mat
     
     addpath(genpath('/Users/stephenholtz/matlab-utils'))
@@ -162,24 +162,24 @@ if steady_state_figure
                             'PaperOrientation','portrait');    
     height_iter     = 0;
 
-    for cn = curve_names([9 10 11 12])
+    for cn = curve_names([5 6 7 8])
         curve_name = cn{1};
         height_iter = height_iter+1;
 
         for col = 1:nWide
-
+            
             subplot('Position',sp_positions{height_iter,col})
             
             for side = 1:2
                 graph.line{side}        = lr_summ_data.(curve_name).raw(side).avg_lmr_ts{col};
-                graph.shade{side}   = lr_summ_data.(curve_name).raw(side).sem_lmr_ts{col};
-                graph.color{side}      = my_lr_colormap{side};
+                graph.shade{side}       = lr_summ_data.(curve_name).raw(side).sem_lmr_ts{col};
+                graph.color{side}       = my_lr_colormap{side};
             end
             
             x_trace = lr_summ_data.(curve_name).raw(i).avg_x_pos_ts{col};
             x_trace = x_trace-(mean(x_trace(1:10)));
             plot(x_trace/max(x_trace),'Color',grey_map{2},'linewidth',2);
-
+            
             hold on
             
             switch_point = (size(graph.line{i},2)/2) - 10;
@@ -189,7 +189,7 @@ if steady_state_figure
             box off
             
             axis([0 size(graph.line{i},2) -3 3])
-
+            
             if height_iter == 1
                 if col == 1
                     title('L-R WBA For Steady State Switch: 60 dps') 
@@ -239,7 +239,7 @@ if edge_sweep_figure
                             'PaperOrientation','portrait');    
     height_iter     = 0;
 
-    for cn = curve_names([7 8])
+    for cn = curve_names([3 4])
         curve_name = cn{1};
         height_iter = height_iter+1;
 
@@ -316,7 +316,7 @@ if competing_edges
                             'PaperOrientation','portrait');    
     height_iter     = 0;
 
-    for cn = curve_names([5 6])
+    for cn = curve_names([1 2])
         curve_name = cn{1};
         height_iter = height_iter+1;
 
@@ -394,7 +394,7 @@ if tuthill_opposed
                             'PaperOrientation','portrait');    
     height_iter     = 0;
 
-    for cn = curve_names([14])
+    for cn = curve_names([10])
         curve_name = cn{1};
         height_iter = height_iter+1;
 
@@ -472,7 +472,7 @@ if tuthill_motion
                             'PaperOrientation','portrait');    
     height_iter     = 0;
 
-    for cn = curve_names([15 16 17 18])
+    for cn = curve_names([11 12 13 14])
         curve_name = cn{1};
         height_iter = height_iter+1;
 
@@ -543,7 +543,7 @@ if rotation_30_lam
                             'PaperOrientation','portrait');    
     height_iter     = 0;
 
-    for cn = curve_names(13)
+    for cn = curve_names([9])
         
         curve_name = cn{1};
         height_iter = height_iter+1;

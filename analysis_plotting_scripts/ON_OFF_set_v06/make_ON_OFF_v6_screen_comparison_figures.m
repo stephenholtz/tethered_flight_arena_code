@@ -25,7 +25,18 @@ data_location = '/Users/stephenholtz/local_experiment_copies/ON_OFF_set_v06';
 summary_location = '/Users/stephenholtz/local_experiment_copies/ON_OFF_set_v06';
 
 geno_names{1} = 'gmr_48a08ad_gal80ts_kir21';
-%geno_names{2} = 'gmr_48a08ad_gal80ts_kir21';
+geno_names{2} = 'gmr_48a08ad_66a01dbd_gal80ts_kir21';
+geno_names{3} = 'gmr_48a08ad_29g11dbd_gal80ts_kir21';
+geno_names{4} = 'gmr_53g02ad_29g11dbd_gal80ts_kir21';
+geno_names{5} = 'gmr_82f12ad_75h08dbd_gal80ts_kir21';
+
+better_geno_names{1} = 'Ctrl (48a08ad_kir21)';
+better_geno_names{2} = 'L1 (48a08ad_66a01dbd_kir21)';
+better_geno_names{3} = 'L1+L2 (48a08ad_29g11dbd_kir21)';
+better_geno_names{4} = 'L2 (53g02ad_29g11dbd_kir21)';
+better_geno_names{5} = 'L2 (82f12ad_75h08dbd_kir21)';
+
+%geno_names{6} = 'gmr_75h07ad_29g11dbd_gal80ts_kir21'; % L1+L2 that behaved even worse than the other, exclude for now
 
 % All of the tuning curves to be saved. Copied from the
 % grouped_conditions struct in grouped_conds.m
@@ -51,12 +62,12 @@ make_stds               = 1;
 save_figures            = 1;
 
 % Make certain figures
-all_raw_timeseries_figure  = 1;
-tuning_curve_and_ts_figure = 1;
+edges_sweep_steady_figure   = 1;
+tuthill_stimuli_figure      = 1;
 
 % Process initial pruned data and save summary.mat files
 if 0
-    tfAnalysis.save_geno_group_summary_files(geno_names,data_location);
+    tfAnalysis.save_geno_group_summary_files(geno_names,summary_location);
 end
 
 if 0
@@ -65,7 +76,7 @@ if 0
     addpath(genpath('/Users/stephenholtz/matlab-utils'))
     
     if ~exist('geno_data','var')
-        geno_data = tfAnalysis.load_geno_group_summary_files(geno_names,data_location);
+        geno_data = tfAnalysis.load_geno_group_summary_files(geno_names,summary_location);
     end
     
     % Calculate normalization value per genotype
@@ -160,6 +171,8 @@ if 0
 
                 summ_data.(curve_name).raw(i).all_x_pos_ts = a;
                 
+                summ_data.(curve_name).raw(i).N = numel(geno_data{i}.experiment);
+                
                 summ_data.B = B;
                 summ_data.A = A;
                 
@@ -167,135 +180,441 @@ if 0
         end
     end
     
-    save(fullfile(data_location,'summ_data'),'summ_data')
+    save(fullfile(summary_location,'summ_data'),'summ_data')
     
     clear curve_name condition_set_number i avg variance avg_ts variance_ts
     
 end
 
 
-% colormaps
-my_colormap     = {[30 144 255]/255,[255 165 0]/255,[238 0 238]/255,[0 238 0]/255,[255 44 44]/255};
+
+% Set up colormaps, variables etc.,
+
+black_figure = 0;
+
+if black_figure
+    figure_color = [0 0 0];
+    font_color = [1 1 1];
+    axis_color = figure_color;
+    zero_line_color = font_color;
+    xy_color = [1 1 1];
+else
+    figure_color = [1 1 1];
+    font_color = [0 0 0];
+    axis_color = figure_color;
+    zero_line_color = font_color;
+    xy_color = [0 0 0];
+end
+
+colormap_type = 'mine';
+
+switch colormap_type
+    case 'mine'
+        my_colormap     = {[30 144 255]/255,[255 165 0]/255,[238 0 238]/255,[0 238 0]/255,[255 44 44]/255};
+    otherwise
+        temp_colormap = pastel(1:7);
+        
+        for i = 1:size(temp_colormap,2)-1
+            my_colormap{i} = squeeze(temp_colormap(:,i+1,:))';
+        end
+        clear temp_colormap;
+end
+
 my_lr_colormap  = {[238 0 238]/255,[0 238 0]/255}; %,[0 178 238]/255};
 grey_map        = {[205 201 201]/255,[125 125 125]/255};
 
+title_fontsize = 14;
+
 if ~exist('summ_data','var')
-    load(fullfile(data_location,'summ_data'));
+    load(fullfile(summary_location,'summ_data'));
 end
 
-
-
-if all_raw_timeseries_figure
+if edges_sweep_steady_figure
     
     % Set up subplot dimensions
     nHigh       = 4;
-    nWide       = 2;
+    nWide       = 5;
     widthGap    = .02;
     heightGap   = .05;
-    widthOffset = .1;
-    heightOffset= .05;
+    widthOffset = .08;
+    heightOffset= .04;
     
     sp_positions = getFullPageSubplotPositions(nWide,nHigh,widthGap,heightGap,widthOffset,heightOffset);
     
     
-    
-    
-end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-if 0
-
-% Set up subplot dimensions
-    nHigh       = 4;
-    nWide       = 2;
-    widthGap    = .02;
-    heightGap   = .05;
-    widthOffset = .1;
-    heightOffset= .05;
-    
-    sp_positions = getFullPageSubplotPositions(nWide,nHigh,widthGap,heightGap,widthOffset,heightOffset);
-    
-    i = 1;
-    
-    tuningFigHandle(1) = figure( 'name' ,'Minimal Motion TS Figure','NumberTitle','off',...
-                            'Color',[1 1 1],'Position',[50 50 345 684],...
+    edges_sweep_steady_figure_handle(1) = figure( 'name' ,'Summary Figure','NumberTitle','off',...
+                            'Color',figure_color,'Position',[50 50 1000 800],...
                             'PaperOrientation','portrait');    
-    height_iter     = 0;
-
-    for cn = curve_names([5 6 7 8])
-        curve_name = cn{1};
-        height_iter = height_iter+1;
-
-        for col = 1:nWide
+    
+    % Plot the 'edges' and the 'sweep'
+    
+    % Each cond_num is a new row
+    row_iter = 1;
+    
+    for cond_num = [1 2 3 4]
+        
+        curve_name = curve_names{cond_num};
+        
+        % Each speed is a new col
+        col_iter = 1;
+        
+        for speed = 1:2
             
-            subplot('Position',sp_positions{height_iter,col})
-            
-            for u = 1
-                graph.line{u}        = summ_data.(curve_name).raw(u).avg_lmr_ts{col};
-                graph.shade{u}       = summ_data.(curve_name).raw(u).sem_lmr_ts{col};
-                graph.color{u}       = my_lr_colormap{u};
+            for u = 1:numel(geno_names)
+                graph.line{u}        = summ_data.(curve_name).raw(u).avg_lmr_ts{speed};
+                graph.shade{u}       = summ_data.(curve_name).raw(u).sem_lmr_ts{speed};
+                graph.color{u}       = my_colormap{u};
+                N(u)                 = summ_data.(curve_name).raw(u).N;
             end
             
-            x_trace = summ_data.(curve_name).raw(i).avg_x_pos_ts{col};
-            x_trace = x_trace-(mean(x_trace(1:10)));
-            plot(x_trace/max(x_trace)*1.5,'Color',grey_map{2},'linewidth',2);
+            graph.zero_line_color = zero_line_color;
             
-            hold on
+            subplot('Position',sp_positions{row_iter,col_iter})            
             
-            switch_point = (size(graph.line{i},2)/2) - 10;
-            plot(repmat(switch_point,7,1),-3:3,'--','Color',grey_map{2},'linewidth',1)
-
             makeErrorShadedTimeseries(graph);
-            box off
             
-            axis([0 size(graph.line{i},2) -3 3])
+            set(gca,'color',axis_color);
             
-            if height_iter == 1
-                if col == 1
-                    title({'L-R WBA Timeseries','Steady State Switch: 60 dps'}) 
-                elseif col == 2
-                    title({'L-R WBA Timeseries',' Steady State Switch: 120 dps'}) 
+            axis([0 size(graph.line{1},2) -3 3])
+
+            set(gca,'XColor',xy_color,'YColor',xy_color)
+            
+            % Label Plots correctly
+            if speed == 1
+               ylabel('L-R WBA [V]','color',font_color)
+            end
+            
+            if row_iter == 4
+               xlabel('Time [ms]','color',font_color)
+            end
+            
+            if row_iter == 1
+                if speed == 1
+                    title('Edges ON: 100 dps','Fontsize',title_fontsize,'color',font_color)
+                elseif speed == 2
+                    title('Edges ON: 220 dps','Fontsize',title_fontsize,'color',font_color)
+                end
+            elseif row_iter == 2
+                if speed == 1
+                    title('Edges OFF: 100 dps','Fontsize',title_fontsize,'color',font_color)
+                elseif speed == 2
+                    title('Edges OFF: 220 dps','Fontsize',title_fontsize,'color',font_color)
+                end
+            elseif row_iter == 3
+                if speed == 1
+                    title('Sweep ON: 100 dps','Fontsize',title_fontsize,'color',font_color)
+                elseif speed == 2
+                    title('Sweep ON: 220 dps','Fontsize',title_fontsize,'color',font_color)
+                end
+            elseif row_iter == 4
+                if speed == 1
+                    title('Sweep OFF: 100 dps','Fontsize',title_fontsize,'color',font_color)
+                elseif speed == 2
+                    title('Sweep OFF: 220 dps','Fontsize',title_fontsize,'color',font_color)
                 end
             end
             
-            if height_iter == nHigh
-                xlabel('Time (ms)')
-            else
-                if col ~= 1
-                    axis off
+            % Add legend with all the genotype names
+            if row_iter == 1 && speed == 2
+
+                legend_names = [];
+
+                for u = 1:numel(geno_names)
+                    legend_names{u} = better_geno_names{u};
                 end
+                
+                [legend_hand,obj_hand,~,text_content]=legend(legend_names);
+                set(legend_hand,'location','NorthEastOutside','interpreter','none')
+                
+                for u = 1:numel(text_content)
+                    text = text_content{u};
+                    set(obj_hand(u),'String',{[text(1:13) '-'],text(14:end),[' N = ' num2str(N(u))]})
+                    set(obj_hand(u),'linewidth',5,'color',font_color)
+                end
+                
+                legend_pos = get(legend_hand,'Position');
+                new_legend_pos = [legend_pos(1)+.01 legend_pos(2)/2 legend_pos(3) legend_pos(4)*4];
+                set(legend_hand,'Position',new_legend_pos,'box','off');
+                
             end
             
-            if col == 1
-                ylabel(['                                  ', curve_name],'interpreter','none','FontWeight','bold')
-                if make_stds
-                    subplot('Position',[0.015 sp_positions{height_iter,col}(2)-.05 .06 .06] )
-                    subimage(summ_data.(curve_name).space_time_diagram{1})
-                    title({'Space-','Time'})
-                    axis off   
-                end
-            end
+            col_iter = col_iter + 1;
+            
+            clear graph
+            
         end
+        
+        row_iter = row_iter + 1;
+        
     end
     
-    lh=legend('x_pos','switch','LmR'); 
-    set(lh,'interpreter','none','location','best');    
-    if save_figures; export_fig(tuningFigHandle(1),fullfile(data_location,'steady_state_v06'),'-pdf'); end
+    % Plot the 'steady state'
+    
+    % Each cond_num is a new row
+    row_iter = 1;
+    
+    for cond_num = [5 6 7 8]
+        
+        curve_name = curve_names{cond_num};
+        
+        % Each speed is a new col, starting at col 4
+        col_iter = 4;
+        
+        for speed = 1:2
+            
+            for u = 1:numel(geno_names)
+                graph.line{u}        = summ_data.(curve_name).raw(u).avg_lmr_ts{speed};
+                graph.shade{u}       = summ_data.(curve_name).raw(u).sem_lmr_ts{speed};
+                graph.color{u}       = my_colormap{u};
+                N(u)                 = summ_data.(curve_name).raw(u).N;
+            end
+            
+            graph.zero_line_color = zero_line_color;
+            
+            subplot('Position',sp_positions{row_iter,col_iter})            
+            
+            makeErrorShadedTimeseries(graph);
+            
+            set(gca,'color',axis_color);
+            
+            axis([0 size(graph.line{1},2) -2 2])
+            
+            set(gca,'XColor',xy_color,'YColor',xy_color)
+            
+            % Label Plots correctly
+            if speed == 1
+               ylabel('L-R WBA [V]','color',font_color)
+            end
+            
+            if row_iter == 4
+               xlabel('Time [ms]','color',font_color)
+            end
+            
+            if row_iter == 1
+                if speed == 1
+                    title('ON->ON: 100 dps','Fontsize',title_fontsize,'color',font_color)
+                elseif speed == 2
+                    title('ON->ON: 220 dps','Fontsize',title_fontsize,'color',font_color)
+                end
+            elseif row_iter == 2
+                if speed == 1
+                    title('ON->OFF: 100 dps','Fontsize',title_fontsize,'color',font_color)
+                elseif speed == 2
+                    title('ON->OFF: 220 dps','Fontsize',title_fontsize,'color',font_color)
+                end
+            elseif row_iter == 3
+                if speed == 1
+                    title('OFF->ON: 100 dps','Fontsize',title_fontsize,'color',font_color)
+                elseif speed == 2
+                    title('OFF->ON: 220 dps','Fontsize',title_fontsize,'color',font_color)
+                end
+            elseif row_iter == 4
+                if speed == 1
+                    title('OFF->OFF: 100 dps','Fontsize',title_fontsize,'color',font_color)
+                elseif speed == 2
+                    title('OFF->OFF: 220 dps','Fontsize',title_fontsize,'color',font_color)
+                end
+            end
+
+            col_iter = col_iter + 1;
+            
+            clear graph
+        end
+        
+        row_iter = row_iter + 1;
+        
+    end
+    
+    annotation('textbox','position',[ .15 .88 .62 .1],'string','New ON OFF Stimuli','fontweight','bold','interpreter','none','EdgeColor','none','Fontsize',title_fontsize+2,'Color',font_color);
+    
+    if save_figures; export_fig(edges_sweep_steady_figure_handle(1),fullfile(summary_location,'new_ON_OFF_stimuli'),'-pdf'); end
+
 end
 
+if tuthill_stimuli_figure
+    % Set up subplot dimensions
+    nHigh       = 2;
+    nWide       = 5;
+    widthGap    = .04;
+    heightGap   = .1;
+    widthOffset = .08;
+    heightOffset= .01;
+    
+    sp_positions = getFullPageSubplotPositions(nWide,nHigh,widthGap,heightGap,widthOffset,heightOffset);
+    
+    tuthill_stimuli_figure_handle(1) = figure( 'name' ,'Summary Figure','NumberTitle','off',...
+                            'Color',figure_color,'Position',[50 50 1000 800],...
+                            'PaperOrientation','portrait');    
+    
+    % plot opposed motion
+    
+    curve_name = 'opposed_ON_OFF';
+    
+    speed = 1;
+    
+    for u = 1:numel(geno_names)
+        graph.line{u}        = summ_data.(curve_name).raw(u).avg_lmr_ts{speed};
+        graph.shade{u}       = summ_data.(curve_name).raw(u).sem_lmr_ts{speed};
+        graph.color{u}       = my_colormap{u};
+        N(u)                 = summ_data.(curve_name).raw(u).N;
+    end
+
+    sp = sp_positions{1,1};
+    sp(3) = sp(3)*1.75;
+    sp(1) = sp(1)*1.15;
+    
+    graph.zero_line_color = zero_line_color;
+    
+    subplot('Position',sp)
+
+    makeErrorShadedTimeseries(graph);
+
+    set(gca,'color',axis_color);
+    
+    axis([0 size(graph.line{1},2) -2 2])
+
+    set(gca,'XColor',xy_color,'YColor',xy_color)
+    
+    title('Opposed Motion','Fontsize',title_fontsize,'color',font_color)
+
+    ylabel('L-R WBA [V]','color',font_color)
+
+    xlabel('Time [ms]','color',font_color)
+    
+    % plot rotation
+    
+    curve_name = 'lam_30_rotation';
+    
+    % each speed is a new column
+    col_iter = 3;
+    row_iter = 1;
+    
+    for speed = 1:3
+        
+        for u = 1:numel(geno_names)
+            graph.line{u}        = summ_data.(curve_name).raw(u).avg_lmr_ts{speed};
+            graph.shade{u}       = summ_data.(curve_name).raw(u).sem_lmr_ts{speed};
+            graph.color{u}       = my_colormap{u};
+            N(u)                 = summ_data.(curve_name).raw(u).N;
+        end
+        
+        graph.zero_line_color = zero_line_color;
+        
+        subplot('Position',sp_positions{row_iter,col_iter})
+        
+        makeErrorShadedTimeseries(graph);
+        
+        set(gca,'color',axis_color);
+        
+        axis([0 size(graph.line{1},2) -3.5 3.5])
+
+        set(gca,'XColor',xy_color,'YColor',xy_color)
+        
+        % Label Plots correctly
+        if col_iter == 1
+           ylabel('L-R WBA [V]','color',font_color)
+        end
+        
+        if speed == 1;
+            title({'Optomotor',' \lambda 30, 15 dps'},'Fontsize',title_fontsize,'color',font_color)
+        elseif speed == 2
+            title({'Optomotor','\lambda 30, 90 dps'},'Fontsize',title_fontsize,'color',font_color)
+        elseif speed == 3
+            title({'Optomotor','\lambda 30, 270 dps'},'Fontsize',title_fontsize,'color',font_color)
+        end
+        
+        col_iter = col_iter + 1;
+        
+        clear graph
+    end
+    
+    % plot sawtooth, expansion
+        
+    % Each cond_num is a new col
+    row_iter = 2;
+    col_iter = 1;
+    
+    for cond_num = [11 12 13 14]
+
+        curve_name = curve_names{cond_num};
+
+        % Each speed is a new col, starting at col 4
+
+
+        speed = 1;
+
+        for u = 1:numel(geno_names)
+            graph.line{u}        = summ_data.(curve_name).raw(u).avg_lmr_ts{speed};
+            graph.shade{u}       = summ_data.(curve_name).raw(u).sem_lmr_ts{speed};
+            graph.color{u}       = my_colormap{u};
+            N(u)                 = summ_data.(curve_name).raw(u).N;
+        end
+
+        graph.zero_line_color = zero_line_color;
+        
+        subplot('Position',sp_positions{row_iter,col_iter})            
+
+        makeErrorShadedTimeseries(graph);
+
+        set(gca,'color',axis_color);
+
+        set(gca,'XColor',xy_color,'YColor',xy_color)
+        
+        % Label Plots correctly
+        if col_iter == 1 || col_iter == 4
+           ylabel('L-R WBA [V]','color',font_color)
+        end
+        
+        xlabel('Time [ms]','color',font_color)
+            
+        if col_iter == 1
+            title('ON Expansion','Fontsize',title_fontsize,'color',font_color)
+            axis([0 size(graph.line{1},2) -2 2])
+        elseif col_iter == 2
+            title('OFF Expansion','Fontsize',title_fontsize,'color',font_color)
+            axis([0 size(graph.line{1},2) -2 2])            
+        elseif col_iter == 4
+            title('ON Sawtooth','Fontsize',title_fontsize,'color',font_color)
+            axis([0 size(graph.line{1},2) -3 3])            
+        elseif col_iter == 5
+            title('OFF Sawtooth','Fontsize',title_fontsize,'color',font_color)
+            axis([0 size(graph.line{1},2) -3 3])            
+        end
+        
+        % Add legend with all the genotype names
+        if row_iter == 2 && col_iter == 2
+
+            legend_names = [];
+
+            for u = 1:numel(geno_names)
+                legend_names{u} = better_geno_names{u};
+            end
+
+            [legend_hand,obj_hand,~,text_content]=legend(legend_names);
+            set(legend_hand,'location','NorthEastOutside','interpreter','none')
+
+            for u = 1:numel(text_content)
+                text = text_content{u};
+                set(obj_hand(u),'String',{[text(1:13) '-'],text(14:end),[' N = ' num2str(N(u))]})
+                set(obj_hand(u),'linewidth',5,'color',font_color)
+            end
+
+            legend_pos = get(legend_hand,'Position');
+            new_legend_pos = [legend_pos(1)+.01 .05 legend_pos(3) legend_pos(4)*4];
+            set(legend_hand,'Position',new_legend_pos,'box','off');
+
+        end
+        
+        if col_iter == 2
+            col_iter = col_iter + 2;
+        else
+            col_iter = col_iter + 1;
+        end
+        clear graph
+    end
+    
+    annotation('textbox','position',[ .15 .88 .62 .1],'string','Tuthill ON OFF Stimuli','fontweight','bold','interpreter','none','EdgeColor','none','Fontsize',title_fontsize+2,'Color',font_color);
+
+    if save_figures; export_fig(tuthill_stimuli_figure_handle(1),fullfile(summary_location,'tuthill_ON_OFF_stimuli'),'-pdf'); end
+
+end

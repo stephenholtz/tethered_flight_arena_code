@@ -94,11 +94,13 @@ classdef import < handle
             %--------------------------------------------------------------
             exp_iter = 1;
             
-            fprintf('Experiment %4d of %4d\n',1,numel(exps));
+            %fprintf('Experiment %4d of %4d\n',1,numel(exps));
+            fprintf('\nTotal Experiments: %4d',numel(exps));
             
             for i  = 1:numel(exps)
-                fprintf('\b\b\b\b\b\b\b\b\b\b\b\b\b');
-                fprintf('%4d of %4d\n',i,numel(exps));
+                % fprintf('\b\b\b\b\b\b\b\b\b\b\b\b\b');
+                % fprintf('%4d of %4d\n',i,numel(exps));
+                fprintf(['\n    Exp %d of %d - ' exps{i}],i,numel(exps));
                 
                 set_get_experiment_info(self,exps{i});
                 

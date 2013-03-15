@@ -145,13 +145,13 @@ classdef Utilities
                     pause(.075)
                     putvalue(startle_channel,0)
                     stop(startle_channel)
-                % For the fan, needs longer to start up
+                % For some strange reason this is required for one of the
+                % rigs (using an AO instead of the DIO)
                 case 2
-                    start(startle_channel)
-                    putvalue(startle_channel,1)
-                    pause(1.5)
-                    putvalue(startle_channel,0)
-                    stop(startle_channel)
+                    putdata(startle_channel,[repmat(5,50,1); zeros(50,1); repmat(5,50,1); zeros(50,1)]);  % set hi
+                    if strcmp(startle_channel.Running,'Off')
+                        start(startle_channel)      % ON
+                    end    
             end
         end
         
@@ -166,28 +166,34 @@ classdef Utilities
             end
                 stop(monitor_channel);
         end
-            
-        function [AI_wbf, DIO_trig, AI_stim_sync] = initialize_default_hardware()
+        
+        function [wbf_monitor_chan, startle_trigger, stim_sync_chan] = initialize_default_hardware(startle_type)
         % Initialize the hardware and neccessary channels. Hard coded for sanity.
             % Reset the daq
             daqreset; % useful!
             pause(.2);
 
             % Setup the wbf monitor for checking if the fly is flying
-            AI_wbf = analoginput('mcc',0);
-            addchannel(AI_wbf, 0);
-            set(AI_wbf,'TriggerType','Immediate','SamplesPerTrigger',1,'ManualTriggerHwOn','Start')
+            wbf_monitor_chan = analoginput('mcc',0);
+            addchannel(wbf_monitor_chan, 0);
+            set(wbf_monitor_chan,'TriggerType','Immediate','SamplesPerTrigger',1,'ManualTriggerHwOn','Start')
             pause(.2);
 
-            % Setup the digital trigger for the buzzer/fan
-            DIO_trig = digitalio('mcc',0);
-            addline(DIO_trig,0,'Out');
-            pause(.2);
+            % Setup the digital or analog trigger for the buzzer/fan
+            if startle_type == 1
+                startle_trigger = digitalio('mcc',0);
+                addline(startle_trigger,0,'Out');
+                pause(.2);
+            elseif startle_type == 2
+                startle_trigger = analogoutput('mcc',0);
+                addchannel(startle_trigger, 0);
+                pause(.2)
+            end
 
             % Setup the stimulus sync-er for ensuring full stim presentation
-            AI_stim_sync = analoginput('mcc',0);
-            addchannel(AI_stim_sync, 1);
-            set(AI_stim_sync,'TriggerType','Immediate','SamplesPerTrigger',1,'ManualTriggerHwOn','Start')
+            stim_sync_chan = analoginput('mcc',0);
+            addchannel(stim_sync_chan, 1);
+            set(stim_sync_chan,'TriggerType','Immediate','SamplesPerTrigger',1,'ManualTriggerHwOn','Start')
             pause(.2);
         
         end

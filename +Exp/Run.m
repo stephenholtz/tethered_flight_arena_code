@@ -47,7 +47,7 @@ default_reps    = 3;
 default_record  = 1;
 check_flying    = 1;
 randomize       = 1;
-startle_type    = 1; %1 works well with buzzer and puffer
+startle_type    = 1; %1 for DIO trigger, 2 for AO trigger
 
 disp('STANDARD PROTOCOL STARTING')
 
@@ -64,7 +64,7 @@ disp('STANDARD PROTOCOL STARTING')
     %% Initialize the hardware and neccessary channels. Hard coded for sanity.
     string = ('Initializing hardware');
     Exp.Utilities.unixy_output_pt1(string)
-    [AI_wbf, DIO_trig, AI_stim_sync] = Exp.Utilities.initialize_default_hardware;
+    [AI_wbf, startle_trigger, AI_stim_sync] = Exp.Utilities.initialize_default_hardware(startle_type);
     
     % For acquiring the actual data, if wanted
     if nargin > 2 ;
@@ -263,7 +263,7 @@ disp('STANDARD PROTOCOL STARTING')
                 if check_flying
                     if ~Exp.Utilities.simple_end_wbf_check(AI_wbf)
                         flying = 0;
-                        Exp.Utilities.startle_animal(DIO_trig,startle_type)
+                        Exp.Utilities.startle_animal(startle_trigger,startle_type)
                         time = time + 1.3;
                         pause(1.25)
                     end

@@ -98,8 +98,12 @@ for left = {'grating','edge'}
                 right_pattern.SwitchXYChannels;
                 right_pattern.AddDummyFrames('y',1);
                 
+                % Add the left and right patterns together with this
+                % function
                 unshifted_pattern = patternFactory.AddPatternsBilatLeftRight(left_pattern,right_pattern,120);
                 
+                % Now shift the edges to line up using this case structure
+                % to get the right input to my ridiculous function
                 switch left{1}
                     case 'edge'
                         
@@ -114,6 +118,12 @@ for left = {'grating','edge'}
                         
                         switch right{1}
                             case 'grating'
+                                
+                                %%%% the unshifted pattern here is smaller
+                                %%%% in the Y dim than the
+                                %%%% right_shifted_pattern, what is the
+                                %%%% problem??
+                                
                                 right_shifted_pattern = patternFactory.ShiftWindowedToEdgeStart(unshifted_pattern,'x','low',1);
                                 Pats = patternFactory.ShiftWindowedToEdgeStart(right_shifted_pattern,'y','low',1);
                                 
@@ -126,6 +136,7 @@ for left = {'grating','edge'}
                 
                 pattern_name = cell2mat(['left_' left '_Lbarsize_' num2str(left_val) '_dir_' left_motion_type '_right_' right '_Rbarsize_' num2str(right_val) '_dir_' right_motion_type '_frame_1_empty']);
                 
+                % Use this convenient pattern saver function
                 counter = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_name,project,counter,testing_flag);
   
                 clear pattern_name Pats

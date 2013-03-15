@@ -793,7 +793,7 @@ classdef patternFactory < handle
         end
         
         function shifted_pattern = ShiftWindowedToEdgeStart(pattern,channel,edge_type,has_dummy_frame)
-                        
+            
             % the row with the edge is by default in the middle
             row_with_edge = ceil(size(pattern,1)/2);
             

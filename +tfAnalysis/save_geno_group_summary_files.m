@@ -14,7 +14,7 @@ function save_geno_group_summary_files(geno_names,data_location,overwrite)
             eval([summary_filename ' = geno;']);
             save(save_location,summary_filename);
         end
-
+    
     end
     
 end

@@ -31,7 +31,7 @@ end
 
 
 % Constant variables. May need optimization in the future
-ANALOGTOLERANCE         = 0.025;
+ANALOGTOLERANCE         = 0.03;
 DURATIONTOLERANCE       = 0.05;
 SAMPLERATE              = 1000;
 
@@ -71,7 +71,7 @@ for flyNum = 1:numel(data_files)
     end
     % Some error checking on the diff between voltage_values (all should be
     % just about equal...)
-    if range(diff(voltage_values)) > ANALOGTOLERANCE*2
+    if range(diff(voltage_values)) > ANALOGTOLERANCE*5 % sometimes there is an offset with the first value... no idea why
         error('Problem with parsing voltage values: diff is inconsistent');
     end
     

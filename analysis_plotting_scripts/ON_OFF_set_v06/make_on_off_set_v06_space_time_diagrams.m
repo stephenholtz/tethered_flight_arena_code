@@ -1,8 +1,8 @@
 % Script to make/save space time diagrams and movies
 
-conditions = ON_OFF_set_v06;
+conditions = ON_OFF_set_v06_short;
 
-save_path = '/Users/stephenholtz/Desktop/temp_space_time/on_off_set_v06';
+save_path = '/Users/stephenholtz/Desktop/temp_space_time/on_off_set_v06_short';
 
 if ~exist(save_path,'dir')
     mkdir(save_path)

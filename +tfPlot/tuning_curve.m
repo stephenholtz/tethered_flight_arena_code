@@ -76,15 +76,15 @@ else
 end
 
 if ~isfield(graph,'zero_line')
-    graph.zero_line = true;
+    graph.zero_line = false;
 end
 
 if ~isfield(graph,'x_offset')
-    graph.x_offset = 0;    
+    graph.x_offset = 0.05;    
 end
 
 if ~isfield(graph,'line_width')
-    graph.line_width = 1;    
+    graph.line_width = 2;    
 end
 
 if ~isfield(graph,'dot_compare')
@@ -169,7 +169,7 @@ for i = 1:numel(graph.avg)
         
        % if y_vals(1)*y_vals(2) < 1 || y_vals(1)*y_vals(2) == 0
             hold('all')
-            plot(x_len_vec,zeros(1,numel(x_len_vec)),'LineStyle','--','Color',zero_color);
+            plot(x_len_vec,zeros(1,numel(x_len_vec)),'LineStyle','-','Color',.8*zero_color);
             set(max(get(gca,'Children')),'Tag','zero_line')
        % end
     end
@@ -225,6 +225,7 @@ if numel(x_positions) == 1
     set(gca,'XLim',[0 2])
 end
 
+fix_ebar_tee_width(.5)
 
     function fix_ebar_tee_width(width_mod)
     % this function widens the tee on errorbars by the factor specified in

@@ -72,3 +72,7 @@ grouped_conditions(13).conds        = {[45,46]};
 grouped_conditions(14).bar_type     = 'OFF';
 grouped_conditions(14).speed        = 3*3.75;
 grouped_conditions(14).conds        = {[47,48]};
+% closed loop stripe fixation
+grouped_conditions(15).bar_type     = 'dark';
+grouped_conditions(15).speed        = -12;
+grouped_conditions(15).conds        = {49};

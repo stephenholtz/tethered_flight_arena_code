@@ -5,7 +5,7 @@ addpath(genpath('/Users/stephenholtz/matlab-utils'))
 for g = 1:numel(geno_names)
     [summary_file,summary_filepath] = returnDirFileList(fullfile(data_location,geno_names{g}),'summary.mat');
     load(summary_filepath{:});
-
+    fprintf(['\n    %d of %d' summary_filepath{:}],g,numel(geno_names))
     geno_data{g} = tfAnalysis.ExpSet(eval(summary_file{1}(1:end-4))); %#ok<*AGROW>
 end
 

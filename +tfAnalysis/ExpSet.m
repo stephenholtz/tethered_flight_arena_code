@@ -28,7 +28,10 @@ classdef ExpSet < handle
                 error('ExpSet must take an object holding a cell array of tfAnalysis.Experiment objects of size > 0')
             end
             
-            self.protocol               = tf_analysis_object.experiment{1}.protocol;
+            for i = 1:numel(tf_analysis_object.experiment)
+                self.protocol{i}        = tf_analysis_object.experiment{i}.protocol;
+            end
+            
             self.experiment             = tf_analysis_object.experiment;
             self                        = populate_condition_properties(self);
             self.exp_set_turning_resp   = self.get_mean_exp_set_turning_resp();
@@ -38,22 +41,26 @@ classdef ExpSet < handle
             % load the symmetric conditions from the protocol's folder
             found_file = 0;
             
-            path_to_cond_func = which(self.protocol);
-            protocol_folder = fileparts(path_to_cond_func);
-            folder_contents = dir(protocol_folder);
-            for i = 1:numel(folder_contents)
-                if strcmp(folder_contents(i).name,'grouped_conds.m')
-                    found_file = 1;
+            for p = 1:numel(self.protocol)
+
+                path_to_cond_func = which(self.protocol{p});
+                protocol_folder = fileparts(path_to_cond_func);
+                folder_contents = dir(protocol_folder);
+                for i = 1:numel(folder_contents)
+                    if strcmp(folder_contents(i).name,'grouped_conds.m')
+                        found_file = 1;
+                    end
                 end
-            end
-            
-            if found_file
-                cf = pwd;
-                cd(protocol_folder)
-                eval('grouped_conds'); % drop the .m to evaluate .m file...
-                self.grouped_conditions = grouped_conditions; %#ok<*CPROP>
-                self.sym_conditions = sym_conditions; %#ok<*CPROP>                
-                cd(cf)
+
+                if found_file
+                    cf = pwd;
+                    cd(protocol_folder)
+                    eval('grouped_conds'); % drop the .m to evaluate .m file...
+                    self.grouped_conditions{p} = grouped_conditions; %#ok<*CPROP>
+                    self.sym_conditions = sym_conditions; %#ok<*CPROP>                
+                    cd(cf)
+                end
+
             end
         end
         
@@ -98,15 +105,17 @@ classdef ExpSet < handle
             % by the whole genotype's mean turning
             
             daq_channel = 'lmr';
-            
+            condition_matrix = [];
             % get all of the condition numbers, except for the closed loop
             % portion (the last condition number)
-            for i = 1:(numel(self.experiment{1}.cond_rep_index)-1)
-                condition_matrix{i} = i;
+            for exp_num = 1:numel(self.experiment)
+                for i = 1:(numel(self.experiment{end}.cond_rep_index))
+                    condition_matrix{exp_num}{i} = i;
+                end
             end
             
-            overall_turning = mean(abs(cell2mat(get_trial_data_set(self,condition_matrix,daq_channel,'mean','no','exp',0))),2);
-            
+            overall_turning = mean(abs(cell2mat(get_trial_data_set(self,condition_matrix,daq_channel,'mean','no','exp',0))));
+
             exp_set_turning_resp = mean(overall_turning);
             
         end
@@ -130,10 +139,12 @@ classdef ExpSet < handle
                 % right_amp in the symmetric condition
                 case {1,'yes','true'}
                     switch daq_channel
-                        case {'left_amp'}
+                        case {'left_amp'} %%% TODO!!!!
+                            error('need to fix this first!!')
                             temp_cond_data(:,1) = return_multi_experiment_cond_data(self,cond_num_mat(:,1),'left_amp',normalization_value,get_samples);
                             temp_cond_data(:,2) = return_multi_experiment_cond_data(self,cond_num_mat(:,2),'right_amp',normalization_value,get_samples);
-                        case {'right_amp'}
+                        case {'right_amp'} %%% TODO!!!
+                            error('need to fix this first!!')
                             temp_cond_data(:,1) = return_multi_experiment_cond_data(self,cond_num_mat(:,1),'right_amp',normalization_value,get_samples);
                             temp_cond_data(:,2) = return_multi_experiment_cond_data(self,cond_num_mat(:,2),'left_amp',normalization_value,get_samples);
                         otherwise
@@ -214,19 +225,25 @@ classdef ExpSet < handle
                     end
                     
                     exp_iter = 0;
+                    % If there are multiple lengths... truncate the longest
+                    smallest_len = Inf;
+                    for tcg = 1:numel(temp_cond_data)
+                        if smallest_len > length(temp_cond_data{tcg}(1,:))
+                           smallest_len = length(temp_cond_data{tcg}(1,:));
+                        end
+                    end
                     for g = 1:numel(temp_cond_data)
                         if ~isempty(temp_cond_data{g})
                             exp_iter = exp_iter + 1;
                             if size(temp_cond_data{g},1) > 1
-                                sem(exp_iter,:) = std(temp_cond_data{g})/(size(temp_cond_data{g},1)^(1/2));
-                                cond_data(exp_iter,:) = mean(resp_func(temp_cond_data{g}));
+                                sem(exp_iter,:) = std(temp_cond_data{g}(:,1:smallest_len))/(size(temp_cond_data{g}(:,1:smallest_len),1)^(1/2));
+                                cond_data(exp_iter,:) = mean(resp_func(temp_cond_data{g}(:,1:smallest_len)));
                             else
-                                sem(exp_iter,:) = zeros(1,numel(temp_cond_data{g}));
-                                cond_data(exp_iter,:) = resp_func(temp_cond_data{g});
+                                sem(exp_iter,:) = zeros(1,numel(temp_cond_data{g}(:,1:smallest_len)));
+                                cond_data(exp_iter,:) = resp_func(temp_cond_data{g}(:,1:smallest_len));
                             end
                         end
-                    end
-                    
+                    end  
                 case {'all',2}
                     % Return averaged experiments (over sym conds if present)                       
                     exp_iter = 0;
@@ -273,17 +290,31 @@ classdef ExpSet < handle
         % gets rid of my innermost for loop of several figure making
         % functions... output works directly with tfPlot.timeseries and
         % tfPlot.tuning_curve
-            
+        
+            % reshape this variable so that one cell array vector
+            % corresponds to all of the same condition across many
+            % experiments
+                        
             if ~exist('num_samples','var')
-                
-                for i = 1:numel(cond_num_mat)
-                    [cond_data{i}, sem{i}] = self.get_trial_data(cond_num_mat{i},daq_channel,computation,use_sym_conds,average_type,normalization_value);
+                for i = 1:numel(cond_num_mat{1})
+                    
+                    temp_cond_num_mat = [];
+
+                    for exp_num = 1:numel(cond_num_mat)
+                        temp_cond_num_mat{exp_num} = cond_num_mat{exp_num}{i};
+                    end
+                    
+                    [cond_data{i}, sem{i}] = self.get_trial_data(temp_cond_num_mat,daq_channel,computation,use_sym_conds,average_type,normalization_value);
+                    
+                    clear temp_cond_num_mat
                 end
-                
             else
                 
+                error('Fix before you use this! (like above)')
+                
                 for i = 1:size(cond_num_mat,1)
-                    [cond_data{i}, sem{i}] = self.get_trial_data(cond_num_mat{i},daq_channel,computation,use_sym_conds,average_type,normalization_value,num_samples);
+                    
+                    [cond_data{i}, sem{i}] = self.get_trial_data(temp_cond_num_mat{i},daq_channel,computation,use_sym_conds,average_type,normalization_value,num_samples);
                 end
                 
             end
@@ -620,12 +651,12 @@ classdef ExpSet < handle
         function cond_data = return_multi_experiment_cond_data(self,...
                 cond_num_mat,daq_channel,normalization_value,get_samples)
             cond_data = {};
-            for g = 1:numel(cond_num_mat)
+            for g = 1:numel(cond_num_mat{1})
                 exp_iter = 0;
                 for i = 1:numel(self.experiment)
                     if ~isempty(self.experiment{i})
                         exp_iter = exp_iter + 1;
-                        rep_idx = self.experiment{i}.cond_rep_index{cond_num_mat(g)};
+                        rep_idx = self.experiment{i}.cond_rep_index{cond_num_mat{i}(g)};
                         
                         for j = 1:numel(rep_idx);
                             % Check for isvalid

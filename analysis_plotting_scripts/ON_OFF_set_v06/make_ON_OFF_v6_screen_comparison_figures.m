@@ -18,10 +18,12 @@
 %
 
 % Initial variables which all scripts use
-data_location = '/Users/stephenholtz/local_experiment_copies/ON_OFF_set_v06';
+data_loc.long = '/Users/stephenholtz/local_experiment_copies/ON_OFF_set_v06';
+data_loc.short = '/Users/stephenholtz/local_experiment_copies/ON_OFF_set_v06_short';
 %data_location = '/Volumes/reiserlab/slh_fs/ON_OFF_set_v06';
 
-summary_location = '/Users/stephenholtz/local_experiment_copies/ON_OFF_set_v06';
+summary_loc.long = '/Users/stephenholtz/local_experiment_copies/ON_OFF_set_v06';
+summary_loc.short = '/Users/stephenholtz/local_experiment_copies/ON_OFF_set_v06_short';
 
 % All of the geno_names are the folder names with the data, and the
 % better_geno_names are what the folder contents will be called in the
@@ -54,7 +56,20 @@ geno_names{19} = 'dim_shift_ok371vp16ad_ortc3dbd_kitamoto_shibire'; better_geno_
 
 geno_names{20} = 'dim_retest2_gmr_48a08ad_66a01dbd_gal80ts_kir21'; better_geno_names{20} = 'L1 DIM Retest (48a08ad 66a01dbd kir)';
 
-geno_names{numel(geno_names)+1} = 'gmr_75h07ad_29g11dbd_gal80ts_kir21';       better_geno_names{numel(geno_names)+1}  = 'Junk';
+for i = 1:20
+   data_location{i} = data_loc.long;
+   summary_location{i} = summary_loc.long;
+end
+
+% new, short protocol
+geno_names{21} = 'dim_gmr_48a08ad_gal80ts_kir21'; better_geno_names{21} = 'Ctrl DIM (48a08ad kir)';
+geno_names{22} = 'shift_gmr_48a08ad_kitamoto_shibire'; better_geno_names{22} = '[34C] Ctrl (48a08ad shiTS)';
+geno_names{numel(geno_names) + 1} = 'shift_gmr_48a08ad_kitamoto_shibire'; better_geno_names{numel(geno_names)} = 'FILLER';
+
+for i = 21:numel(geno_names)
+   data_location{i} = data_loc.short;
+   summary_location{i} = summary_loc.short;
+end
 
 for plot_group = 8
 
@@ -97,45 +112,45 @@ for plot_group = 8
     % grouped_conditions struct in grouped_conds.m
     curve_names = { 'edges_rear_ON_OFF',...     1
                     'edges_center_ON_OFF',...   2
-                    'sweep_ON',...              3
-                    'sweep_OFF',...             4
+                    'sweep_ON',...              3* (in short protocol)
+                    'sweep_OFF',...             4*
                     'steady_ON_ON',...          5
                     'steady_ON_OFF',...         6
                     'steady_OFF_ON',...         7
                     'steady_OFF_OFF',...        8
-                    'lam_30_rotation',...       9
-                    'opposed_ON_OFF',...        10
-                    'expansion_ON',...          11
-                    'expansion_OFF',...         12
-                    'sawtooth_ON',...           13
-                    'sawtooth_OFF'};%           14
+                    'lam_30_rotation',...       9*
+                    'opposed_ON_OFF',...        10*
+                    'expansion_ON',...          11*
+                    'expansion_OFF',...         12*
+                    'sawtooth_ON',...           13*
+                    'sawtooth_OFF'};%           14*
     
     % Make space time diagrams in the figures
     % make_stds               = 1;
     
     % Save figures as pdfs
-    save_figures            = 1;
+    save_figures            = 0;
     
     % Make certain figures
-    edges_sweep_steady_figure   = 1;
-    tuthill_stimuli_figure      = 1;
+    edges_sweep_steady_figure   = 0;
+    tuthill_stimuli_figure      = 0;
     
     % Process initial pruned data and save summary.mat files
-    if 0
-        tfAnalysis.save_geno_group_summary_files(geno_names,summary_location,0);
+    if 1
+        tfAnalysis.save_geno_group_summary_files(geno_names,data_location,0);
     end
     
-    if 0
+    if 1
         % Use summary files to save specific subsets of data in summ_data.mat
 
         addpath(genpath('/Users/stephenholtz/matlab-utils'))
         
-        fprintf('\n\nLoading in *_summary.mat files from %s.',summary_location)
+        fprintf('\n\nLoading in *_summary.mat files from %s.',summary_location{1})
         
         if ~exist('geno_data','var')
             geno_data = tfAnalysis.load_geno_group_summary_files(geno_names,summary_location);
         end
-
+        
         % Calculate normalization value per genotype
         for i = numel(geno_names)
            mean_turning_resps(i) = geno_data{i}.exp_set_turning_resp; %#ok<*SAGROW>
@@ -156,7 +171,13 @@ for plot_group = 8
 
             fprintf('%d,',i)
             
-            for condition_set_number = 1:numel(curve_names)
+            if i < 21 || i == numel(geno_names)
+                curve_inds_to_use = 1:numel(curve_names);
+            else
+                curve_inds_to_use = [3 4 9:14];
+            end
+            
+            for condition_set_number = curve_inds_to_use
 
                 % Gets CW or CCW or flipped and averaged
 
@@ -238,24 +259,24 @@ for plot_group = 8
 
                     summ_data.B = B;
                     summ_data.A = A;
-
+                    
                 end
             end
         end
-
+        
         fprintf('\n ...Saving summarized data.\n')
         
         save(fullfile(summary_location,'summ_data'),'summ_data')
-
+        
         clear curve_name condition_set_number i avg variance avg_ts variance_ts
-
+        
     end
-
+    
     % Set up colormaps, variables etc.,
-
+    
     % Make a black version of the figure for nice contrast if wanted
     black_figure = 0;
-
+    
     if black_figure
         figure_color = [0 0 0];
         font_color = [1 1 1];
@@ -443,7 +464,6 @@ for easy_code_collapse = 1
                     N(graph_iter)                 = summ_data.(curve_name).raw(u).N;
                     graph_iter = graph_iter + 1;
                 end
-
 
                 graph.zero_line_color = zero_line_color;
 

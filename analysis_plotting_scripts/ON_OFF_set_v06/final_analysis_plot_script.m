@@ -3,6 +3,10 @@
 % conditions. The summary file generated from this should have all of the
 % data necessary for making figures.
 
+% I do not recommend trying to use this as example code.
+
+deg = char(176);
+
 addpath(genpath('/Users/stephenholtz/matlab-utils'))
 
 % Locations for all of the experiment groupings
@@ -13,25 +17,25 @@ summary_location    = '/Users/stephenholtz/local_experiment_copies/ON_OFF_set_v0
 % [34C] ShiTS
 num = 1; geno_folder_names{num} = 'shift_gmr_48a08ad_66a01dbd_kitamoto_shibire';       colormap_ind{num} = 1;    proper_geno_names{num} = 'L1 (48a08AD;66A01DBD)/ShiTS';
 num = 2; geno_folder_names{num} = 'shift_gmr_48a08ad_kitamoto_shibire';                colormap_ind{num} = 2;    proper_geno_names{num} = 'Ctrl (48a08AD;+)/ShiTS';
-num = 3; geno_folder_names{num} = 'shift_ok371_vp16_ad_ort_c1_3_dbd_kitamoto_shibire'; colormap_ind{num} = 3;    proper_geno_names{num} = 'L1 (ok371vp16AD;ortC1-3DBD)/ShiTS';
-num = 4; geno_folder_names{num} = 'shift_L1_c202a_kitamoto_shibire';                   colormap_ind{num} = 4;    proper_geno_names{num} = 'L1 (c202a)/ShiTS';
-num = 5; geno_folder_names{num} = 'shift_iso_d1_kitamoto_shibire';                     colormap_ind{num} = 5;    proper_geno_names{num} = 'Ctrl (Iso-D1)/ShiTS';
+num = 3; geno_folder_names{num} = 'shift_ok371_vp16_ad_ort_c1_3_dbd_kitamoto_shibire'; colormap_ind{num} = 1;    proper_geno_names{num} = 'L1 (ok371vp16AD;ortC1-3DBD)/ShiTS';
+num = 4; geno_folder_names{num} = 'shift_L1_c202a_kitamoto_shibire';                   colormap_ind{num} = 2;    proper_geno_names{num} = 'L1 (c202a)/ShiTS';
+num = 5; geno_folder_names{num} = 'shift_iso_d1_kitamoto_shibire';                     colormap_ind{num} = 3;    proper_geno_names{num} = 'Ctrl (Iso-D1)/ShiTS';
 
 % [34C] ShiTS DIM
-num = 6; geno_folder_names{num} = 'dim_shift_gmr_48a08ad_66a01dbd_kitamoto_shibire';   colormap_ind{num} = 8;    proper_geno_names{num} = '(low contrast) L1 (48a08AD;66A01DBD)/ShiTS';
-num = 7; geno_folder_names{num} = 'dim_shift_gmr_48a08ad_kitamoto_shibire';            colormap_ind{num} = 9;    proper_geno_names{num} = '(low contrast) Ctrl (48a08AD;+)/ShiTS';
-num = 8; geno_folder_names{num} = 'dim_shift_ok371vp16ad_ortc3dbd_kitamoto_shibire';   colormap_ind{num} = 10;    proper_geno_names{num} = '(low contrast) L1 (ok371vp16AD;ortC1-3DBD)/ShiTS';
-num = 9; geno_folder_names{num} = 'dim_shift_L1_c202a_kitamoto_shibire';               colormap_ind{num} = 11;    proper_geno_names{num} = '(low contrast) L1 (c202a)/ShiTS';
-num = 10; geno_folder_names{num} = 'dim_shift_iso_d1_kitamoto_shibire';                colormap_ind{num} = 12;    proper_geno_names{num} = '(low contrast) Ctrl (Iso-D1)/ShiTS';
+num = 6; geno_folder_names{num} = 'dim_shift_gmr_48a08ad_66a01dbd_kitamoto_shibire';   colormap_ind{num} = 4;    proper_geno_names{num} = '(low cont) L1 (48a08AD;66A01DBD)/ShiTS';
+num = 7; geno_folder_names{num} = 'dim_shift_gmr_48a08ad_kitamoto_shibire';            colormap_ind{num} = 5;    proper_geno_names{num} = '(low cont) Ctrl (48a08AD;+)/ShiTS';
+num = 8; geno_folder_names{num} = 'dim_shift_ok371vp16ad_ortc3dbd_kitamoto_shibire';   colormap_ind{num} = 4;    proper_geno_names{num} = '(low cont) L1 (ok371vp16AD;ortC1-3DBD)/ShiTS';
+num = 9; geno_folder_names{num} = 'dim_shift_L1_c202a_kitamoto_shibire';               colormap_ind{num} = 5;    proper_geno_names{num} = '(low cont) L1 (c202a)/ShiTS';
+num = 10; geno_folder_names{num} = 'dim_shift_iso_d1_kitamoto_shibire';                colormap_ind{num} = 6;    proper_geno_names{num} = '(low cont) Ctrl (Iso-D1)/ShiTS';
 
 % [25C] Kir2.1
-num = 11; geno_folder_names{num} = 'gmr_48a08ad_66a01dbd_gal80ts_kir21';               colormap_ind{num} = 6;    proper_geno_names{num} = 'L1 (48a08AD;66A01DBD)/Kir2.1';
-num = 12; geno_folder_names{num} = 'gmr_48a08ad_gal80ts_kir21';                        colormap_ind{num} = 7;    proper_geno_names{num} = 'Ctrl (48a08AD;+)/Kir2.1';
+num = 11; geno_folder_names{num} = 'gmr_48a08ad_66a01dbd_gal80ts_kir21';               colormap_ind{num} = 1;    proper_geno_names{num} = 'L1 (48a08AD;66A01DBD)/Kir2.1';
+num = 12; geno_folder_names{num} = 'gmr_48a08ad_gal80ts_kir21';                        colormap_ind{num} = 2;    proper_geno_names{num} = 'Ctrl (48a08AD;+)/Kir2.1';
 
 % [25C] Kir2.1 DIM
-num = 13; geno_folder_names{num} = 'dim_combined_gmr_48a08ad_66a01dbd_gal80ts_kir21';  colormap_ind{num} = 13;    proper_geno_names{num} = '(low contrast) L1 (48a08AD;66A01DBD)/Kir2.1';
-num = 14; geno_folder_names{num} = 'dim_gmr_48a08ad_gal80ts_kir21';                    colormap_ind{num} = 14;    proper_geno_names{num} = '(low contrast) Ctrl (48a08AD;+)/Kir2.1';
-num = 15; geno_folder_names{num} = 'dim_retest_gmr_48a08ad_66a01dbd_gal80ts_kir21';    colormap_ind{num} = 13;    proper_geno_names{num} = '(low contrast) L1 (48a08AD;66A01DBD)/Kir2.1';
+num = 13; geno_folder_names{num} = 'dim_combined_gmr_48a08ad_66a01dbd_gal80ts_kir21';  colormap_ind{num} = 4;    proper_geno_names{num} = '(low cont) L1 (48a08AD;66A01DBD)/Kir2.1';
+num = 14; geno_folder_names{num} = 'dim_gmr_48a08ad_gal80ts_kir21';                    colormap_ind{num} = 5;    proper_geno_names{num} = '(low cont) Ctrl (48a08AD;+)/Kir2.1';
+num = 15; geno_folder_names{num} = 'dim_retest_gmr_48a08ad_66a01dbd_gal80ts_kir21';    colormap_ind{num} = 4;    proper_geno_names{num} = '(low cont) L1 (48a08AD;66A01DBD)/Kir2.1';
 
 % debugging folder
 %geno_folder_names{1} = 'debug_folder';       proper_geno_names{1} = 'debug...';
@@ -58,11 +62,12 @@ curve_names = { 'edges_rear_ON_OFF',...     1
 save_figures                    = 1;
 
 % Make certain figures
-optomotor_tune_figure           = 1;
-sawtooth_expansion_tune_figure  = 1;
+combined_figure                 = 1;
 
-optomotor_ts_figure             = 1;
-sawtooth_expansion_ts_figure    = 1;
+optomotor_tune_figure           = 0;
+sawtooth_expansion_tune_figure  = 0;
+optomotor_ts_figure             = 0;
+sawtooth_expansion_ts_figure    = 0;
 
 % Make summary data files within each folder (if needed)
 if 0
@@ -80,13 +85,15 @@ if 0
         geno_data = tfAnalysis.load_geno_group_summary_files(geno_folder_names,data_location);
     end
     
-    % Ca(low contrast)ulate normalization value per genotype
+    % Calculate normalization value per genotype
     for i = numel(geno_folder_names)
-       mean_turning_resps(i) = geno_data{i}.exp_set_turning_resp; %#ok<*SAGROW>
+       mean_turning_resps(i) = 1;%geno_data{i}.exp_set_turning_resp; %#ok<*SAGROW>
     end
-
+    
+    [B,A] = butter(2,.0695,'low');
+    
     geno_norm_values = mean_turning_resps/mean(mean_turning_resps);
-
+    
     % These are set up so the indecies work for both regular and 'short'
     % versions of the experiment
     conditions = ON_OFF_set_v06_short; %%%%% TODO
@@ -101,7 +108,7 @@ if 0
             
             % Gets CW or CCW or flipped and averaged
             for sym = 3
-
+                
                 if sym == 1
                     symmetry = '_CW';
                     sym_inds = 1;
@@ -117,11 +124,11 @@ if 0
                 end
                 
                 curve_name = curve_names{condition_set_number};
-
+                
                 summ_data.names{condition_set_number} = curve_name;
-
+                
                 %summ_data.(curve_name).raw(i).grouped_conditions = geno_data{i}.grouped_conditions(condition_set_number);
-
+                
                 % These condition numbers need to be made on a per
                 % experiment basis now...
                 for exp_num = 1:numel(geno_data{i}.experiment)
@@ -139,52 +146,252 @@ if 0
                 
                 summ_data.(curve_name).(['raw' symmetry])(i).avg_lmr = a;
                 summ_data.(curve_name).(['raw' symmetry])(i).sem_lmr = v;
-
+                
                 [a, v] = geno_data{i}.get_trial_data_set(condition_numbers,'lmr','none',flip,'all',geno_norm_values(i));
-
-                summ_data.(curve_name).(['raw' symmetry])(i).avg_lmr_ts = a;
-                summ_data.(curve_name).(['raw' symmetry])(i).sem_lmr_ts = v;
-
+                
+                for c = 1:size(a,2)
+                for r = 1:size(a,1)
+                for t = 1:size(a{r,c},1)
+                    temp_a{r,c}(t,:) = filter(B,A,a{r,c}(t,:));
+                    temp_v{r,c}(t,:) = filter(B,A,v{r,c}(t,:));
+                end
+                end
+                end
+                
+                summ_data.(curve_name).(['raw' symmetry])(i).avg_lmr_ts = temp_a;
+                summ_data.(curve_name).(['raw' symmetry])(i).sem_lmr_ts = temp_v;
+                clear temp_*
+                
                 [a, v] = geno_data{i}.get_trial_data_set(condition_numbers,'lmr','none',flip,'exp',geno_norm_values(i));
-
-                summ_data.(curve_name).(['raw' symmetry])(i).avg_per_fly_lmr_ts = a;
-                summ_data.(curve_name).(['raw' symmetry])(i).sem_per_fly_lmr_ts = v;
-
+                
+                for c = 1:size(a,2)
+                for r = 1:size(a,1)
+                for t = 1:size(a{r,c},1)
+                    temp_a{r,c}(t,:) = filter(B,A,a{r,c}(t,:));
+                    temp_v{r,c}(t,:) = filter(B,A,v{r,c}(t,:));
+                end
+                end
+                end
+                
+                summ_data.(curve_name).(['raw' symmetry])(i).avg_per_fly_lmr_ts = temp_a;
+                summ_data.(curve_name).(['raw' symmetry])(i).sem_per_fly_lmr_ts = temp_v;
+                clear temp_*
+                
                 [a, ~] = geno_data{i}.get_trial_data_set(condition_numbers,'lmr','none',flip,'none',geno_norm_values(i));
-
-                summ_data.(curve_name).(['raw' symmetry])(i).all_lmr_ts = a;
-
+                
+                for c = 1:size(a,2)
+                for r = 1:size(a,1)
+                for t = 1:size(a{r,c},1)
+                    temp_a{r,c}(t,:) = filter(B,A,a{r,c}(t,:));
+                end
+                end
+                end
+                
+                summ_data.(curve_name).(['raw' symmetry])(i).all_lmr_ts = temp_a;
+                clear temp_*
+                
                 [a, v] = geno_data{i}.get_trial_data_set(condition_numbers,'x_pos','none','no','all',geno_norm_values(i));
-
+                
                 summ_data.(curve_name).(['raw' symmetry])(i).avg_x_pos_ts = a;
                 summ_data.(curve_name).(['raw' symmetry])(i).sem_x_pos_ts = v;
-
+                
                 [a, v] = geno_data{i}.get_trial_data_set(condition_numbers,'x_pos','none','no','exp',geno_norm_values(i));
-
+                
                 summ_data.(curve_name).(['raw' symmetry])(i).avg_per_fly_x_pos_ts = a;
                 summ_data.(curve_name).(['raw' symmetry])(i).sem_per_fly_x_pos_ts = v;
-
+                
                 [a, ~] = geno_data{i}.get_trial_data_set(condition_numbers,'x_pos','none','no','none',geno_norm_values(i));
-
+                
                 summ_data.(curve_name).raw(i).all_x_pos_ts = a;
-
+                
                 summ_data.(curve_name).raw(i).N = numel(geno_data{i}.experiment);
                 
                 clear condition_numbers
-
+                
             end
         end
     end
     
     fprintf('\n ...Saving summarized data.\n')
-
+    
     save(fullfile(summary_location,'summ_data'),'summ_data')
     
 end
 
-% Make the figures
+% Load in the data
+if ~exist('summ_data','var')
+    load(fullfile(summary_location,'summ_data'));
+end
 
-for plotting_group = 3
+% Figure out when the ON rotation starts turning and doesn't turn back
+% (make an NaN if the fly turns back..)
+curve_name = 'sawtooth_ON';
+
+
+for geno_ind = 1:numel(geno_folder_names)
+
+    curr_ts_set = cell2mat(summ_data.(curve_name).raw(geno_ind).avg_per_fly_lmr_ts);
+    fly_thresh_pts = [];
+    
+    for exp = 1:size(curr_ts_set,1)
+
+        % get rid of the noisy first second and normalize for easy viewing
+        % while debugging
+        
+%         curr_ts = curr_ts_set(exp,1001:end);
+%         curr_ts = ((curr_ts)-min(curr_ts));
+%         curr_ts = (curr_ts)/max(curr_ts);
+% 
+%         thresh = .5;
+%         
+%         max_resp = sum(curr_ts);
+%         
+%         for i = 1:numel(curr_ts)
+%             if sum(curr_ts(1:i)) > thresh*max_resp
+%                 thresh_pt = i;
+%                 break
+%             end
+%         end
+%         
+%         fly_thresh_pts(exp) = thresh_pt+1000;
+        
+        curr_ts = curr_ts_set(exp,1001:end);
+        curr_ts = ((curr_ts)-min(curr_ts));
+        curr_ts = (curr_ts)/max(curr_ts);
+
+        thresh = .5;
+
+        curr_ts(curr_ts < thresh) = 0;
+
+        thresh_pt = NaN;
+
+        for i = 1:numel(curr_ts)
+            if curr_ts(i) > 0 && isnan(thresh_pt)
+                thresh_pt = i;
+            elseif curr_ts(i) == 0
+                thresh_pt = NaN;
+            else
+            end
+        end
+        
+        if ~isnan(thresh_pt)
+            % add back in the time
+            fly_thresh_pts(exp) = thresh_pt + 1000;
+            
+            clf
+            plot(curr_ts_set(exp,:)); hold all
+            plot([zeros(1,1000) curr_ts],'--')
+            plot(fly_thresh_pts(exp),curr_ts_set(exp,fly_thresh_pts(exp)),'.')
+            title(proper_geno_names{geno_ind})
+            
+        else
+            fly_thresh_pts(exp) = thresh_pt;
+            
+            clf
+            plot(curr_ts_set(exp,:)); hold all
+            plot([zeros(1,1000) curr_ts],'--')
+            %plot(fly_thresh_pts(exp),curr_ts_set(exp,fly_thresh_pts(exp)),'.')
+            title(proper_geno_names{geno_ind})
+
+        end
+            %pause()        
+            close all
+    end
+    
+    summ_data.sawtooth_ON.raw(geno_ind).all_turning_thresh_times = fly_thresh_pts;
+    summ_data.sawtooth_ON.raw(geno_ind).mean_turning_thresh_times = nanmean(fly_thresh_pts);
+    summ_data.sawtooth_ON.raw(geno_ind).sem_turning_thresh_times = nanstd(fly_thresh_pts)./sqrt(sum(~isnan(fly_thresh_pts)));
+    clear fly_thresh_pts
+    
+end
+
+
+
+% Do ON-expansion analysis as well (shift to the first 3 bumps and then see
+% what the response peaks are within then)
+
+% all of the inds that correspond to a step in the stimulus (ms), based
+% on the median responses... seems to align well in 95% of the cases
+% where I actually have x_position data...
+expansion_inds = [25 363 701 1037 1375 1712 2050 2387 2726];
+
+
+for geno_ind = 1:numel(geno_folder_names)
+
+    curr_ts_set = cell2mat(summ_data.(curve_name).raw(geno_ind).avg_per_fly_lmr_ts);
+
+    for exp = 1:size(curr_ts_set,1)
+
+        % I will only use the first few bumps in the respones
+        aligned_responses = [];
+        
+        aligned_responses(1,:) = curr_ts_set(exp,expansion_inds(1):(expansion_inds(2)-1));
+        aligned_responses(2,:) = curr_ts_set(exp,expansion_inds(2):(expansion_inds(3)-1));
+        aligned_responses(3,:) = curr_ts_set(exp,expansion_inds(3):(expansion_inds(4)-1));
+        
+        mean_aligned_responses(exp,:) = mean(aligned_responses);
+        
+        clear aligned_responses
+    end
+    
+    summ_data.expansion_ON.raw(geno_ind).mean_aligned_subresponse_ts = mean(mean_aligned_responses);
+    summ_data.expansion_ON.raw(geno_ind).sem_aligned_subresponse_ts = std(mean_aligned_responses)/sqrt(size(mean_aligned_responses,1));
+    
+    summ_data.expansion_ON.raw(geno_ind).mean_aligned_subresponse = mean(summ_data.expansion_ON.raw(geno_ind).mean_aligned_subresponse_ts);
+    summ_data.expansion_ON.raw(geno_ind).sem_aligned_subresponse = std(summ_data.expansion_ON.raw(geno_ind).mean_aligned_subresponse_ts)/sqrt(size(summ_data.expansion_ON.raw(geno_ind).mean_aligned_subresponse_ts,1));
+
+    clear mean_aligned_responses 
+end
+
+% Do stats on the data
+if 0
+% hard coded comparisons... oh well
+comparison_groups{1} = [11 12]; comp_kind{1} = 'ctrl';
+comparison_groups{2} = [11 13]; comp_kind{2} = 'dim';
+comparison_groups{3} = [13 14]; comp_kind{3} = 'ctrl';
+comparison_groups{4} = [1 2];   comp_kind{4} = 'ctrl';
+comparison_groups{5} = [1 6];   comp_kind{5} = 'dim';
+comparison_groups{6} = [6 7];   comp_kind{6} = 'ctrl';
+comparison_groups{7} = [3 5];   comp_kind{7} = 'ctrl';
+comparison_groups{8} = [3 8];   comp_kind{8} = 'dim';
+comparison_groups{9} = [4 5];   comp_kind{9} = 'ctrl';
+comparison_groups{10} = [4 9];  comp_kind{10} = 'dim';
+comparison_groups{11} = [8 10]; comp_kind{11} = 'ctrl';
+comparison_groups{12} = [9 10]; comp_kind{12} = 'ctrl';
+
+for curve_name_ind = [3 4 9 10 11 12 13 14]
+    
+    for i = 1:numel(comparison_groups)
+        
+        for k = 1:numel(summ_data.(curve_names{curve_name_ind}).raw(comparison_groups{i}(1)).avg_per_fly_lmr_ts)
+            
+            s1 = summ_data.(curve_names{curve_name_ind}).raw(comparison_groups{i}(1)).avg_per_fly_lmr_ts{k};
+            s2 = summ_data.(curve_names{curve_name_ind}).raw(comparison_groups{i}(2)).avg_per_fly_lmr_ts{k};
+            
+            [h, p] = ttest2(mean(s1,2),mean(s2,2));
+            
+            summ_data.(curve_names{curve_name_ind}).stats(i).h{k} = h;
+            summ_data.(curve_names{curve_name_ind}).stats(i).p{k} = p;
+            summ_data.(curve_names{curve_name_ind}).stats(i).comp_kind = comp_kind{i};
+            summ_data.(curve_names{curve_name_ind}).stats(i).comp_names = [proper_geno_names{comparison_groups{i}(1)} proper_geno_names{comparison_groups{i}(2)}];
+            
+            [h, p] = ttest2(mean(s2,2),mean(s1,1));
+            
+            summ_data.(curve_names{curve_name_ind}).stats2(i).h{k} = h;
+            summ_data.(curve_names{curve_name_ind}).stats2(i).p{k} = p;
+            summ_data.(curve_names{curve_name_ind}).stats2(i).comp_kind = comp_kind{i};
+            summ_data.(curve_names{curve_name_ind}).stats2(i).comp_names = [proper_geno_names{comparison_groups{i}(2)} proper_geno_names{comparison_groups{i}(1)}];
+            
+        end
+    end
+end
+
+% x=summ_data.lam_30_rotation.raw(12).avg_per_fly_lmr_ts{2};
+% y=summ_data.lam_30_rotation.raw(13).avg_per_fly_lmr_ts{2};
+% [h,p]=ttest2(mean(x,2),mean(y,2));
+end
+% Make the figures
+for plotting_group = [6 7 8]
     
     if plotting_group == 1
         % ShiTS regular
@@ -193,7 +400,7 @@ for plotting_group = 3
         graph_name = 'ShiTS';
     elseif plotting_group == 2
         % ShiTS dim
-        geno_inds_to_plot = [6:10];
+        geno_inds_to_plot = 6:10;
         isdim = 1;
         graph_name = 'ShiTS Dim';
     elseif plotting_group == 3
@@ -211,8 +418,26 @@ for plotting_group = 3
         geno_inds_to_plot = [2 7];
         isdim = 2;
         graph_name = 'Kir Reg + Dim';
+    elseif plotting_group == 6
+        
+        geno_inds_to_plot = [1 2 6 7];
+        isdim = 2;
+        graph_name = {['New L1 Driver > Shibire^T^S (34C' deg '), Multiple Closed-Loop Fixation Contrasts']};
+        fig_file_name = 'new_L1_drivers_shibire';
+    elseif plotting_group == 7
+        
+        geno_inds_to_plot = [3 4 5 8 9 10];
+        isdim = 2;
+        graph_name = {['Literature L1 Drivers > Shibire^T^S (34C' deg '),  Multiple Closed-Loop Fixation Contrasts']};
+        fig_file_name = 'lit_L1_drivers_shibire';
+    elseif plotting_group == 8
+        
+        geno_inds_to_plot = [11 12 13 14];
+        isdim = 2;
+        graph_name = {['New L1 Drivers > Kir2.1 (24C' deg '),  Multiple Closed-Loop Fixation Contrasts']};
+        fig_file_name = 'new_L1_drivers_kir';
     end
-
+    
     figure_color = [1 1 1];
     font_color = [0 0 0];
     axis_color = figure_color;
@@ -220,17 +445,20 @@ for plotting_group = 3
     xy_color = [0 0 0];
     grid = 'off';
     fig_name_prefix = '';
+    font_size_1 = 7;
+    font_size_2 = 8;
+    
+    dim = .4;
 
-    % Should only be plotting 7
-    dim = .45;
-    my_bright_colormap  = {[235 225 2]/255,[30 144 255]/255,[255 5 0]/255,[238 0 238]/255,[0 238 0]/255,[255 44 44]/255,[0 0 210]/255};
-    my_dim_colormap     = {dim*[235 225 2]/255,dim*[30 144 255]/255,dim*[255 5 0]/255,dim*[238 0 238]/255,dim*[0 238 0]/255,dim*[255 44 44]/255,dim*[0 0 210]/255};
+%     my_bright_colormap  = {[235 225 2]/255,[30 144 255]/255,[255 5 0]/255,[238 0 238]/255,[0 238 0]/255,[255 44 44]/255,[0 0 210]/255};
+%     my_dim_colormap     = {dim*[235 225 2]/255,dim*[30 144 255]/255,dim*[255 5 0]/255,dim*[238 0 238]/255,dim*[0 238 0]/255,dim*[255 44 44]/255,dim*[0 0 210]/255};
+% 
+%     my_colormap = [my_bright_colormap my_dim_colormap];
+
+    my_bright_colormap= {[40 154 255]/255,[248 0 248]/255,[0 238 0]/255};
+    my_dim_colormap     = {dim*[40 154 255]/255,dim*[248 0 248]/255,dim*[0 238 0]/255};
 
     my_colormap = [my_bright_colormap my_dim_colormap];
-    
-    if ~exist('summ_data','var')
-        load(fullfile(summary_location,'summ_data'));
-    end
 
     if optomotor_tune_figure
         
@@ -253,11 +481,11 @@ for plotting_group = 3
         end
         
         graph.zero_line_color = [.27 .27 .27];
-        
+        graph.zero_line = 0;
         makeErrorbarTuningCurve(graph);
 
         title({curve_name,graph_name},'interpreter','none')
-        ylabel('Mean L-R WBA [V]','color',font_color)
+        ylabel({'Mean L-R',' WBA (V)'},'color',font_color)
         xlabel('Temporal Frequency','color',font_color)        
         
         legend_hand = add_legend_with_N(names_plotted,n_for_names_plotted,'NorthEastOutside');
@@ -265,7 +493,7 @@ for plotting_group = 3
         
         clear graph names_plotted n_for_names_plotted
     end
-
+    
     if optomotor_ts_figure
         
         curve_name = 'lam_30_rotation';
@@ -296,7 +524,7 @@ for plotting_group = 3
             % Just make a tuning curve with the correct color
             for i = 1:numel(geno_inds_to_plot)
                 graph.line{i} 	= (summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_lmr_ts{speed});
-                graph.shade{i}  = (summ_data.(curve_name).raw(geno_inds_to_plot(i)).sem_lmr_ts{speed});
+                %graph.shade{i}  = (summ_data.(curve_name).raw(geno_inds_to_plot(i)).sem_lmr_ts{speed});
 
                 graph.color{i}  = my_colormap{colormap_ind{geno_inds_to_plot(i)}};
 
@@ -310,15 +538,15 @@ for plotting_group = 3
             makeErrorShadedTimeseries(graph);
 
             title({curve_name,graph_name},'interpreter','none')
-            ylabel('Mean L-R WBA [V]','color',font_color)
+            ylabel({'Mean L-R',' WBA (V)'},'color',font_color)
             xlabel('Temporal Frequency','color',font_color)        
-
+            graph.zero_line = 1;
             if plot_iter == 3
                 legend_hand = add_legend_with_N(names_plotted,n_for_names_plotted,'NorthEastOutside');
                 %set(legend_hand,'location','Best')
             end
             
-            axis([0 2500 -3.5 3.5])
+            axis([0 2500 -1.5 3.5])
             
             clear graph names_plotted n_for_names_plotted
 
@@ -326,7 +554,7 @@ for plotting_group = 3
     end
     
     if sawtooth_expansion_tune_figure
-
+        
         % Set up subplot dimensions
         nHigh       = 1;
         nWide       = 5;
@@ -355,7 +583,7 @@ for plotting_group = 3
                 % Just make a tuning curve with the correct color
                 for i = 1:numel(geno_inds_to_plot)
                     graph.line{i}       = cell2mat(summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_lmr);
-                    graph.shade{i}  = cell2mat(summ_data.(curve_name).raw(geno_inds_to_plot(i)).sem_lmr);
+                    graph.shade{i}      = cell2mat(summ_data.(curve_name).raw(geno_inds_to_plot(i)).sem_lmr);
                     
                     graph.color{i}     = my_colormap{colormap_ind{geno_inds_to_plot(i)}};
 
@@ -363,13 +591,13 @@ for plotting_group = 3
                     n_for_names_plotted(i) = summ_data.(curve_name).raw(geno_inds_to_plot(i)).N;
 
                 end
-
-                graph.zero_line_color = [.27 .27 .27];
                 
-                makeErrorbarTuningCurve(graph);
+                graph.zero_line_color = [.27 .27 .27];
+                graph.zero_line = 0;
+                makeErrorbarTuningCurve(graph,.5+(1:numel(geno_inds_to_plot))/10);
 
-                title({curve_name,graph_name},'interpreter','none')
-                ylabel('Mean L-R WBA [V]','color',font_color)
+                %title({curve_name,graph_name},'interpreter','none')
+                ylabel({'Mean L-R',' WBA (V)'},'color',font_color)
                 xlabel('Temporal Frequency','color',font_color)        
                 axis([0 2 0 2])
 
@@ -411,22 +639,22 @@ for plotting_group = 3
                 % Just make a tuning curve with the correct color
                 for i = 1:numel(geno_inds_to_plot)
                     graph.line{i}       = cell2mat(summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_lmr_ts);
-                    graph.shade{i}  = cell2mat(summ_data.(curve_name).raw(geno_inds_to_plot(i)).sem_lmr_ts);
+                    %graph.shade{i}  = cell2mat(summ_data.(curve_name).raw(geno_inds_to_plot(i)).sem_lmr_ts);
                     
                     graph.color{i}     = my_colormap{colormap_ind{geno_inds_to_plot(i)}};
-
+                    
                     names_plotted{i} = proper_geno_names{geno_inds_to_plot(i)};
                     n_for_names_plotted(i) = summ_data.(curve_name).raw(geno_inds_to_plot(i)).N;
 
                 end
                 
                 graph.zero_line_color = [.27 .27 .27];
-                
+                graph.zero_line = 1;
                 makeErrorShadedTimeseries(graph);
                 
                 title({curve_name,graph_name},'interpreter','none')
-                ylabel('Mean L-R WBA [V]','color',font_color)
-                axis([0 3000 -3 3])
+                ylabel({'Mean L-R',' WBA (V)'},'color',font_color)
+                axis([0 3000 -1 3])
                 
                 if plot_iter == 4
                     [legend_hand] = add_legend_with_N(names_plotted,n_for_names_plotted,'NorthEastOutside');
@@ -437,5 +665,410 @@ for plotting_group = 3
         end
     end
     
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    nudge = @(pos,x_dir,y_dir)([pos(1)+x_dir pos(2)+y_dir pos(3) pos(4)]);
+    ff = @(hand)(ff(hand));
+    combined_figure_handle(plotting_group) = figure( 'name' ,'Summary Figure','NumberTitle','off',...
+                                    'Color',figure_color,'Position',[50 50 590 285],...
+                                    'PaperOrientation','portrait');    
+    
+    % Set up subplot dimensions
+    nHigh       = 3;
+    nWide       = 4;
+    widthGap    = .0625;
+    heightGap   = .1;
+    widthOffset = .1;
+    heightOffset= .085;
+    
+    sp_positions_1 = getFullPageSubplotPositions(nWide,nHigh,widthGap,heightGap,widthOffset,heightOffset);
+    
+    % Set up subplot dimensions
+    nHigh       = 3;
+    nWide       = 4;
+    widthGap    = .0725;
+    heightGap   = .1;
+    widthOffset = .16;
+    heightOffset= .085;
+
+    sp_positions_2 = getFullPageSubplotPositions(nWide,nHigh,widthGap,heightGap,widthOffset,heightOffset);
+        
+    % Set up subplot dimensions
+    nHigh       = 3;
+    nWide       = 7;
+    widthGap    = .05;
+    heightGap   = .1;
+    widthOffset = .18;
+    heightOffset= .085;
+
+    sp_positions_mid_bot = getFullPageSubplotPositions(nWide,nHigh,widthGap,heightGap,widthOffset,heightOffset);
+
+    % Set up subplot dimensions
+    nHigh       = 3;
+    nWide       = 5;
+    widthGap    = .1;
+    heightGap   = .1;
+    widthOffset = -.412;
+    heightOffset= .085;
+
+    sp_positions_right = getFullPageSubplotPositions(nWide,nHigh,widthGap,heightGap,widthOffset,heightOffset);
+    
+    text_offset = .03;
+    
+    handles_iter = 1;
+    
+    clear graph names_plotted n_for_names_plotted
+    
+    annotation('Textbox','Position',[text_offset+.075 .775 .8 .167],'String',graph_name,'Edgecolor','none','fontsize',font_size_2)
+    
+    % Plot the optomotor stimuli timeseries
+        curve_name = 'lam_30_rotation';
+
+        deg = char(176);
+        annotation('Textbox','Position',[text_offset sp_positions_1{1,1}(2:4)],'String',{'Rotation',['  \lambda = 30' deg]},'Edgecolor','none','fontsize',font_size_1)
+    
+        for speed = 1:3
+
+                subplot('Position',sp_positions_1{1,speed})
+                if speed == 2 || speed == 3
+                    subplot('Position',nudge(sp_positions_1{1,speed},-.025,0))
+                elseif  speed == 1
+                    subplot('Position',nudge(sp_positions_1{1,speed},-.015,0))
+                end
+
+                % Just make a tuning curve with the correct color
+                for i = 1:numel(geno_inds_to_plot)
+                    graph.line{i} 	= (summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_lmr_ts{speed});
+                    %graph.shade{i}  = (summ_data.(curve_name).raw(geno_inds_to_plot(i)).sem_lmr_ts{speed});
+
+                    graph.color{i}  = my_colormap{colormap_ind{geno_inds_to_plot(i)}};
+
+                    names_plotted{i} = proper_geno_names{geno_inds_to_plot(i)};
+                    n_for_names_plotted(i) = summ_data.(curve_name).raw(geno_inds_to_plot(i)).N;
+                    
+                end
+                
+                graph.zero_line_color = [.27 .27 .27];
+                
+                makeErrorShadedTimeseries(graph);
+                
+                axis([0 2250 -.5 3.99])
+                
+                if speed == 1
+                    ylabel('L-R WBA (V)','color',font_color,'fontsize',font_size_1)
+                    %xlabel('Time (ms)','color',font_color,'fontsize',font_size_1)
+                    title('F_t = .5 Hz','fontsize',font_size_1)
+                    
+                    set(gca,'XTick',[0 2250],'XTickLabel',{'0','2.25(s)'},'fontsize',font_size_1)
+                elseif speed == 2
+                    title('F_t = 1.5 Hz','fontsize',font_size_1)
+                    set(gca,'XTick',[0 2250])
+                    axis off
+                elseif speed == 3
+                    title('F_t = 9 Hz','fontsize',font_size_1)
+                    set(gca,'XTick',[0 2250])
+                    axis off
+                end
+                
+        end
+        
+        clear graph names_plotted n_for_names_plotted
+        
+    % Plot the optomotor stimuli tuning curve
+        
+        subplot('Position',nudge(sp_positions_2{1,4},-.05,0))
+    
+        curve_name = 'lam_30_rotation';
+        graph.zero_line = 0;
+        graph.zero_line_color = [.27 .27 .27];
+        
+        plot(-10:10,zeros(21,1),'Color',graph.zero_line_color,'LineWidth',1)
+        hold on
+        
+        % Just make a tuning curve with the correct color
+        for i = 1:numel(geno_inds_to_plot)
+            graph.line{i}   = cell2mat(summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_lmr);
+            graph.shade{i}  = cell2mat(summ_data.(curve_name).raw(geno_inds_to_plot(i)).sem_lmr);
+            
+            graph.color{i}  = my_colormap{colormap_ind{geno_inds_to_plot(i)}};
+            
+            names_plotted{i} = proper_geno_names{geno_inds_to_plot(i)};
+            n_for_names_plotted(i) = summ_data.(curve_name).raw(geno_inds_to_plot(i)).N;
+            
+        end
+        
+        makeErrorbarTuningCurve(graph);
+        
+        axis([.8 3.2 -.5 3.95])
+        
+        box off
+        set(gca,'YAxisLocation','right')
+        set(gca,'XTickLabel',{'.5','1.5','9'},'fontsize',font_size_1)
+        ylabel({'Mean L-R',' WBA (V)'},'color',font_color,'fontsize',font_size_1)
+        xlabel('F_t (Hz)','color',font_color,'fontsize',font_size_1)        
+        fix_errorbar_tee_width(3.85)
+                
+        clear graph names_plotted n_for_names_plotted p_for_plotted
+        
+    % Plot the ON Sawtooth timeseries
+        annotation('Textbox','Position',[text_offset sp_positions_1{2,1}(2:4)],'String',{'   ON-','Rotation'},'Edgecolor','none','fontsize',font_size_1)
+        annotation('Textbox','Position',[text_offset sp_positions_1{3,1}(2:4)],'String',{'   ON-','Expansion'},'Edgecolor','none','fontsize',font_size_1)
+
+        for pos_loc = 2:3
+                        
+            subplot('Position',nudge(sp_positions_1{pos_loc,1},-.015,0))
+            
+            if pos_loc == 2
+                curve_name = 'sawtooth_ON';
+            elseif pos_loc == 3
+                curve_name = 'expansion_ON';
+            end
+                            
+                % Just make a tuning curve with the correct color
+                for i = 1:numel(geno_inds_to_plot)
+                    graph.line{i}       = cell2mat(summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_lmr_ts);
+                    %graph.shade{i}  = cell2mat(summ_data.(curve_name).raw(geno_inds_to_plot(i)).sem_lmr_ts);
+                    
+                    graph.color{i}     = my_colormap{colormap_ind{geno_inds_to_plot(i)}};
+
+                    names_plotted{i} = proper_geno_names{geno_inds_to_plot(i)};
+                    n_for_names_plotted(i) = summ_data.(curve_name).raw(geno_inds_to_plot(i)).N;
+                    
+                end
+                
+                graph.zero_line_color = [.27 .27 .27];
+                
+                makeErrorShadedTimeseries(graph);
+                
+                %xlabel('Time (ms)','color',font_color,'fontsize',font_size_1) 
+                ylabel('L-R WBA (V)','color',font_color,'fontsize',font_size_1)
+                axis([0 3000 -.5 2])
+                set(gca,'XTick',[0 3000],'XTickLabel',{'0','3(s)'},'fontsize',font_size_1)                
+                clear graph names_plotted n_for_names_plotted p_for_plotted
+        end
+        
+    % Plot the On Sawtooth + Expansion Tuning curve
+
+        for pos_loc = 2:3
+            
+            if pos_loc == 2
+                curve_name = 'sawtooth_ON';
+            elseif pos_loc == 3
+                curve_name = 'expansion_ON';
+            end
+            
+            subplot('Position',sp_positions_mid_bot{pos_loc,2})
+            
+            graph.zero_line = 0;
+            graph.zero_line_color = [.27 .27 .27];
+            
+            plot(-10:10,zeros(21,1),'Color',graph.zero_line_color,'LineWidth',1)
+            hold on
+            
+            % Just make a tuning curve with the correct color
+            for i = 1:numel(geno_inds_to_plot)
+                graph.line{i}       = cell2mat(summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_lmr);
+                graph.shade{i}      = cell2mat(summ_data.(curve_name).raw(geno_inds_to_plot(i)).sem_lmr);
+
+                graph.color{i}     = my_colormap{colormap_ind{geno_inds_to_plot(i)}};
+
+                names_plotted{i} = proper_geno_names{geno_inds_to_plot(i)};
+                n_for_names_plotted(i) = summ_data.(curve_name).raw(geno_inds_to_plot(i)).N;
+                color_for_names_plotted{i} = graph.color{i};
+                
+            end
+            
+            graph.zero_line_color = [.27 .27 .27];
+            
+            x_distrib=.5+(1:numel(geno_inds_to_plot))/10;
+            
+            makeErrorbarTuningCurve(graph,x_distrib);
+            
+            box off
+            
+            set(gca,'XTickLabel',{''},'XTick',0,'fontsize',font_size_1)
+            set(gca,'YAxisLocation','right')
+            ylabel({'Mean L-R',' WBA (V)'},'color',font_color,'fontsize',font_size_1)            
+            axis([.25 1.25 -.25 1])
+            fix_errorbar_tee_width(7)
+        end
+
+    % Plot the On Sawtooth response-thing curve
+    subplot('Position',nudge(sp_positions_mid_bot{2,3},0.023,0))
+    
+        curve_name = 'sawtooth_ON';            
+
+        graph.zero_line = 0;
+        graph.zero_line_color = [.27 .27 .27];
+
+        plot(-10:10,zeros(21,1),'Color',graph.zero_line_color,'LineWidth',1)
+        hold on
+
+        % Just make a tuning curve with the correct color
+        for i = 1:numel(geno_inds_to_plot)
+            graph.line{i}       = (summ_data.(curve_name).raw(geno_inds_to_plot(i)).mean_turning_thresh_times);
+            graph.shade{i}      = (summ_data.(curve_name).raw(geno_inds_to_plot(i)).sem_turning_thresh_times);
+
+            graph.color{i}     = my_colormap{colormap_ind{geno_inds_to_plot(i)}};
+
+            names_plotted{i} = proper_geno_names{geno_inds_to_plot(i)};
+            n_for_names_plotted(i) = summ_data.(curve_name).raw(geno_inds_to_plot(i)).N;
+            color_for_names_plotted{i} = graph.color{i};
+            
+        end
+
+        makeErrorbarTuningCurve(graph,.5+(1:numel(geno_inds_to_plot))/10);
+        
+        box off
+        set(gca,'YAxisLocation','right')
+        set(gca,'XTickLabel',{''},'XTick',0,'fontsize',font_size_1)
+        set(gca,'YTickLabel',{'0','1','2','3'},'XTick',[0 3000],'fontsize',font_size_1)
+        ylabel({'Time of Response',' Start (s)'},'color',font_color,'fontsize',font_size_1)
+        axis([.25 1.25 0 3250])
+        fix_errorbar_tee_width(7)
+
+    % Plot the On expansion response-thing curve
+    subplot('Position',nudge(sp_positions_mid_bot{3,3},0.023,0))
+    
+        curve_name = 'expansion_ON';            
+
+        graph.zero_line = 0;
+        graph.zero_line_color = [.27 .27 .27];
+
+        plot(-10:10,zeros(21,1),'Color',graph.zero_line_color,'LineWidth',1)
+        hold on
+
+        % Just make a tuning curve with the correct color
+        for i = 1:numel(geno_inds_to_plot)
+            graph.line{i}       = (summ_data.(curve_name).raw(geno_inds_to_plot(i)).mean_aligned_subresponse);
+            graph.shade{i}      = (summ_data.(curve_name).raw(geno_inds_to_plot(i)).sem_aligned_subresponse);
+
+            graph.color{i}     = my_colormap{colormap_ind{geno_inds_to_plot(i)}};
+
+            names_plotted{i} = proper_geno_names{geno_inds_to_plot(i)};
+            n_for_names_plotted(i) = summ_data.(curve_name).raw(geno_inds_to_plot(i)).N;
+            color_for_names_plotted{i} = graph.color{i};
+            
+        end
+
+        makeErrorbarTuningCurve(graph,.5+(1:numel(geno_inds_to_plot))/10);
+        
+        box off
+        set(gca,'YAxisLocation','right')
+        set(gca,'XTickLabel',{''},'XTick',0,'fontsize',font_size_1)
+        set(gca,'YTickLabel',{'0','1','2','3'},'XTick',[0 3000],'fontsize',font_size_1)
+        ylabel({'Aligned Subresponse','Size (V)'},'color',font_color,'fontsize',font_size_1)
+        axis([.25 1.25 0 3250])
+        fix_errorbar_tee_width(7)
+
+        
+%     % Plot the On Expansion response-thing curve
+%     subplot('Position',sp_positions_right{3,4})
+%     
+%     plot(1:10,1:10,'k--',1:10,10:-1:1,'k--')
+%     title('placeholder for ON analysis','fontsize',font_size_1)
+%     axis off
+%     box on
+	
+    % Make a legend with all of the correct names and usefully sized color
+    % boxes
+
+    legend_rectangle_loc = [.66 .482 .02 .0075];
+    legend_text_loc = [.675 .445 .4 .07];
+    text_decrement = .07;
+    
+    for i = 1:numel(names_plotted)
+        
+        %subplot('Position',legend_rectangle_loc)
+        h=annotation('Rectangle','Position',legend_rectangle_loc,'EdgeColor',color_for_names_plotted{i},'facecolor',color_for_names_plotted{i});
+                
+        name_with_n = {[names_plotted{i} ' N = ' num2str(n_for_names_plotted(i))]};
+        
+        annotation('textbox','position',legend_text_loc,'string',name_with_n,...
+            'interpreter','none','EdgeColor','none','fontsize',font_size_1); %
+
+        
+        legend_rectangle_loc    = [legend_rectangle_loc(1) legend_rectangle_loc(2)-text_decrement legend_rectangle_loc(3:4)];
+        legend_text_loc         = [legend_text_loc(1) legend_text_loc(2)-text_decrement legend_text_loc(3:4)];
+        
+    end
+
+    export_fig(combined_figure_handle(plotting_group),fullfile(summary_location,fig_file_name),'-pdf')
+    
+
+
+if 0
+
+% make a bunch of subplots for MR
+    
+    mr_subplots(plotting_group) = figure( 'name' ,'Summary Figure','NumberTitle','off',...
+                                    'Color',figure_color,'Position',[50 50 750 750],...
+                                    'PaperOrientation','portrait');    
+    % Set up subplot dimensions
+    nHigh       = 6;
+    nWide       = 16;
+    widthGap    = .01;
+    heightGap   = .02;
+    widthOffset = .05;
+    heightOffset= .025;
+    
+    subplots_for_single_fly = getFullPageSubplotPositions(nWide,nHigh,widthGap,heightGap,widthOffset,heightOffset);
+    
+    curve_name = 'sawtooth_ON';
+    
+    annotation('Textbox','Position',[text_offset+.075 .8875 .8 .167],'String',graph_name,'Edgecolor','none','fontsize',font_size_2)
+
+    for i = 1:numel(geno_inds_to_plot)
+        for fly = 1:size(summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_per_fly_lmr_ts{1},1)
+            if fly < 17
+
+            subplot('Position',subplots_for_single_fly{i,fly})
+            
+            plot(summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_lmr_ts{1},'Color',[.5 .5 .5],'linewidth',2);
+            hold on
+            plot((summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_lmr{1})*ones(1,numel(summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_lmr_ts{1})),'Color',[.5 .5 .5],'linewidth',2);
+            
+            graph.line{1}  = summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_per_fly_lmr_ts{1}(fly,:);
+            graph.shade{1} = summ_data.(curve_name).raw(geno_inds_to_plot(i)).sem_per_fly_lmr_ts{1}(fly,:);
+            graph.color{1} = [1 .069 .069];
+            
+            graph.zero_line_color = [.27 .27 .27];
+            graph.zero_line = 0;
+            
+            makeErrorShadedTimeseries(graph);
+
+            axis([0 2250 -2.5 3])
+            
+            box off
+            
+            if fly ~= 1
+                axis off
+            else
+                ylabel('LmR WBA (V)')
+                xlabel('Time (s)')
+            end
+            
+            if fly == 5
+                title(proper_geno_names{geno_inds_to_plot(i)})
+            elseif fly == 9
+               title(curve_name,'interpreter','none') 
+            elseif fly == 10
+                title('(means overlayed)')
+            end
+            
+            clear graph
+            
+            end
+        end
+    end
+    
+    export_fig(mr_subplots(plotting_group),fullfile(summary_location,['subplots_for_' fig_file_name]),'-pdf')
 end
 
+end
+% %%%%% clone to one figure
+% newFigHand = figure( 'name' ,'Summary Figure','NumberTitle','off',...
+%                                     'Color',figure_color,'Position',[50 50 590 3*285],...
+%                                     'PaperOrientation','portrait');
+% for i = [6 7 8]
+%     CloneFig(combined_figure_handle(plotting_group),newFigHand)
+% end

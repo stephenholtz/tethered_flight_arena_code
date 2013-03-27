@@ -34,7 +34,7 @@ classdef ExpSet < handle
             
             self.experiment             = tf_analysis_object.experiment;
             self                        = populate_condition_properties(self);
-            self.exp_set_turning_resp   = self.get_mean_exp_set_turning_resp();
+%            self.exp_set_turning_resp   = self.get_mean_exp_set_turning_resp();
         end
         
         function self = populate_condition_properties(self)

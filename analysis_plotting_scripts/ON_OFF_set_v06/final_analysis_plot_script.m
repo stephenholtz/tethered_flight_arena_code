@@ -142,7 +142,7 @@ if 0
                     end
                 end
                 
-                [a, v] = geno_data{i}.get_trial_data_set(condition_numbers,'lmr','mean',flip,'all',geno_norm_values(i));
+                [a, v] = geno_data{i}.get_trial_data_set(condition_numbers,'lmr','trapz',flip,'all',geno_norm_values(i));
                 
                 summ_data.(curve_name).(['raw' symmetry])(i).avg_lmr = a;
                 summ_data.(curve_name).(['raw' symmetry])(i).sem_lmr = v;
@@ -278,26 +278,26 @@ for geno_ind = 1:numel(geno_folder_names)
             % add back in the time
             fly_thresh_pts(exp) = thresh_pt + 1000;
             
-            clf
-            plot(curr_ts_set(exp,:)); hold all
-            plot([zeros(1,1000) curr_ts],'--')
-            plot(fly_thresh_pts(exp),curr_ts_set(exp,fly_thresh_pts(exp)),'.')
-            title(proper_geno_names{geno_ind})
+%             clf
+%             plot(curr_ts_set(exp,:)); hold all
+%             plot([zeros(1,1000) curr_ts],'--')
+%             plot(fly_thresh_pts(exp),curr_ts_set(exp,fly_thresh_pts(exp)),'.')
+%             title(proper_geno_names{geno_ind})
             
         else
             fly_thresh_pts(exp) = thresh_pt;
             
-            clf
-            plot(curr_ts_set(exp,:)); hold all
-            plot([zeros(1,1000) curr_ts],'--')
-            %plot(fly_thresh_pts(exp),curr_ts_set(exp,fly_thresh_pts(exp)),'.')
-            title(proper_geno_names{geno_ind})
+%             clf
+%             plot(curr_ts_set(exp,:)); hold all
+%             plot([zeros(1,1000) curr_ts],'--')
+%             %plot(fly_thresh_pts(exp),curr_ts_set(exp,fly_thresh_pts(exp)),'.')
+%             title(proper_geno_names{geno_ind})
 
         end
             %pause()        
-            close all
+%             close all
     end
-    
+
     summ_data.sawtooth_ON.raw(geno_ind).all_turning_thresh_times = fly_thresh_pts;
     summ_data.sawtooth_ON.raw(geno_ind).mean_turning_thresh_times = nanmean(fly_thresh_pts);
     summ_data.sawtooth_ON.raw(geno_ind).sem_turning_thresh_times = nanstd(fly_thresh_pts)./sqrt(sum(~isnan(fly_thresh_pts)));
@@ -306,6 +306,46 @@ for geno_ind = 1:numel(geno_folder_names)
 end
 
 
+% Use a normalized threshold and integration to try and find the data's
+% time to turn
+
+thresh = .33;
+for geno_ind = 1:numel(geno_folder_names)
+
+    curr_ts_set = cell2mat(summ_data.(curve_name).raw(geno_ind).avg_per_fly_lmr_ts);
+    integ_thresh_pts = [];
+    
+    for exp = 1:size(curr_ts_set,1)
+        exp_ts = curr_ts_set(exp,500:end);
+        
+        [max_val,max_ind] = max(exp_ts);
+        
+        max_ind = max_ind(end);
+        
+        exp_resp_sum = sum(exp_ts(1:max_ind));
+        
+        found_thresh = 0;
+        
+        integ_thresh_pts(exp) = NaN;
+
+        thresh_cross_val = inf;
+        
+        for i = 1:numel(exp_ts)
+            
+            if abs((thresh*max_val)-exp_ts(i)) < thresh_cross_val && i < max_ind && i > 1200
+                thresh_cross_val = abs((thresh*max_val)-exp_ts(i));
+                integ_thresh_pts(exp) = i + 500;
+            end
+        end
+        
+    end
+    
+    summ_data.sawtooth_ON.raw(geno_ind).integ_thresh_time = integ_thresh_pts;
+    summ_data.sawtooth_ON.raw(geno_ind).mean_integ_thresh_time = nanmean(integ_thresh_pts);
+    summ_data.sawtooth_ON.raw(geno_ind).sem_integ_thresh_time = nanstd(integ_thresh_pts)/sqrt(numel(integ_thresh_pts));
+    clear integ_thresh_pts running_sum exp_ts
+    
+end
 
 % Do ON-expansion analysis as well (shift to the first 3 bumps and then see
 % what the response peaks are within then)
@@ -313,83 +353,143 @@ end
 % all of the inds that correspond to a step in the stimulus (ms), based
 % on the median responses... seems to align well in 95% of the cases
 % where I actually have x_position data...
-expansion_inds = [25 363 701 1037 1375 1712 2050 2387 2726];
+%expansion_inds = [25 363 701 1039 1376 1713 2051 2388 2726];
+expansion_inds = [25 375 350 700 675 1025];
+tsm = @(ts,inds)(ts(inds)-mean(ts(inds(1)-20:inds(1)-1)));
 
-
+%%%%%%h1=figure;
+%%%%%%h2=figure;
 for geno_ind = 1:numel(geno_folder_names)
 
-    curr_ts_set = cell2mat(summ_data.(curve_name).raw(geno_ind).avg_per_fly_lmr_ts);
-
+    curr_ts_set = cell2mat(summ_data.expansion_ON.raw(geno_ind).avg_per_fly_lmr_ts);
+    mean_aligned_responses = [];
     for exp = 1:size(curr_ts_set,1)
 
         % I will only use the first few bumps in the respones
         aligned_responses = [];
         
-        aligned_responses(1,:) = curr_ts_set(exp,expansion_inds(1):(expansion_inds(2)-1));
-        aligned_responses(2,:) = curr_ts_set(exp,expansion_inds(2):(expansion_inds(3)-1));
-        aligned_responses(3,:) = curr_ts_set(exp,expansion_inds(3):(expansion_inds(4)-1));
+        aligned_responses(1,:) = tsm(curr_ts_set(exp,:),expansion_inds(1):(expansion_inds(2)));
+        aligned_responses(2,:) = tsm(curr_ts_set(exp,:),expansion_inds(3):(expansion_inds(4)));
+        aligned_responses(3,:) = tsm(curr_ts_set(exp,:),expansion_inds(5):(expansion_inds(6)));
+
+        aligned_responses_no_offset_red(1,:) = curr_ts_set(exp,expansion_inds(1):(expansion_inds(2)));
+        aligned_responses_no_offset_red(2,:) = curr_ts_set(exp,expansion_inds(3):(expansion_inds(4)));
+        aligned_responses_no_offset_red(3,:) = curr_ts_set(exp,expansion_inds(5):(expansion_inds(6)));
+
+        if 0
+        
+        figure(h1); clf
+        for uu = 1:3
+            subplot(1,3,uu)
+            plot(aligned_responses(uu,:)); hold all
+            plot(aligned_responses_no_offset_red(uu,:));
+            
+        end
+        
+        figure(h2); clf
+        plot(summ_data.expansion_ON.raw(geno_ind).avg_lmr_ts{1});hold all;
+        plot(curr_ts_set(exp,:));
+        plot(25:375,mean(aligned_responses))
+        title(proper_geno_names{geno_ind})
+                
+        pause() 
+        
+        end
+        %
+%         clf
+%         subplot(1,2,1)
+%         plot(curr_ts_set)
+%         subplot(1,2,2)
+%         
+%         plot(aligned_responses')
+%         hold all
+%         plot(mean(aligned_responses))
+%         title(proper_geno_names{geno_ind})
+%         pause()
+%         clf
         
         mean_aligned_responses(exp,:) = mean(aligned_responses);
-        
-        clear aligned_responses
     end
     
-    summ_data.expansion_ON.raw(geno_ind).mean_aligned_subresponse_ts = mean(mean_aligned_responses);
+    summ_data.expansion_ON.raw(geno_ind).all_mean_aligned_subresponse_ts = (mean_aligned_responses);
+    summ_data.expansion_ON.raw(geno_ind).mean_aligned_subresponse_ts = 	mean(mean_aligned_responses); %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     summ_data.expansion_ON.raw(geno_ind).sem_aligned_subresponse_ts = std(mean_aligned_responses)/sqrt(size(mean_aligned_responses,1));
     
-    summ_data.expansion_ON.raw(geno_ind).mean_aligned_subresponse = mean(summ_data.expansion_ON.raw(geno_ind).mean_aligned_subresponse_ts);
+    summ_data.expansion_ON.raw(geno_ind).mean_aligned_subresponse = trapz(summ_data.expansion_ON.raw(geno_ind).mean_aligned_subresponse_ts);
     summ_data.expansion_ON.raw(geno_ind).sem_aligned_subresponse = std(summ_data.expansion_ON.raw(geno_ind).mean_aligned_subresponse_ts)/sqrt(size(summ_data.expansion_ON.raw(geno_ind).mean_aligned_subresponse_ts,1));
-
-    clear mean_aligned_responses 
+    
+    clear aligned_responses mean_aligned_responses
 end
 
 % Do stats on the data
-if 0
-% hard coded comparisons... oh well
-comparison_groups{1} = [11 12]; comp_kind{1} = 'ctrl';
-comparison_groups{2} = [11 13]; comp_kind{2} = 'dim';
-comparison_groups{3} = [13 14]; comp_kind{3} = 'ctrl';
-comparison_groups{4} = [1 2];   comp_kind{4} = 'ctrl';
-comparison_groups{5} = [1 6];   comp_kind{5} = 'dim';
-comparison_groups{6} = [6 7];   comp_kind{6} = 'ctrl';
-comparison_groups{7} = [3 5];   comp_kind{7} = 'ctrl';
-comparison_groups{8} = [3 8];   comp_kind{8} = 'dim';
-comparison_groups{9} = [4 5];   comp_kind{9} = 'ctrl';
-comparison_groups{10} = [4 9];  comp_kind{10} = 'dim';
-comparison_groups{11} = [8 10]; comp_kind{11} = 'ctrl';
-comparison_groups{12} = [9 10]; comp_kind{12} = 'ctrl';
-
-for curve_name_ind = [3 4 9 10 11 12 13 14]
+if 1
     
-    for i = 1:numel(comparison_groups)
-        
-        for k = 1:numel(summ_data.(curve_names{curve_name_ind}).raw(comparison_groups{i}(1)).avg_per_fly_lmr_ts)
+    % hard coded comparisons... oh well
+    comparison_groups{1} = [11 12]; comp_kind{1} = 'ctrl';
+    comparison_groups{2} = [11 13]; comp_kind{2} = 'dim';
+    comparison_groups{3} = [13 14]; comp_kind{3} = 'ctrl';
+    comparison_groups{4} = [1 2];   comp_kind{4} = 'ctrl';
+    comparison_groups{5} = [1 6];   comp_kind{5} = 'dim';
+    comparison_groups{6} = [6 7];   comp_kind{6} = 'ctrl';
+    comparison_groups{7} = [3 5];   comp_kind{7} = 'ctrl';
+    comparison_groups{8} = [3 8];   comp_kind{8} = 'dim';
+    comparison_groups{9} = [4 5];   comp_kind{9} = 'ctrl';
+    comparison_groups{10} = [4 9];  comp_kind{10} = 'dim';
+    comparison_groups{11} = [8 10]; comp_kind{11} = 'ctrl';
+    comparison_groups{12} = [9 10]; comp_kind{12} = 'ctrl';
+
+    for curve_name_ind = [3 4 9 10 11 12 13 14]
+
+        for i = 1:numel(comparison_groups)
+
+            for k = 1:numel(summ_data.(curve_names{curve_name_ind}).raw(comparison_groups{i}(1)).avg_per_fly_lmr_ts)
+
+                s1 = summ_data.(curve_names{curve_name_ind}).raw(comparison_groups{i}(1)).avg_per_fly_lmr_ts{k};
+                s2 = summ_data.(curve_names{curve_name_ind}).raw(comparison_groups{i}(2)).avg_per_fly_lmr_ts{k};
+
+                [h, p] = ttest2(mean(s1,2),mean(s2,2));
+
+                summ_data.(curve_names{curve_name_ind}).stats(i).h{k} = h;
+                summ_data.(curve_names{curve_name_ind}).stats(i).p{k} = p;
+                summ_data.(curve_names{curve_name_ind}).stats(i).comp_kind = comp_kind{i};
+                summ_data.(curve_names{curve_name_ind}).stats(i).comp_names = [proper_geno_names{comparison_groups{i}(1)} proper_geno_names{comparison_groups{i}(2)}];
+
+                [h, p] = ttest2(mean(s2,2),mean(s1,1));
+
+                summ_data.(curve_names{curve_name_ind}).stats2(i).h{k} = h;
+                summ_data.(curve_names{curve_name_ind}).stats2(i).p{k} = p;
+                summ_data.(curve_names{curve_name_ind}).stats2(i).comp_kind = comp_kind{i};
+                summ_data.(curve_names{curve_name_ind}).stats2(i).comp_names = [proper_geno_names{comparison_groups{i}(2)} proper_geno_names{comparison_groups{i}(1)}];
+                
+            end
             
-            s1 = summ_data.(curve_names{curve_name_ind}).raw(comparison_groups{i}(1)).avg_per_fly_lmr_ts{k};
-            s2 = summ_data.(curve_names{curve_name_ind}).raw(comparison_groups{i}(2)).avg_per_fly_lmr_ts{k};
+            % expansion_ON
+            s1 = summ_data.expansion_ON.raw(comparison_groups{i}(1)).all_mean_aligned_subresponse_ts;
+            s2 = summ_data.expansion_ON.raw(comparison_groups{i}(2)).all_mean_aligned_subresponse_ts;
             
-            [h, p] = ttest2(mean(s1,2),mean(s2,2));
+            [h,p] = ttest2(mean(s1,2),mean(s2,2));
             
-            summ_data.(curve_names{curve_name_ind}).stats(i).h{k} = h;
-            summ_data.(curve_names{curve_name_ind}).stats(i).p{k} = p;
-            summ_data.(curve_names{curve_name_ind}).stats(i).comp_kind = comp_kind{i};
-            summ_data.(curve_names{curve_name_ind}).stats(i).comp_names = [proper_geno_names{comparison_groups{i}(1)} proper_geno_names{comparison_groups{i}(2)}];
+            summ_data.expansion_ON.s_stats(i).h{1} = h;
+            summ_data.expansion_ON.s_stats(i).p{1} = p;
+            summ_data.expansion_ON.s_stats(i).comp_kind = comp_kind{i};
+            summ_data.expansion_ON.s_stats(i).comp_names = [proper_geno_names{comparison_groups{i}(1)} proper_geno_names{comparison_groups{i}(2)}];
             
-            [h, p] = ttest2(mean(s2,2),mean(s1,1));
+            % sawtooth_ON
+            s1 = summ_data.sawtooth_ON.raw(comparison_groups{i}(1)).integ_thresh_time;
+            s2 = summ_data.sawtooth_ON.raw(comparison_groups{i}(2)).integ_thresh_time;
             
-            summ_data.(curve_names{curve_name_ind}).stats2(i).h{k} = h;
-            summ_data.(curve_names{curve_name_ind}).stats2(i).p{k} = p;
-            summ_data.(curve_names{curve_name_ind}).stats2(i).comp_kind = comp_kind{i};
-            summ_data.(curve_names{curve_name_ind}).stats2(i).comp_names = [proper_geno_names{comparison_groups{i}(2)} proper_geno_names{comparison_groups{i}(1)}];
+            [h,p] = ttest2(s1,s2);
+            
+            summ_data.sawtooth_ON.s_stats(i).h{1} = h;
+            summ_data.sawtooth_ON.s_stats(i).p{1} = p;
+            summ_data.sawtooth_ON.s_stats(i).comp_kind = comp_kind{i};
+            summ_data.sawtooth_ON.s_stats(i).comp_names = [proper_geno_names{comparison_groups{i}(1)} proper_geno_names{comparison_groups{i}(2)}];
             
         end
     end
+
 end
 
-% x=summ_data.lam_30_rotation.raw(12).avg_per_fly_lmr_ts{2};
-% y=summ_data.lam_30_rotation.raw(13).avg_per_fly_lmr_ts{2};
-% [h,p]=ttest2(mean(x,2),mean(y,2));
-end
 % Make the figures
 for plotting_group = [6 7 8]
     
@@ -485,7 +585,7 @@ for plotting_group = [6 7 8]
         makeErrorbarTuningCurve(graph);
 
         title({curve_name,graph_name},'interpreter','none')
-        ylabel({'Mean L-R',' WBA (V)'},'color',font_color)
+        ylabel({'Integrated \DeltaWBA'},'color',font_color)
         xlabel('Temporal Frequency','color',font_color)        
         
         legend_hand = add_legend_with_N(names_plotted,n_for_names_plotted,'NorthEastOutside');
@@ -538,7 +638,7 @@ for plotting_group = [6 7 8]
             makeErrorShadedTimeseries(graph);
 
             title({curve_name,graph_name},'interpreter','none')
-            ylabel({'Mean L-R',' WBA (V)'},'color',font_color)
+            ylabel({'Mean L-R',' WBA (V*s)'},'color',font_color)
             xlabel('Temporal Frequency','color',font_color)        
             graph.zero_line = 1;
             if plot_iter == 3
@@ -597,7 +697,7 @@ for plotting_group = [6 7 8]
                 makeErrorbarTuningCurve(graph,.5+(1:numel(geno_inds_to_plot))/10);
 
                 %title({curve_name,graph_name},'interpreter','none')
-                ylabel({'Mean L-R',' WBA (V)'},'color',font_color)
+                ylabel({'Integrated \DeltaWBA'},'color',font_color)
                 xlabel('Temporal Frequency','color',font_color)        
                 axis([0 2 0 2])
 
@@ -751,10 +851,10 @@ for plotting_group = [6 7 8]
                 
                 makeErrorShadedTimeseries(graph);
                 
-                axis([0 2250 -.5 3.99])
+                axis([0 2250 -.5 4.2])
                 
                 if speed == 1
-                    ylabel('L-R WBA (V)','color',font_color,'fontsize',font_size_1)
+                    ylabel('\DeltaWBA (V)','color',font_color,'fontsize',font_size_1)
                     %xlabel('Time (ms)','color',font_color,'fontsize',font_size_1)
                     title('F_t = .5 Hz','fontsize',font_size_1)
                     
@@ -798,15 +898,16 @@ for plotting_group = [6 7 8]
         
         makeErrorbarTuningCurve(graph);
         
-        axis([.8 3.2 -.5 3.95])
+        axis([.8 3.2 -1000 7000])
         
         box off
         set(gca,'YAxisLocation','right')
+        set(gca,'YTick',[0 2000 4000 6000],'YTickLabel',{'0','2','4','6'},'fontsize',font_size_1)
         set(gca,'XTickLabel',{'.5','1.5','9'},'fontsize',font_size_1)
-        ylabel({'Mean L-R',' WBA (V)'},'color',font_color,'fontsize',font_size_1)
+        ylabel({'Integrated \Delta WBA'},'color',font_color,'fontsize',font_size_1)
         xlabel('F_t (Hz)','color',font_color,'fontsize',font_size_1)        
         fix_errorbar_tee_width(3.85)
-                
+        
         clear graph names_plotted n_for_names_plotted p_for_plotted
         
     % Plot the ON Sawtooth timeseries
@@ -840,9 +941,9 @@ for plotting_group = [6 7 8]
                 makeErrorShadedTimeseries(graph);
                 
                 %xlabel('Time (ms)','color',font_color,'fontsize',font_size_1) 
-                ylabel('L-R WBA (V)','color',font_color,'fontsize',font_size_1)
+                ylabel('\DeltaWBA (V)','color',font_color,'fontsize',font_size_1)
                 axis([0 3000 -.5 2])
-                set(gca,'XTick',[0 3000],'XTickLabel',{'0','3(s)'},'fontsize',font_size_1)                
+                set(gca,'XTick',[0 6000],'XTickLabel',{'0','3(s)'},'fontsize',font_size_1)                
                 clear graph names_plotted n_for_names_plotted p_for_plotted
         end
         
@@ -857,39 +958,78 @@ for plotting_group = [6 7 8]
             end
             
             subplot('Position',sp_positions_mid_bot{pos_loc,2})
-            
-            graph.zero_line = 0;
-            graph.zero_line_color = [.27 .27 .27];
-            
-            plot(-10:10,zeros(21,1),'Color',graph.zero_line_color,'LineWidth',1)
-            hold on
-            
-            % Just make a tuning curve with the correct color
-            for i = 1:numel(geno_inds_to_plot)
-                graph.line{i}       = cell2mat(summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_lmr);
-                graph.shade{i}      = cell2mat(summ_data.(curve_name).raw(geno_inds_to_plot(i)).sem_lmr);
 
-                graph.color{i}     = my_colormap{colormap_ind{geno_inds_to_plot(i)}};
-
-                names_plotted{i} = proper_geno_names{geno_inds_to_plot(i)};
-                n_for_names_plotted(i) = summ_data.(curve_name).raw(geno_inds_to_plot(i)).N;
-                color_for_names_plotted{i} = graph.color{i};
+            
+            if pos_loc == 3 && 1
+                clear graph
                 
+                curve_name = 'expansion_ON';            
+
+                graph.zero_line = 0;
+                graph.zero_line_color = [.27 .27 .27];
+
+                plot(-1000:1000,zeros(2001,1),'Color',graph.zero_line_color,'LineWidth',1)
+                hold on
+
+                % Just make a tuning curve with the correct color
+                for i = 1:numel(geno_inds_to_plot)
+                    graph.line{i}       = (summ_data.(curve_name).raw(geno_inds_to_plot(i)).mean_aligned_subresponse_ts);
+                    %graph.shade{i}      = (summ_data.(curve_name).raw(geno_inds_to_plot(i)).sem_aligned_subresponse);
+
+                    graph.color{i}     = my_colormap{colormap_ind{geno_inds_to_plot(i)}};
+
+                    names_plotted{i} = proper_geno_names{geno_inds_to_plot(i)};
+                    n_for_names_plotted(i) = summ_data.(curve_name).raw(geno_inds_to_plot(i)).N;
+                    color_for_names_plotted{i} = graph.color{i};
+
+                end
+
+                makeErrorShadedTimeseries(graph);
+
+                box off
+                set(gca,'YAxisLocation','right')
+                set(gca,'XTick',[0 340],'XTickLabel',{'0','0.34(s)'},'fontsize',font_size_1)
+                ylabel({'Aligned Mean \DeltaWBA','Subresponses (V)'},'color',font_color,'fontsize',font_size_1)
+                axis([-15 350 -.2 .5])
+
+            else
+                
+                graph.zero_line = 0;
+                graph.zero_line_color = [.27 .27 .27];
+
+                plot(-10:10,zeros(21,1),'Color',graph.zero_line_color,'LineWidth',1)
+                hold on
+
+                % Just make a tuning curve with the correct color
+                for i = 1:numel(geno_inds_to_plot)
+                    graph.line{i}       = cell2mat(summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_lmr);
+                    graph.shade{i}      = cell2mat(summ_data.(curve_name).raw(geno_inds_to_plot(i)).sem_lmr);
+
+                    graph.color{i}     = my_colormap{colormap_ind{geno_inds_to_plot(i)}};
+
+                    names_plotted{i} = proper_geno_names{geno_inds_to_plot(i)};
+                    n_for_names_plotted(i) = summ_data.(curve_name).raw(geno_inds_to_plot(i)).N;
+                    color_for_names_plotted{i} = graph.color{i};
+
+                end
+
+                graph.zero_line_color = [.27 .27 .27];
+
+                x_distrib=.5+(1:numel(geno_inds_to_plot))/10;
+
+                makeErrorbarTuningCurve(graph,1:numel(geno_inds_to_plot));
+
+                box off
+
+                set(gca,'XTickLabel',{''},'XTick',0,'fontsize',font_size_1)
+                set(gca,'YTick',[0 1500 3000],'YTickLabel',{'0','1.5','3'},'fontsize',font_size_1)
+                set(gca,'YAxisLocation','right')
+                ylabel({'Integrated',' \DeltaWBA (V*s)'},'color',font_color,'fontsize',font_size_1)            
+                axis([0 1+numel(geno_inds_to_plot) -200 3200])
+                fix_errorbar_tee_width(7)
+                
+                clear graph
             end
-            
-            graph.zero_line_color = [.27 .27 .27];
-            
-            x_distrib=.5+(1:numel(geno_inds_to_plot))/10;
-            
-            makeErrorbarTuningCurve(graph,x_distrib);
-            
-            box off
-            
-            set(gca,'XTickLabel',{''},'XTick',0,'fontsize',font_size_1)
-            set(gca,'YAxisLocation','right')
-            ylabel({'Mean L-R',' WBA (V)'},'color',font_color,'fontsize',font_size_1)            
-            axis([.25 1.25 -.25 1])
-            fix_errorbar_tee_width(7)
         end
 
     % Plot the On Sawtooth response-thing curve
@@ -905,8 +1045,8 @@ for plotting_group = [6 7 8]
 
         % Just make a tuning curve with the correct color
         for i = 1:numel(geno_inds_to_plot)
-            graph.line{i}       = (summ_data.(curve_name).raw(geno_inds_to_plot(i)).mean_turning_thresh_times);
-            graph.shade{i}      = (summ_data.(curve_name).raw(geno_inds_to_plot(i)).sem_turning_thresh_times);
+            graph.line{i}       = (summ_data.(curve_name).raw(geno_inds_to_plot(i)).mean_integ_thresh_time);
+            graph.shade{i}      = (summ_data.(curve_name).raw(geno_inds_to_plot(i)).sem_integ_thresh_time);
 
             graph.color{i}     = my_colormap{colormap_ind{geno_inds_to_plot(i)}};
 
@@ -916,27 +1056,31 @@ for plotting_group = [6 7 8]
             
         end
 
-        makeErrorbarTuningCurve(graph,.5+(1:numel(geno_inds_to_plot))/10);
+        makeErrorbarTuningCurve(graph,1:numel(geno_inds_to_plot));
         
         box off
         set(gca,'YAxisLocation','right')
         set(gca,'XTickLabel',{''},'XTick',0,'fontsize',font_size_1)
-        set(gca,'YTickLabel',{'0','1','2','3'},'XTick',[0 3000],'fontsize',font_size_1)
+        set(gca,'YTick',[1500 2000 2500],'YTickLabel',{'1.5','2.0','2.5'},'fontsize',font_size_1)
         ylabel({'Time of Response',' Start (s)'},'color',font_color,'fontsize',font_size_1)
-        axis([.25 1.25 0 3250])
+        axis([0 1+numel(geno_inds_to_plot) 1400 2600])
         fix_errorbar_tee_width(7)
 
+        clear graph
+        
     % Plot the On expansion response-thing curve
-    subplot('Position',nudge(sp_positions_mid_bot{3,3},0.023,0))
+    
+    if 1
+        subplot('Position',nudge(sp_positions_mid_bot{3,3},0.023,0))
     
         curve_name = 'expansion_ON';            
 
         graph.zero_line = 0;
         graph.zero_line_color = [.27 .27 .27];
 
-        plot(-10:10,zeros(21,1),'Color',graph.zero_line_color,'LineWidth',1)
+        plot(-1000:1000,zeros(2001,1),'Color',graph.zero_line_color,'LineWidth',1)
         hold on
-
+        
         % Just make a tuning curve with the correct color
         for i = 1:numel(geno_inds_to_plot)
             graph.line{i}       = (summ_data.(curve_name).raw(geno_inds_to_plot(i)).mean_aligned_subresponse);
@@ -949,18 +1093,57 @@ for plotting_group = [6 7 8]
             color_for_names_plotted{i} = graph.color{i};
             
         end
-
-        makeErrorbarTuningCurve(graph,.5+(1:numel(geno_inds_to_plot))/10);
+        
+        %makeErrorShadedTimeseries(graph);
+        
+        %makeErrorbarTuningCurve(graph,.5+(1:numel(geno_inds_to_plot))/10);
+        makeErrorbarTuningCurve(graph,1:numel(geno_inds_to_plot));
         
         box off
         set(gca,'YAxisLocation','right')
-        set(gca,'XTickLabel',{''},'XTick',0,'fontsize',font_size_1)
-        set(gca,'YTickLabel',{'0','1','2','3'},'XTick',[0 3000],'fontsize',font_size_1)
-        ylabel({'Aligned Subresponse','Size (V)'},'color',font_color,'fontsize',font_size_1)
-        axis([.25 1.25 0 3250])
+        set(gca,'XTickLabel',{''},'XTick',0,'fontsize',font_size_1)        
+        set(gca,'YTick',[20 40 60 80],'YTickLabel',{'.02','.04','.06','.08'},'fontsize',font_size_1)        
+        %set(gca,'XTick',[-5 340],'XTickLabel',{'0','0.34(s)'},'fontsize',font_size_1)
+        ylabel({'Integrated \DeltaWBA','Subresponses (V*s)'},'color',font_color,'fontsize',font_size_1)
+        %axis([0 338 -.2 .5])
+        %axis([.25 1.25 -.1 .4])
+        axis([0 1+numel(geno_inds_to_plot) 10 90])
         fix_errorbar_tee_width(7)
-
         
+    else
+        
+        subplot('Position',nudge(sp_positions_mid_bot{3,3},0.023,0))
+    
+        curve_name = 'expansion_ON';            
+
+        graph.zero_line = 0;
+        graph.zero_line_color = [.27 .27 .27];
+
+        plot(-1000:1000,zeros(2001,1),'Color',graph.zero_line_color,'LineWidth',1)
+        hold on
+        
+        % Just make a tuning curve with the correct color
+        for i = 1:numel(geno_inds_to_plot)
+            graph.line{i}       = (summ_data.(curve_name).raw(geno_inds_to_plot(i)).mean_aligned_subresponse_ts);
+            %graph.shade{i}      = (summ_data.(curve_name).raw(geno_inds_to_plot(i)).sem_aligned_subresponse);
+
+            graph.color{i}     = my_colormap{colormap_ind{geno_inds_to_plot(i)}};
+
+            names_plotted{i} = proper_geno_names{geno_inds_to_plot(i)};
+            n_for_names_plotted(i) = summ_data.(curve_name).raw(geno_inds_to_plot(i)).N;
+            color_for_names_plotted{i} = graph.color{i};
+            
+        end
+        
+        makeErrorShadedTimeseries(graph);
+                
+        box off
+        set(gca,'YAxisLocation','right')
+        set(gca,'XTick',[0 340],'XTickLabel',{'0','0.34(s)'},'fontsize',font_size_1)
+        ylabel({'Aligned Mean \DeltaWBA','Subresponses (V)'},'color',font_color,'fontsize',font_size_1)
+        axis([-15 350 -.2 .5])
+        
+    end
 %     % Plot the On Expansion response-thing curve
 %     subplot('Position',sp_positions_right{3,4})
 %     
@@ -993,28 +1176,93 @@ for plotting_group = [6 7 8]
     end
 
     export_fig(combined_figure_handle(plotting_group),fullfile(summary_location,fig_file_name),'-pdf')
-    
 
 
 if 0
-
+% 
+% % make a bunch of subplots for MR
+%     
+%     mr_subplots(plotting_group) = figure( 'name' ,'Summary Figure','NumberTitle','off',...
+%                                     'Color',figure_color,'Position',[50 50 750 750],...
+%                                     'PaperOrientation','portrait');    
+%     % Set up subplot dimensions
+%     nHigh       = 6;
+%     nWide       = 16;
+%     widthGap    = .01;
+%     heightGap   = .02;
+%     widthOffset = .05;
+%     heightOffset= .025;
+%     
+%     subplots_for_single_fly = getFullPageSubplotPositions(nWide,nHigh,widthGap,heightGap,widthOffset,heightOffset);
+%     
+%     curve_name = 'sawtooth_ON';
+%     
+%     annotation('Textbox','Position',[text_offset+.075 .8875 .8 .167],'String',graph_name,'Edgecolor','none','fontsize',font_size_2)
+% 
+%     for i = 1:numel(geno_inds_to_plot)
+%         for fly = 1:size(summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_per_fly_lmr_ts{1},1)
+%             if fly < 17
+% 
+%             subplot('Position',subplots_for_single_fly{i,fly})
+%             
+%             plot(summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_lmr_ts{1},'Color',[.5 .5 .5],'linewidth',2);
+%             hold on
+%             plot(0*ones(1,numel(summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_lmr_ts{1})),'Color',[.5 .5 .5],'linewidth',2);
+%             
+%             graph.line{1}  = summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_per_fly_lmr_ts{1}(fly,:);
+%             graph.shade{1} = summ_data.(curve_name).raw(geno_inds_to_plot(i)).sem_per_fly_lmr_ts{1}(fly,:);
+%             graph.color{1} = [1 .09 .09];
+%             
+%             graph.zero_line_color = [.27 .27 .27];
+%             graph.zero_line = 0;
+%             
+%             makeErrorShadedTimeseries(graph);
+% 
+%             axis([0 3000 -2.5 3])
+%             
+%             box off
+%             
+%             if fly ~= 1
+%                 axis off
+%             else
+%                 ylabel('LmR WBA (V)')
+%                 xlabel('Time (s)')
+%             end
+%             
+%             if fly == 5
+%                 title(proper_geno_names{geno_inds_to_plot(i)})
+%             elseif fly == 9
+%                title(curve_name,'interpreter','none') 
+%             elseif fly == 12
+%                 title('(means underlayed)')
+%             end
+%             
+%             clear graph
+%             
+%             end
+%         end
+%     end
+%     
+%     export_fig(mr_subplots(plotting_group),fullfile(summary_location,['subplots_for_' fig_file_name]),'-pdf')
+%     
+    
 % make a bunch of subplots for MR
     
-    mr_subplots(plotting_group) = figure( 'name' ,'Summary Figure','NumberTitle','off',...
+    mr_subplots2(plotting_group) = figure( 'name' ,'Summary Figure','NumberTitle','off',...
                                     'Color',figure_color,'Position',[50 50 750 750],...
                                     'PaperOrientation','portrait');    
     % Set up subplot dimensions
     nHigh       = 6;
     nWide       = 16;
     widthGap    = .01;
-    heightGap   = .02;
+    heightGap   = .05;
     widthOffset = .05;
     heightOffset= .025;
     
     subplots_for_single_fly = getFullPageSubplotPositions(nWide,nHigh,widthGap,heightGap,widthOffset,heightOffset);
     
     curve_name = 'sawtooth_ON';
-    
+    clear graph
     annotation('Textbox','Position',[text_offset+.075 .8875 .8 .167],'String',graph_name,'Edgecolor','none','fontsize',font_size_2)
 
     for i = 1:numel(geno_inds_to_plot)
@@ -1023,20 +1271,21 @@ if 0
 
             subplot('Position',subplots_for_single_fly{i,fly})
             
-            plot(summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_lmr_ts{1},'Color',[.5 .5 .5],'linewidth',2);
-            hold on
-            plot((summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_lmr{1})*ones(1,numel(summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_lmr_ts{1})),'Color',[.5 .5 .5],'linewidth',2);
+            plot(summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_lmr_ts{1},'Color',[.5 .5 .5],'linewidth',2); hold all;
+            plot(0*ones(1,numel(summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_lmr_ts{1})),'Color',[.5 .5 .5],'linewidth',1,'linestyle','--');            
+            plot(summ_data.sawtooth_ON.raw(geno_inds_to_plot(i)).integ_thresh_time(fly)*ones(2,1),[-1000 1000],'color',[0 .75 1],'linewidth',2);
+            %plot(summ_data.sawtooth_ON.raw(geno_inds_to_plot(i)).running_sum{fly}/1000,'color',[0 .75 1],'linewidth',2);
             
             graph.line{1}  = summ_data.(curve_name).raw(geno_inds_to_plot(i)).avg_per_fly_lmr_ts{1}(fly,:);
             graph.shade{1} = summ_data.(curve_name).raw(geno_inds_to_plot(i)).sem_per_fly_lmr_ts{1}(fly,:);
-            graph.color{1} = [1 .069 .069];
+            graph.color{1} = [1 .09 .09];
             
             graph.zero_line_color = [.27 .27 .27];
             graph.zero_line = 0;
             
             makeErrorShadedTimeseries(graph);
-
-            axis([0 2250 -2.5 3])
+            
+            axis([0 3000 -2.5 3])
             
             box off
             
@@ -1051,17 +1300,79 @@ if 0
                 title(proper_geno_names{geno_inds_to_plot(i)})
             elseif fly == 9
                title(curve_name,'interpreter','none') 
-            elseif fly == 10
-                title('(means overlayed)')
+            elseif fly == 12
+                title('(means underlayed)')
             end
             
             clear graph
+            
+            text(1100,2,[num2str(summ_data.sawtooth_ON.raw(geno_inds_to_plot(i)).integ_thresh_time(fly)) 'ms'])
             
             end
         end
     end
     
-    export_fig(mr_subplots(plotting_group),fullfile(summary_location,['subplots_for_' fig_file_name]),'-pdf')
+    export_fig(mr_subplots2(plotting_group),fullfile(summary_location,['turn_thresh_subplots_for_' fig_file_name]),'-pdf')
+end
+
+if 0
+
+    if ~exist('cf_hand','var')
+
+        % Set up subplot dimensions
+        nHigh       = 3;
+        nWide       = 2;
+        widthGap    = .01;
+        heightGap   = .05;
+        widthOffset = .05;
+        heightOffset= .025;
+
+        subplot_cf = getFullPageSubplotPositions(nWide,nHigh,widthGap,heightGap,widthOffset,heightOffset);
+
+        sp_iter = 1;
+        
+        cf_hand = figure( 'name' ,'Summary Figure','NumberTitle','off',...
+                    'Color',figure_color,'Position',[50 50 285 590],...
+                    'PaperOrientation','portrait');    
+
+    else
+
+        sp_iter = sp_iter + 1;
+
+    end
+    
+    figure(cf_hand)
+    
+    clear graph
+    
+    
+        
+    if sp_iter == 1
+        annotation('Textbox','Position',subplot_cf{2,1},'String',graph_name,'Edgecolor','none','fontsize',font_size_2)
+        subplot('Position',subplot_cf{2,2})
+    elseif sp_iter == 2
+        annotation('Textbox','Position',subplot_cf{3,1},'String',graph_name,'Edgecolor','none','fontsize',font_size_2)
+        subplot('Position',subplot_cf{3,2})        
+    else
+        annotation('Textbox','Position',subplot_cf{1,1},'String',graph_name,'Edgecolor','none','fontsize',font_size_2)
+        subplot('Position',subplot_cf{1,2})        
+    end
+    
+    % Just make a tuning curve with the correct color
+    for i = 1:numel(geno_inds_to_plot)
+        graph.line{i}       = cell2mat(summ_data.opposed_ON_OFF.raw(geno_inds_to_plot(i)).avg_lmr_ts);
+        graph.shade{i}      = cell2mat(summ_data.opposed_ON_OFF.raw(geno_inds_to_plot(i)).sem_lmr_ts);
+        graph.color{i}     = my_colormap{colormap_ind{geno_inds_to_plot(i)}};
+    end
+
+    graph.zero_line_color = [.27 .27 .27];
+    ylabel('LmR WBA (V)')
+    xlabel('Time (ms)')
+    makeErrorShadedTimeseries(graph);
+
+    if sp_iter == 3
+        export_fig(cf_hand,fullfile(summary_location,'clark_turning_responses'),'-pdf')
+    end
 end
 
 end
@@ -1072,3 +1383,12 @@ end
 % for i = [6 7 8]
 %     CloneFig(combined_figure_handle(plotting_group),newFigHand)
 % end
+
+
+
+
+
+
+
+
+

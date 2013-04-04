@@ -10,7 +10,7 @@ end
 
 make_vids = 0;
 
-for i = 1:(numel(conditions)-1)
+for i = 15%:(numel(conditions)-1)
     
     stim_name = ['cond_' num2str(i) '_pat_' conditions(i).PatternName(12:(end-20))];
     
@@ -27,6 +27,6 @@ for i = 1:(numel(conditions)-1)
         mov_handle = stimulus.MakeMovie('green',save_file);
     end
     
-    close all
+    %close all
     
 end

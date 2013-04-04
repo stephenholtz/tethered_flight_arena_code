@@ -428,12 +428,7 @@ classdef arenaSimulation < handle
             end
             
         end
-        
-        function mov_handle = CompareConditionsTopBottom(save_file_path,mov_handle_top,mov_handle_bottom)
-            
-            
-        end
-        
+                
     end
     
 end

@@ -20,7 +20,7 @@ classdef Utilities
                                 'Voltage',...           % trial_metadata type value
                                 'PosFuncNameX',...      % trial_metadata type value
                                 'PosFuncNameY',...      % trial_metadata type value
-                                'PatternName'};         % trial_metadata type value                           
+                                'PatternName'};         % trial_metadata type value
     % Stored fields for metadata checking, each experiment must have all of these
 	% fields populated so that a complete picture of all experiments can exist
 	% in the database.
